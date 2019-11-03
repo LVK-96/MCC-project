@@ -3,6 +3,7 @@ import {
   View,
   Text,
   TextInput,
+  Alert,
 } from 'react-native';
 import Button from '../Button';
 import styles from './styles';
@@ -34,9 +35,21 @@ function AuthenticationView() {
   /*Logs in or signs up based on the values currently in the fields*/
   const performAuthentication = () => {
     if (form === "login") {
-      authenticationContext.login({ email, password });
+      authenticationContext
+        .login({ email, password })
+        .catch(() => Alert.alert(
+          "Failed to log in",
+          "Please recheck your credentials.",
+          [{ text: 'OK', onPress: () => {}}],
+        ));
     } else {
-      authenticationContext.signup({ email, password, displayName });
+      authenticationContext
+        .signup({ email, password, displayName })
+        .catch(() => Alert.alert(
+          "Signup failed",
+          "Try another display name.",
+          [{ text: 'OK', onPress: () => {}}],
+        ));
     }
   };
   return (
