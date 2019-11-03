@@ -1,20 +1,16 @@
 import React from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  View,
-  Text,
   StatusBar,
 } from 'react-native';
+import AppView from './app/views/AppView';
 
 function App() {
   return (
     <>
       <StatusBar barStyle="light-content"/>
       <SafeAreaView>
-        <Text>
-          Placeholder
-        </Text>
+        <AppView/>
       </SafeAreaView>
     </>
   );
