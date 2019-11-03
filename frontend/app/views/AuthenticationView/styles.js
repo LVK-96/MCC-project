@@ -32,7 +32,7 @@ export default StyleSheet.create({
     fontSize: fontSizes.massive,
     marginBottom: 10,
   },
-  usernameInput: {
+  displayNameInput: {
     ...inputCommon,
   },
   emailInput: {
