@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,10 @@ import {
 import Button from '../Button';
 import styles from './styles';
 import colors from '../../values/colors';
+import AuthenticationContext from '../../contexts/AuthenticationContext';
 
 function AuthenticationView() {
+  const authenticationContext = useContext(AuthenticationContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,6 +31,14 @@ function AuthenticationView() {
   /*To actually perform authentication, we need the form to be completely filled
     out.*/
   const formFilled = (email.length > 0) && (password.length > 0) && ((form === "login") || (username.length > 0));
+  /*Logs in or signs up based on the values currently in the fields*/
+  const performAuthentication = () => {
+    if (form === "login") {
+      authenticationContext.login({ email, password });
+    } else {
+      authenticationContext.signup({ email, password, displayName: username });
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
@@ -61,6 +71,7 @@ function AuthenticationView() {
         style={styles.authButton}
         title={authButtonTitle}
         disabled={!formFilled}
+        onPress={performAuthentication}
       />
       <Button
         style={styles.switchButton}
