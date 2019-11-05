@@ -10,7 +10,7 @@ import styles from './styles';
 import colors from '../../values/colors';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
 
-function AuthenticationView() {
+function AuthenticationView(props) {
   const authenticationContext = useContext(AuthenticationContext);
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
@@ -42,6 +42,8 @@ function AuthenticationView() {
           "Please recheck your credentials.",
           [{ text: 'OK', onPress: () => {}}],
         ));
+      // TODO: only navigate on successfull login
+      props.navigation.replace('Profile');
     } else {
       authenticationContext
         .signup({ email, password, displayName })
