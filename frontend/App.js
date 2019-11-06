@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <StatusBar barStyle="light-content"/>
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
         <AppView/>
       </SafeAreaView>
     </>
