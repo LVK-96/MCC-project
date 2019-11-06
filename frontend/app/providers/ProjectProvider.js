@@ -55,8 +55,21 @@ function ProjectProvider({ children }) {
       keywords: ['test', 'project', 'placeholder'],
     },
   ];
+  const allWithId = id => projects.filter(project => project.id === id);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const selectProject = async (projectId) => {
+    if (allWithId(projectId).length > 0) {
+      setSelectedProjectId(projectId);
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const [selectedProject] = allWithId(selectedProjectId);
   const value = {
     projects,
+    selectProject,
+    selectedProject,
   };
   return (
     <ProjectContext.Provider value={value}>
