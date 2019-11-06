@@ -2,6 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 import styles from './styles';
 
@@ -15,9 +16,13 @@ function ProjectPreview({
   modified,
   created,
   favorite,
+  onPress,
 }) {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPress}
+    >
       <Text style={styles.name}>
         {name}
       </Text>
@@ -27,7 +32,7 @@ function ProjectPreview({
       <Text style={styles.deadline}>
         {(new Date(deadline)).toString()}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 
