@@ -5,6 +5,9 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
+import {
+  withNavigation,
+} from 'react-navigation';
 import ProjectContext from '../../contexts/ProjectContext';
 import {
   compareDates,
@@ -19,8 +22,12 @@ import styles from './styles';
   favorite-status, or by upcoming deadlines.*/
 function ProjectList({
   filter,
+  navigation,
 }) {
-  const { projects } = useContext(ProjectContext);
+  const {
+    projects,
+    selectProject
+  } = useContext(ProjectContext);
   const headerText = (filter === 'favorite') ? 'Favorite projects'
                    : (filter === 'date') ? 'All projects'
                    : (filter === 'upcomingDeadline') ? 'Projects with upcoming deadlines'
@@ -37,10 +44,20 @@ function ProjectList({
                          : (filter === 'date') ? byDate
                          : (filter === 'upcomingDeadline') ? byUpcomingDeadline
                          : undefined;
+  const viewProject = async (projectId) => {
+    const selected = await selectProject(projectId);
+    if (selected && navigation) {
+      navigation.navigate("Project");
+    }
+  };
   const contentArea = selectedProjects ? (
     <ScrollView style={styles.projectsContainer}>
       {selectedProjects.map(project =>
-        <ProjectPreview key={project.id} {...project} />
+        <ProjectPreview
+          key={project.id}
+          onPress={() => viewProject(project.id)}
+          {...project}
+        />
       )}
     </ScrollView>
   ) : (
@@ -58,4 +75,4 @@ function ProjectList({
   );
 }
 
-export default ProjectList;
+export default withNavigation(ProjectList);
