@@ -20,7 +20,7 @@ import styles from './styles';
 function ProjectList({
   filter,
 }) {
-  const projects = useContext(ProjectContext);
+  const { projects } = useContext(ProjectContext);
   const headerText = (filter === 'favorite') ? 'Favorite projects'
                    : (filter === 'date') ? 'All projects'
                    : (filter === 'upcomingDeadline') ? 'Projects with upcoming deadlines'

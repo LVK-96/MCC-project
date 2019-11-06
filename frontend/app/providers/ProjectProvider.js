@@ -15,8 +15,11 @@ function ProjectProvider({ children }) {
       keywords: ['test', 'project', 'placeholder'],
     },
   ];
+  const value = {
+    projects,
+  };
   return (
-    <ProjectContext.Provider value={projects}>
+    <ProjectContext.Provider value={value}>
       {children}
     </ProjectContext.Provider>
   );
