@@ -2,6 +2,7 @@
 
 Pre-requisites:
 * [Node.js](https://github.com/nvm-sh/nvm)
+* [Docker](https://docs.docker.com/install/)
 
 Clone repository and `cd` to backend.
 
@@ -14,6 +15,12 @@ Install dependencies.
 
 ```bash
 npm install
+```
+
+Run development database container in the background.
+
+```bash
+docker run -d -p 27017:27017 --name mongodb mongo
 ```
 
 Run backend.
