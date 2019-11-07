@@ -46,10 +46,7 @@ usersRouter.put('/:id', async (request, response, next) => {
 usersRouter.delete('/:id', async (request, response, next) => {
   try {
     const deletedUser = await User.findByIdAndDelete(request.params.id);
-    console.log(deletedUser);
-    response.json(JSON.stringify(
-      { message: 'User deleted', id: deletedUser._id }
-    ));
+    response.json(deletedUser.toJSON());
   } catch (exception) {
     next(exception);
   }
