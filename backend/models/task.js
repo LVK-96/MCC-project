@@ -1,9 +1,22 @@
 const mongoose = require('mongoose');
-
-mongoose.set('useFindAndModify', false);
+// Is this needed? mongoose.set('useFindAndModify', false);
 
 const taskSchema = mongoose.Schema({
   name: String,
+  project: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project'
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'on-going', 'completed'],
+  },
+  asignees:[
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
 });
 
 taskSchema.set('toJSON', {

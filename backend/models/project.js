@@ -1,9 +1,27 @@
 const mongoose = require('mongoose');
-
-mongoose.set('useFindAndModify', false);
+// Is this needed? mongoose.set('useFindAndModify', false);
 
 const projectSchema = mongoose.Schema({
   name: String,
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  members: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }
+  ],
+  tasks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Task',
+    }
+  ],
+  files: [{ type: String }], // Attatchment urls
+  images: [{ type: String }], // Image urls
 });
 
 projectSchema.set('toJSON', {
