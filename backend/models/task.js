@@ -2,10 +2,14 @@ const mongoose = require('mongoose');
 // Is this needed? mongoose.set('useFindAndModify', false);
 
 const taskSchema = mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+  },
   project: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Project'
+    ref: 'Project',
+    required: true,
   },
   status: {
     type: String,
@@ -27,4 +31,4 @@ taskSchema.set('toJSON', {
   },
 });
 
-module.exports = mongoose.model('Project', taskSchema);
+module.exports = mongoose.model('Task', taskSchema);
