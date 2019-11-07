@@ -28,3 +28,5 @@ Run backend.
 ```bash
 npm run watch
 ```
+##
+[Postman collection for testing API](https://app.getpostman.com/run-collection/9c65abaf1605003814e2)
