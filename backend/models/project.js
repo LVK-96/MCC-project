@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 // Is this needed? mongoose.set('useFindAndModify', false);
 
 const projectSchema = mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
