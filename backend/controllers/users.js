@@ -1,12 +1,13 @@
 const usersRouter = require('express').Router();
+let { db } = require('../utils/config');
 const User = require('../models/user');
 
 usersRouter.post('/', async (request, response, next) => {
   try {
     const { body } = request;
-    const user = new User({ ...body });
-    let savedUser = await user.save();
-    response.status(201).json(savedUser.toJSON());
+    const user = new User(body);
+    await db.collection('users').doc(user.id).set({ ...user });
+    response.status(201).json(user);
   } catch (exception) {
     next(exception);
   }
@@ -14,8 +15,13 @@ usersRouter.post('/', async (request, response, next) => {
 
 usersRouter.get('/', async (request, response, next) => {
   try {
-    const users = await User.find({});
-    response.json(users.map(u => u.toJSON()));
+    const collection = await db.collection('users').get();
+    const docs = collection.docs;
+    let users = [];
+    for (let doc of docs) {
+      users.push(doc.data());
+    }
+    response.json(users);
   } catch (exception) {
     next(exception);
   }
@@ -23,21 +29,22 @@ usersRouter.get('/', async (request, response, next) => {
 
 usersRouter.get('/:id', async (request, response, next) => {
   try {
-    const user = await User.findById(request.params.id);
-    response.json(user.toJSON());
+    const document = await db.collection('users').doc(request.params.id).get();
+    const user = document.data();
+    response.json(user);
   } catch (exception) {
     next(exception);
   }
 });
 
-usersRouter.put('/:id', async (request, response, next) => {
+usersRouter.post('/:id', async (request, response, next) => {
   try {
     const { body } = request;
-    const user = { ...body };
-    let updatedUser = await User.findByIdAndUpdate(
-      request.params.id, user, { new: true }
-    );
-    response.json(updatedUser.toJSON());
+    const document = await db.collection('users').doc(request.params.id).get();
+    let user = document.data();
+    user.email = body.email;
+    await db.collection('users').doc(request.params.id).set(user);
+    response.json(user);
   } catch (exception) {
     next(exception);
   }
@@ -45,8 +52,8 @@ usersRouter.put('/:id', async (request, response, next) => {
 
 usersRouter.delete('/:id', async (request, response, next) => {
   try {
-    const deletedUser = await User.findByIdAndDelete(request.params.id);
-    response.json(deletedUser.toJSON());
+    await db.collection('users').doc(request.params.id).delete();
+    response.json({ message: 'User deleted' });
   } catch (exception) {
     next(exception);
   }
