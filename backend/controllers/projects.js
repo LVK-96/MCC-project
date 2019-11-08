@@ -1,5 +1,6 @@
 const projectsRouter = require('express').Router();
 const Project = require('../models/project');
+const Task = require('../models/task');
 let { db } = require('../utils/config');
 
 projectsRouter.post('/', async (request, response, next) => {
@@ -122,6 +123,86 @@ projectsRouter.delete('/:id', async (request, response, next) => {
   try {
     await db.collection('projects').doc(request.params.id).delete();
     response.json({ message: 'Project deleted' });
+  } catch (exception) {
+    next(exception);
+  }
+});
+
+projectsRouter.post('/:id/tasks', async (request, response, next) => {
+  try {
+    const { body } = request;
+    const task = new Task(body);
+    await db.collection('projects').doc(request.params.id).collection('tasks')
+      .doc(task.id).set({ ...task });
+    response.json(task);
+  } catch (exception) {
+    next(exception);
+  }
+});
+
+projectsRouter.get('/:id/tasks', async (request, response, next) => {
+  try {
+    const collection = await db.collection('projects').doc(request.params.id).collection('tasks').get();
+    const docs = collection.docs;
+    let tasks = [];
+    for (let doc of docs) {
+      tasks.push(doc.data());
+    }
+    response.json(tasks);
+  } catch (exception) {
+    next(exception);
+  }
+});
+
+projectsRouter.get('/:project_id/tasks/:task_id', async (request, response, next) => {
+  try {
+    const document = await db.collection('projects').doc(request.params.project_id)
+      .collection('tasks').doc(request.params.task_id).get();
+    const task = document.data();
+    response.json(task);
+  } catch (exception) {
+    next(exception);
+  }
+});
+
+projectsRouter.post('/:project_id/tasks/:task_id/status', async (request, response, next) => {
+  try {
+    const { body } = request;
+    const document = await db.collection('projects').doc(request.params.project_id)
+      .collection('tasks').doc(request.params.task_id).get();
+    let task = document.data();
+    task.status = body.status;
+    await db.collection('projects').doc(request.params.project_id)
+      .collection('tasks').doc(request.params.task_id).set({ ...task });
+    response.json(task);
+  } catch (exception) {
+    next(exception);
+  }
+});
+
+projectsRouter.post('/:project_id/tasks/:task_id/asignees', async (request, response, next) => {
+  try {
+    const { body } = request;
+    for (let user of body.users) {
+      await db.collection('projects').doc(request.params.project_id)
+        .collection('tasks').doc(request.params.task_id).collection('asignees').doc(user).set({ user });
+    }
+    response.json({ message: 'Task assigned', users: body.users });
+  } catch (exception) {
+    next(exception);
+  }
+});
+
+projectsRouter.get('/:project_id/tasks/:task_id/asignees', async (request, response, next) => {
+  try {
+    const collection = await db.collection('projects').doc(request.params.project_id)
+      .collection('tasks').doc(request.params.task_id).collection('asignees').get();
+    const docs = collection.docs;
+    let asignees = [];
+    for (let doc of docs) {
+      asignees.push(doc.data());
+    }
+    response.json(asignees);
   } catch (exception) {
     next(exception);
   }

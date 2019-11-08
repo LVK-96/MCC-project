@@ -1,34 +1,11 @@
-const mongoose = require('mongoose');
-// Is this needed? mongoose.set('useFindAndModify', false);
+const uniqid = require('uniqid');
 
-const taskSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  project: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Project',
-    required: true,
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'on-going', 'completed'],
-  },
-  asignees:[
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  ],
-});
+class Task {
+  constructor(params) {
+    this.id = uniqid();
+    this.name = params.name;
+    this.status = 'Pending';
+  }
+}
 
-taskSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-module.exports = mongoose.model('Task', taskSchema);
+module.exports = Task;
