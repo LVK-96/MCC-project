@@ -2,6 +2,7 @@
 
 Pre-requisites:
 * [Node.js](https://github.com/nvm-sh/nvm)
+* [Firebase CLI](https://firebase.google.com/docs/cli/)
 
 Clone repository and `cd` to backend.
 
@@ -19,5 +20,10 @@ npm install
 Run backend.
 
 ```bash
-npm run watch
+# Starts Cloud Firestore emulator and dev server
+npm run start:development
 ```
+
+##
+
+[Postman collection for testing API](https://app.getpostman.com/run-collection/9c65abaf1605003814e2)

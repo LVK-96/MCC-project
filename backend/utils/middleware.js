@@ -1,10 +1,11 @@
-const errorHandler = (error, response, next) => {
+const errorHandler = (error, response) => {
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' });
-  } if (error.name === 'ValidationError') {
-    return response.status(400).json({ error: error.message });
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: 'validation error' });
+  } else {
+    return response.status(400).json({ error: 'unexpected error' });
   }
-  next(error);
 };
 
 module.exports = { errorHandler };
