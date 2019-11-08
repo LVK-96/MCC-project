@@ -2,49 +2,47 @@ import { StyleSheet } from 'react-native';
 import colors from '../../values/colors';
 import fontSizes from '../../values/fontSizes';
 
+const buttonCommon = {
+  width: '100%',
+  paddingHorizontal: '25%',
+  marginVertical: 10,
+};
+
 const styles = StyleSheet.create({
   header:{
     backgroundColor: colors.corporateBlue,
-    height:200,
+    height: 200,
   },
   avatar: {
     width: 130,
     height: 130,
-    borderRadius: 63,
-    borderWidth: 4,
-    borderColor: "white",
-    marginBottom:10,
+    marginBottom: 10,
     alignSelf:'center',
     position: 'absolute',
-    marginTop:130
+    marginTop: 100
   },
   body:{
-    marginTop:40,
+    marginTop: 20,
   },
   bodyContent: {
     flex: 1,
     alignItems: 'center',
-    padding:30,
+    padding: 30,
   },
   name:{
-    fontSize:28,
+    fontSize: 32,
     color: colors.gray,
-    fontWeight: "600"
+    fontWeight: "600",
+    marginBottom: 10,
   },
-  buttonContainer: {
-    marginTop:10,
-    height:45,
-    flexDirection: 'row',
+  profileButton: {
+    ...buttonCommon,
+    height: 45,
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom:20,
-    width:250,
-    borderRadius:30,
-    backgroundColor: colors.corporateBlue,
+    marginBottom: 10,
+    borderRadius: 30,
   },
-  buttonText: {
-    color: '#ffffff',
-  }
 });
 
 export default styles;

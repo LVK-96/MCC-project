@@ -3,8 +3,8 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity
 } from 'react-native';
+import Button from '../Button';
 import styles from './styles';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
 
@@ -17,14 +17,10 @@ function ProfileView() {
           <Image style={styles.avatar} source={{uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'}}/>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
-              <Text style={styles.name}>{authenticationContext.user.displayName}</Text>
-              <TouchableOpacity style={styles.buttonContainer}>
-                <Text style={styles.buttonText}>Logout</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonContainer}>
-                <Text style={styles.buttonText}>Delete profile</Text>
-              </TouchableOpacity>
+              <Text style={styles.name}>User</Text>
             </View>
+            <Button title='Logout' style={styles.profileButton} />
+            <Button title='Delete profile' style={styles.profileButton} color={'red'} />
         </View>
       </View>
     );

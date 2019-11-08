@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,8 +10,16 @@ import styles from './styles';
 import colors from '../../values/colors';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
 
-function AuthenticationView(props) {
+function AuthenticationView({
+  navigation,
+}) {
   const authenticationContext = useContext(AuthenticationContext);
+  /*Change to Main screen if we have logged in*/
+  useEffect(() => {
+    if (authenticationContext && navigation) {
+      navigation.navigate("Main");
+    }
+  });
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  SafeAreaView,
   StatusBar,
 } from 'react-native';
 import AppView from './app/views/AppView';
@@ -8,7 +9,9 @@ function App() {
   return (
     <>
       <StatusBar barStyle="light-content"/>
-      <AppView/>
+      <SafeAreaView style={{ flex: 1 }}>
+        <AppView/>
+      </SafeAreaView>
     </>
   );
 }
