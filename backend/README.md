@@ -20,7 +20,7 @@ npm install
 Run backend.
 
 ```bash
-# Starts Firebase Cloudstore emulator and dev server
+# Starts Cloud Firestore emulator and dev server
 npm run start:development
 ```
 
