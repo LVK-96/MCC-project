@@ -1,13 +1,17 @@
 require('dotenv').config();
-
-let { DATABASE_URI } = process.env;
-if (process.env.NODE_ENV !== 'production') {
-  DATABASE_URI = process.env.LOCAL_DB_URI;
-}
+const admin = require('firebase-admin');
 
 const { PORT } = process.env;
+const { SERVICE_ACCOUNT_PATH } = process.env;
+
+const serviceAccount = require(SERVICE_ACCOUNT_PATH);
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+let db = admin.firestore();
 
 module.exports = {
+  db,
   PORT,
-  DATABASE_URI,
 };
