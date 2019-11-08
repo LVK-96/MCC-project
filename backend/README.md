@@ -2,7 +2,7 @@
 
 Pre-requisites:
 * [Node.js](https://github.com/nvm-sh/nvm)
-* [Docker](https://docs.docker.com/install/)
+* [Firebase CLI](https://firebase.google.com/docs/cli/)
 
 Clone repository and `cd` to backend.
 
@@ -17,16 +17,13 @@ Install dependencies.
 npm install
 ```
 
-Run development database container in the background.
-
-```bash
-docker run -d -p 27017:27017 --name mongodb mongo
-```
-
 Run backend.
 
 ```bash
-npm run watch
+# Starts Firebase Cloudstore emulator and dev server
+npm run start:development
 ```
+
 ##
+
 [Postman collection for testing API](https://app.getpostman.com/run-collection/9c65abaf1605003814e2)
