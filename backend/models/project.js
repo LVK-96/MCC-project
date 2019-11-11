@@ -5,6 +5,7 @@ class Project {
     this.id = uniqid();
     this.name = params.name;
     this.owner = params.owner;
+    this.tags = params.tags;
   }
 }
 
