@@ -2,10 +2,22 @@ const uniqid = require('uniqid');
 
 class Project {
   constructor(params) {
+    console.log(params);
     this.id = uniqid();
     this.name = params.name;
+    this.description = params.description;
+    this.deadline = params.deadline;
+    this.favorite = false;
     this.owner = params.owner;
-    this.tags = params.tags;
+    this.created = this.dateRegex(new Date().toISOString());
+    this.modified = this.created;
+    this.keywords = params.keywords;
+  }
+
+  dateRegex(ISODateString) {
+    console.log(ISODateString);
+    const regex = /.+?(?=T)/;
+    return ISODateString.match(regex).toString();
   }
 }
 
