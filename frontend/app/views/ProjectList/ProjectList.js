@@ -13,7 +13,6 @@ import {
   compareDates,
   dateIsWithinAWeek,
 } from '../../util';
-import Button from '../Button';
 import ProjectPreview from '../ProjectPreview';
 import colors from '../../values/colors';
 import styles from './styles';
@@ -80,7 +79,6 @@ function ProjectList({
         {headerText}
       </Text>
       {contentArea}
-      <Button title='Profile' onPress={viewProfile} />
     </View>
   );
 }
