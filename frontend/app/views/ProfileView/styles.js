@@ -13,13 +13,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.corporateBlue,
     height: 200,
   },
+  avatarContainer: {
+    alignSelf:'center',
+    position: 'absolute',
+    marginTop: 100,
+  },
   avatar: {
     width: 130,
     height: 130,
-    marginBottom: 10,
-    alignSelf:'center',
-    position: 'absolute',
-    marginTop: 100
   },
   body:{
     marginTop: 20,
