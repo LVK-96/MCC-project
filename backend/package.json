@@ -6,7 +6,7 @@
   "scripts": {
     "start:production": "NODE_ENV=production node index.js",
     "emulator-db": "firebase emulators:start --only firestore",
-    "watch": "NODE_ENV=development FIRESTORE_EMULATOR_HOST=localhost:8080 nodemon index.js",
+    "watch": "NODE_ENV=development FIRESTORE_EMULATOR_HOST=localhost:9080 nodemon index.js",
     "yrjis": "sleep 2 && npm run watch",
     "start:development": "npm-run-all -p emulator-db yrjis",
     "lint": "eslint .",

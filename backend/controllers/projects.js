@@ -28,6 +28,28 @@ projectsRouter.get('/', async (request, response, next) => {
   }
 });
 
+projectsRouter.get('/search', async (request, response, next) => {
+  try {
+    const { query } = request;
+    let collection;
+    if (query.tags) {
+      collection = await db.collection('projects')
+        .where('name', '==', query.name).where('tags', 'array-contains-any', [query.tags]).get();
+    } else {
+      collection = await db.collection('projects')
+        .where('name', '==', query.name).get();
+    }
+    const docs = collection.docs;
+    let projects = [];
+    for (let doc of docs) {
+      projects.push(doc.data());
+    }
+    response.json(projects);
+  } catch (exception) {
+    next(exception);
+  }
+});
+
 projectsRouter.get('/:id', async (request, response, next) => {
   try {
     const document = await db.collection('projects').doc(request.params.id).get();
