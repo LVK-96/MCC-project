@@ -50,6 +50,8 @@ function AuthenticationView({
           "Please recheck your credentials.",
           [{ text: 'OK', onPress: () => {}}],
         ));
+      // TODO: only navigate on successfull login
+      props.navigation.replace('Profile');
     } else {
       authenticationContext
         .signup({ email, password, displayName })

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
-import ProjectNavigator from '../../navigators/ProjectNavigator';
+import MainNavigator from '../../navigators/MainNavigator';
 
 /*A component for everything in the app aside from the authentication view*/
 function MainScreen({
@@ -14,10 +14,10 @@ function MainScreen({
     }
   });
   return (
-    <ProjectNavigator navigation={navigation}/>
+    <MainNavigator navigation={navigation}/>
   );
 }
 
-MainScreen.router = ProjectNavigator.router;
+MainScreen.router = MainNavigator.router;
 
 export default MainScreen;

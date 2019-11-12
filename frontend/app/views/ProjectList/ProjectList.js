@@ -50,6 +50,13 @@ function ProjectList({
       navigation.navigate("Project");
     }
   };
+
+  const viewProfile = async (projectId) => {
+    if (navigation) {
+      navigation.navigate("Profile");
+    }
+  };
+
   const contentArea = selectedProjects ? (
     <ScrollView style={styles.projectsContainer}>
       {selectedProjects.map(project =>
@@ -65,6 +72,7 @@ function ProjectList({
       <ActivityIndicator size="large" color={colors.corporateBlue}/>
     </View>
   );
+
   return (
     <View style={styles.container}>
       <Text>
