@@ -9,7 +9,6 @@ import ProfileView from '../views/ProfileView/';
 export default createStackNavigator({
   ProjectList: ProjectListNavigator,
   Project: ProjectScreenNavigator,
-  Profile: ProfileView,
 }, {
   headerMode: 'none',
 });

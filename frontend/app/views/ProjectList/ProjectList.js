@@ -51,12 +51,6 @@ function ProjectList({
     }
   };
 
-  const viewProfile = async (projectId) => {
-    if (navigation) {
-      navigation.navigate("Profile");
-    }
-  };
-
   const contentArea = selectedProjects ? (
     <ScrollView style={styles.projectsContainer}>
       {selectedProjects.map(project =>
