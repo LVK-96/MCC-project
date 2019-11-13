@@ -48,7 +48,7 @@ function ProjectFormView({ navigation }) {
     };
 
     const handleKeywordAdding = async () => {
-        if (keywords.length < 3) {
+        if (keywordInput.length > 0 && keywords.length < 3) {
             setKeywords(prevState => [keywordInput, ...prevState]);
         }
         setKeywordInput('');
