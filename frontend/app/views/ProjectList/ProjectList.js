@@ -4,6 +4,7 @@ import {
   Text,
   ActivityIndicator,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import {
   withNavigation,
@@ -16,9 +17,7 @@ import {
 import ProjectPreview from '../ProjectPreview';
 import colors from '../../values/colors';
 import styles from './styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import Button from '../Button';
-import Icon from 'react-native-vector-icons/AntDesign';
+import PlusIcon from '../PlusIcon';
 
 /*A component that shows a list of previews of projects.
   The filter prop selects whether to filter the projects by date,
@@ -77,9 +76,7 @@ function ProjectList({
       </Text>
       {contentArea}
       <TouchableOpacity onPress={() => navigation.navigate('ProjectForm')}>
-        <Icon name="pluscircle"
-          size={50}
-          color="blue"/>
+        <PlusIcon />
       </TouchableOpacity>
     </View>
   );
