@@ -6,6 +6,7 @@ import {
     DatePickerAndroid,
     TouchableOpacity,
     Image,
+    Alert
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import {
@@ -85,6 +86,10 @@ function ProjectFormView({ navigation }) {
         // If project was created succesfully, go back to projects view.
         if (creationSuccessful) {
             navigation.navigate('ProjectList');
+        } else {
+            Alert.alert(
+                'Project creation failed', ''
+            );
         }
     };
 
