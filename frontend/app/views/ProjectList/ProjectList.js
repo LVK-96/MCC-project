@@ -75,7 +75,8 @@ function ProjectList({
         {headerText}
       </Text>
       {contentArea}
-      <TouchableOpacity onPress={() => navigation.navigate('ProjectForm')}>
+      <TouchableOpacity onPress={() => navigation.navigate('ProjectForm')}
+        style={styles.createProjectButtonContainer}>
         <PlusIcon />
       </TouchableOpacity>
     </View>
