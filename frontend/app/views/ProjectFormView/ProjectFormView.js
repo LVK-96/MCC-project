@@ -10,6 +10,7 @@ import {
 import ImagePicker from 'react-native-image-picker';
 import { Header } from 'react-native-elements';
 import styles from './styles';
+import projectService from '../../services/projectService';
 
 // Component that renders the project form for creating a new project.
 function ProjectFormView() {
@@ -29,7 +30,7 @@ function ProjectFormView() {
                 date.setFullYear(year);
                 date.setMonth(month);
                 date.setDate(day);
-                setDeadline(date.toISOString());
+                setDeadline(date.toString());
             }
         } catch (error) {
             console.log('Error selecting deadline date', error);
@@ -59,12 +60,29 @@ function ProjectFormView() {
         });
     };
 
+    const handleSavePress = async () => {
+        const project = {
+            iconSource,
+            name,
+            description,
+            deadline,
+            keywords,
+        };
+
+        await projectService.createProject(project);
+        
+    };
+
     return (
         <View style={styles.outerContainer}>
             <Header
                 leftComponent={{ text: 'X', style: { color: '#fff' } }}
                 centerComponent={{ text: 'New project', style: { color: '#fff', left: 0 } }}
-                rightComponent={{ text: 'SAVE', style: { color: '#fff' } }}
+                rightComponent={
+                    <TouchableOpacity onPress={handleSavePress}>
+                        <Text>SAVE</Text>
+                    </TouchableOpacity>
+                }
             />
             <View style={styles.container}>
                 <View>
