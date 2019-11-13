@@ -16,7 +16,7 @@ class ProjectService {
 
 	createProject = async (project) => {
 		try {
-			console.log('Creating project', project);
+			console.log('Creating project', project.name);
 			// const response = await axios.post(baseUrl);
 			// return response.data;
 			project.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
