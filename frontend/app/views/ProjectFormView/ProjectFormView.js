@@ -24,6 +24,7 @@ function ProjectFormView() {
 
     const handleDateSelection = async () => {
         try {
+            // Get user inputted date from Android datepicker.
             const { action, year, month, day } = await DatePickerAndroid.open();
             if (action !== DatePickerAndroid.dismissedAction) {
                 const date = new Date();
@@ -38,7 +39,9 @@ function ProjectFormView() {
     };
 
     const handleKeywordAdding = async () => {
-        setKeywords(prevState => prevState.length < 3 ? [keywordInput, ...prevState] : prevState);
+        if (keywords.length < 3) {
+            setKeywords(prevState => [keywordInput, ...prevState]);
+        }
         setKeywordInput('');
     };
 
@@ -69,8 +72,11 @@ function ProjectFormView() {
             keywords,
         };
 
-        await projectService.createProject(project);
-        
+        const creationSuccessful = await projectService.createProject(project);
+        // If project was created succesfully, go back to projects view.
+        if (creationSuccessful) {
+
+        }
     };
 
     return (
