@@ -5,13 +5,18 @@ import {
     TextInput,
     DatePickerAndroid,
     TouchableOpacity,
+    Image,
 } from 'react-native';
+import ImagePicker from 'react-native-image-picker';
 import styles from './styles';
 
+// Component that renders the project form for creating a new project.
 function ProjectFormView() {
+    // State.
+    const [iconSource, setIconSource] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [deadline, setDeadline] = useState('Press to select date.');
+    const [deadline, setDeadline] = useState('Press to select deadline date.');
     const [keywordInput, setKeywordInput] = useState('');
     const [keywords, setKeywords] = useState([]);
 
@@ -23,7 +28,7 @@ function ProjectFormView() {
                 date.setFullYear(year);
                 date.setMonth(month);
                 date.setDate(day);
-                setDeadline(date);
+                setDeadline(date.toISOString());
             }
         } catch (error) {
             console.log('Error selecting deadline date', error);
@@ -35,8 +40,36 @@ function ProjectFormView() {
         setKeywordInput('');
     };
 
+    const handleIconPress = () => {
+        const options = {
+            title: 'Select project icon',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        ImagePicker.launchImageLibrary(options, response => {
+            if (!response.didCancel && !response.error) {
+                setIconSource(response.uri);
+            } else {
+                console.log('Image picking failed: ', response);
+            }
+        });
+    };
+
     return (
         <View style={styles.container}>
+            <View>
+                <TouchableOpacity onPress={handleIconPress}>
+                    <Image
+                        style={styles.icon}
+                        source={{
+                            uri:
+                            'https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png'}}/>
+                </TouchableOpacity>
+                <Text>Icon</Text>
+            </View>
             <TextInput
                 value={name}
                 placeholder="Name"
@@ -50,7 +83,7 @@ function ProjectFormView() {
                 <View pointerEvents={'none'}>
                     <TextInput
                         editable={false}
-                        value={deadline.toString()} />
+                        value={deadline} />
                 </View>
             </TouchableOpacity>
             <TextInput
