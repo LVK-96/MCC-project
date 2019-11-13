@@ -8,7 +8,7 @@ import {
     Image,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
-import { 
+import {
     Header ,
 } from 'react-native-elements';
 import {
