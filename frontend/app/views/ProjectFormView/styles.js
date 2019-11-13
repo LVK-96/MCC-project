@@ -7,6 +7,9 @@ export default StyleSheet.create({
         padding: 20,
     },
     keyword: {
-        
-    }
+    },
+    icon: {
+        width: 100,
+        height: 100,
+    },
 });
