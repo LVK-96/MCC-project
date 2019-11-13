@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-    container: {
+    outerContainer: {
         flex: 1,
+    },
+    container: {
         flexDirection: 'column',
         padding: 20,
     },
