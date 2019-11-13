@@ -65,7 +65,7 @@ function ProjectFormView() {
                     <Image
                         style={styles.icon}
                         source={{
-                            uri:
+                            uri: iconSource ? iconSource :
                             'https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png'}}/>
                 </TouchableOpacity>
                 <Text>Icon</Text>
