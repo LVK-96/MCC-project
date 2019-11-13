@@ -87,7 +87,7 @@ function ProjectProvider({ children }) {
   // projects context.
   const createProject = async (project) => {
     try {
-      const created = projectsService.createProject(project);
+      const created = await projectsService.createProject(project);
       setProjects(prevProjects => [created, ...prevProjects]);
     } catch (error) {
 
