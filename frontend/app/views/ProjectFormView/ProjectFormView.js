@@ -8,6 +8,7 @@ import {
     Image,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import { Header } from 'react-native-elements';
 import styles from './styles';
 
 // Component that renders the project form for creating a new project.
@@ -59,45 +60,53 @@ function ProjectFormView() {
     };
 
     return (
-        <View style={styles.container}>
-            <View>
-                <TouchableOpacity onPress={handleIconPress}>
-                    <Image
-                        style={styles.icon}
-                        source={{
-                            uri: iconSource ? iconSource :
-                            'https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png'}}/>
-                </TouchableOpacity>
-                <Text>Icon</Text>
-            </View>
-            <TextInput
-                value={name}
-                placeholder="Name"
-                onChangeText={text => setName(text)} />
-            <TextInput
-                value={description}
-                placeholder="Description"
-                onChangeText={text => setDescription(text)} />
-            <Text>Deadline</Text>
-            <TouchableOpacity onPress={handleDateSelection}>
-                <View pointerEvents={'none'}>
-                    <TextInput
-                        editable={false}
-                        value={deadline} />
+        <View style={styles.outerContainer}>
+            <Header
+                leftComponent={{ text: 'X', style: { color: '#fff' } }}
+                centerComponent={{ text: 'New project', style: { color: '#fff', left: 0 } }}
+                rightComponent={{ text: 'SAVE', style: { color: '#fff' } }}
+            />
+            <View style={styles.container}>
+                <View>
+                    <TouchableOpacity onPress={handleIconPress}>
+                        <Image
+                            style={styles.icon}
+                            source={{
+                                uri: iconSource ? iconSource :
+                                    'https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png'
+                            }} />
+                    </TouchableOpacity>
+                    <Text>Icon</Text>
                 </View>
-            </TouchableOpacity>
-            <TextInput
-                value={keywordInput}
-                onChangeText={text => setKeywordInput(text)}
-                onSubmitEditing={handleKeywordAdding}
-                placeholder="Add keyword"/>
-            {keywords.map((keyword, index) =>
-                <Text
-                    key={index}
-                    style={styles.keyword}>
-                    {keyword}
-                </Text>
-            )}
+                <TextInput
+                    value={name}
+                    placeholder="Name"
+                    onChangeText={text => setName(text)} />
+                <TextInput
+                    value={description}
+                    placeholder="Description"
+                    onChangeText={text => setDescription(text)} />
+                <Text>Deadline</Text>
+                <TouchableOpacity onPress={handleDateSelection}>
+                    <View pointerEvents={'none'}>
+                        <TextInput
+                            editable={false}
+                            value={deadline} />
+                    </View>
+                </TouchableOpacity>
+                <TextInput
+                    value={keywordInput}
+                    onChangeText={text => setKeywordInput(text)}
+                    onSubmitEditing={handleKeywordAdding}
+                    placeholder="Add keyword" />
+                {keywords.map((keyword, index) =>
+                    <Text
+                        key={index}
+                        style={styles.keyword}>
+                        {keyword}
+                    </Text>
+                )}
+            </View>
         </View>
     );
 }
