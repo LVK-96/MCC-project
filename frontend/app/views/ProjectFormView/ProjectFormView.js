@@ -10,13 +10,14 @@ import {
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import {
-    Header ,
+    Header,
 } from 'react-native-elements';
 import {
     withNavigation,
 } from 'react-navigation';
 import styles from './styles';
 import ProjectContext from '../../contexts/ProjectContext';
+import formValidators from '../../util/formValidators';
 
 // Component that renders the project form for creating a new project.
 function ProjectFormView({ navigation }) {
@@ -82,14 +83,17 @@ function ProjectFormView({ navigation }) {
             favorite: true,
         };
 
-        const creationSuccessful = await context.createProject(project);
-        // If project was created succesfully, go back to projects view.
-        if (creationSuccessful) {
-            navigation.navigate('ProjectList');
-        } else {
-            Alert.alert(
-                'Project creation failed', ''
-            );
+        // Project information is valid.
+        if (formValidators.projectIsValid(project)) {
+            const creationSuccessful = await context.createProject(project);
+            // If project was created succesfully, go back to projects view.
+            if (creationSuccessful) {
+                navigation.navigate('ProjectList');
+            } else {
+                Alert.alert(
+                    'Project creation failed', ''
+                );
+            }
         }
     };
 
