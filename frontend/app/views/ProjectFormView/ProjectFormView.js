@@ -6,7 +6,7 @@ import {
     DatePickerAndroid,
     TouchableOpacity,
     Image,
-    Alert,
+    Alert
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import {
@@ -15,7 +15,6 @@ import {
 import {
     withNavigation,
 } from 'react-navigation';
-import Icon from 'react-native-vector-icons/AntDesign';
 import styles from './styles';
 import ProjectContext from '../../contexts/ProjectContext';
 import formValidators from '../../util/formValidators';
@@ -137,7 +136,6 @@ function ProjectFormView({ navigation }) {
                             value={deadline} />
                     </View>
                 </TouchableOpacity>
-                <Icon name="minuscircleo" color="green" size={100} />
                 <TextInput
                     value={keywordInput}
                     onChangeText={text => setKeywordInput(text)}
