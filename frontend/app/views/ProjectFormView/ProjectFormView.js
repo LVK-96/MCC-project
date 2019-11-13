@@ -58,8 +58,10 @@ function ProjectFormView() {
                 onChangeText={text => setKeywordInput(text)}
                 onSubmitEditing={handleKeywordAdding}
                 placeholder="Add keyword"/>
-            {keywords.map(keyword =>
-                <Text style={styles.keyword}>
+            {keywords.map((keyword, index) =>
+                <Text
+                    key={index}
+                    style={styles.keyword}>
                     {keyword}
                 </Text>
             )}
