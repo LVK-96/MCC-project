@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ProjectContext from '../contexts/ProjectContext';
-import projectsService from '../services/projects';
+import projectsService from '../services/projectService';
 
 const mockprojects = [
   {
@@ -83,11 +83,23 @@ function ProjectProvider({ children }) {
     }
   };
 
+  // Make call to back-end and add the newly created project to local
+  // projects context.
+  const createProject = async (project) => {
+    try {
+      const created = projectsService.createProject(project);
+      setProjects(prevProjects => [created, ...prevProjects]);
+    } catch (error) {
+
+    }
+  };
+
   const [selectedProject] = allWithId(selectedProjectId);
   const value = {
     projects,
     selectProject,
     selectedProject,
+    createProject,
   };
   return (
     <ProjectContext.Provider value={value}>
