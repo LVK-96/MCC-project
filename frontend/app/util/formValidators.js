@@ -2,7 +2,7 @@
 const projectIsValid = (project) => {
     return project.name.length > 0
         && project.description.length > 0
-        && project.keywords.length > 0
+        && project.keywords.length >= 0
         && project.keywords.length <= 3;
 }
 
