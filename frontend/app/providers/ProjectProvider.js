@@ -84,13 +84,15 @@ function ProjectProvider({ children }) {
   };
 
   // Make call to back-end and add the newly created project to local
-  // projects context.
+  // projects context. Returns whether creation was successful.
   const createProject = async (project) => {
     try {
       const created = await projectsService.createProject(project);
       setProjects(prevProjects => [created, ...prevProjects]);
+      return true;
     } catch (error) {
-
+      console.log('Error', error);
+      return false;
     }
   };
 
