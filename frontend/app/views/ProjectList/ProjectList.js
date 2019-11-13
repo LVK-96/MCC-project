@@ -18,6 +18,7 @@ import colors from '../../values/colors';
 import styles from './styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Button from '../Button';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 /*A component that shows a list of previews of projects.
   The filter prop selects whether to filter the projects by date,
@@ -75,9 +76,10 @@ function ProjectList({
         {headerText}
       </Text>
       {contentArea}
-      <TouchableOpacity>
-        <Button title={'+ New project'}
-          onPress={() => navigation.navigate('ProjectForm')}/>
+      <TouchableOpacity onPress={() => navigation.navigate('ProjectForm')}>
+        <Icon name="pluscircle"
+          size={50}
+          color="blue"/>
       </TouchableOpacity>
     </View>
   );
