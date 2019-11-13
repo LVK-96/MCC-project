@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     View,
     Text,
@@ -8,12 +8,17 @@ import {
     Image,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
-import { Header } from 'react-native-elements';
+import { 
+    Header ,
+} from 'react-native-elements';
+import {
+    withNavigation,
+} from 'react-navigation';
 import styles from './styles';
-import projectService from '../../services/projectService';
+import ProjectContext from '../../contexts/ProjectContext';
 
 // Component that renders the project form for creating a new project.
-function ProjectFormView() {
+function ProjectFormView({ navigation }) {
     // State.
     const [iconSource, setIconSource] = useState('');
     const [name, setName] = useState('');
@@ -21,6 +26,9 @@ function ProjectFormView() {
     const [deadline, setDeadline] = useState('Press to select deadline date.');
     const [keywordInput, setKeywordInput] = useState('');
     const [keywords, setKeywords] = useState([]);
+
+    // We create the project through the project provider.
+    const context = useContext(ProjectContext);
 
     const handleDateSelection = async () => {
         try {
@@ -70,12 +78,13 @@ function ProjectFormView() {
             description,
             deadline,
             keywords,
+            favorite: true,
         };
 
-        const creationSuccessful = await projectService.createProject(project);
+        const creationSuccessful = await context.createProject(project);
         // If project was created succesfully, go back to projects view.
         if (creationSuccessful) {
-
+            navigation.navigate('ProjectList');
         }
     };
 
@@ -135,4 +144,4 @@ function ProjectFormView() {
     );
 }
 
-export default ProjectFormView;
+export default withNavigation(ProjectFormView);
