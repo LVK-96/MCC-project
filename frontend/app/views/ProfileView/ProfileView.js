@@ -9,7 +9,7 @@ import Button from '../Button';
 import styles from './styles';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
 
-function ProfileView() {
+function ProfileView({ navigation }) {
   const authenticationContext = useContext(AuthenticationContext);
 
   const changeProfilePic = () => {
@@ -18,6 +18,7 @@ function ProfileView() {
 
   const changePassword = () => {
     console.log('Change password');
+    navigation.navigate('ChangePassword');
   }
 
   return (
