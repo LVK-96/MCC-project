@@ -15,11 +15,13 @@ function AuthenticationView({
 }) {
   const authenticationContext = useContext(AuthenticationContext);
   /*Change to Main screen if we have logged in*/
+  /*
   useEffect(() => {
     if (authenticationContext && navigation) {
       navigation.navigate("Main");
     }
   });
+  */
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,8 +52,7 @@ function AuthenticationView({
           "Please recheck your credentials.",
           [{ text: 'OK', onPress: () => {}}],
         ));
-      // TODO: only navigate on successfull login
-      props.navigation.replace('Profile');
+      navigation.navigate('Main');
     } else {
       authenticationContext
         .signup({ email, password, displayName })
