@@ -15,11 +15,11 @@ function AuthenticationView({
 }) {
   const authenticationContext = useContext(AuthenticationContext);
   /*Change to Main screen if we have logged in*/
-  useEffect(() => {
+  /*useEffect(() => {
     if (authenticationContext && navigation) {
       navigation.navigate("Main");
     }
-  });
+  });*/
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,17 +41,18 @@ function AuthenticationView({
     out.*/
   const formFilled = (email.length > 0) && (password.length > 0) && ((form === "login") || (displayName.length > 0));
   /*Logs in or signs up based on the values currently in the fields*/
-  const performAuthentication = () => {
+  const performAuthentication = async () => {
     if (form === "login") {
-      authenticationContext
-        .login({ email, password })
-        .catch(() => Alert.alert(
-          "Failed to log in",
-          "Please recheck your credentials.",
+      try {
+        await authenticationContext.login({ email, password });
+        navigation.navigate('Profile');
+      } catch (e) {
+        Alert.alert(
+          "Login failed",
+          "Try another display name.",
           [{ text: 'OK', onPress: () => {}}],
-        ));
-      // TODO: only navigate on successfull login
-      props.navigation.replace('Profile');
+        );
+      }
     } else {
       authenticationContext
         .signup({ email, password, displayName })
@@ -60,6 +61,8 @@ function AuthenticationView({
           "Try another display name.",
           [{ text: 'OK', onPress: () => {}}],
         ));
+        //ToDo: navigate to profile on successful login
+        //ToDo: clear form on unsuccesfull login
     }
   };
   return (
