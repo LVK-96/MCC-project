@@ -25,9 +25,7 @@ function AuthenticationProvider({ children }) {
         && displayName === 'placeholder'
       ) {
         setUser({ email, displayName });
-        return {};
       } else {
-        console.log('failed to signup with mock data');
         throw new Error('Failed to sign up with mock');
       }
     } else {

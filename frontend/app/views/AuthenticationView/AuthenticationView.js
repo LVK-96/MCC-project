@@ -54,15 +54,16 @@ function AuthenticationView({
         );
       }
     } else {
-      authenticationContext
-        .signup({ email, password, displayName })
-        .catch(() => Alert.alert(
+      try {
+        await authenticationContext.signup({ email, password, displayName });
+        navigation.navigate('Profile');
+      } catch (e) {
+        Alert.alert(
           "Signup failed",
           "Try another display name.",
           [{ text: 'OK', onPress: () => {}}],
-        ));
-        //ToDo: navigate to profile on successful login
-        //ToDo: clear form on unsuccesfull login
+        );
+      }
     }
   };
   return (
