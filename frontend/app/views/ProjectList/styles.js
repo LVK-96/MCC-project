@@ -14,4 +14,8 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  createProjectButtonContainer: {
+    alignSelf: 'flex-end',
+    marginRight: 20,
+  }
 });
