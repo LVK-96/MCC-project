@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AuthenticationContext from '../contexts/AuthenticationContext';
-import auth from '@react-native-firebase/auth';
+import auth, { firebase } from '@react-native-firebase/auth'
 
 /*Encapsulates authentication logic inside one component.*/
 function AuthenticationProvider({ children }) {
@@ -15,8 +15,7 @@ function AuthenticationProvider({ children }) {
     }
   };
   const signup = async ({ email, displayName, password }) => {
-    //ToDo: set environment variables using react-native-dotenv?
-    if (__DEV__) {
+    if (false) {
       //developement build -  use mock data
       console.log('Developement');
       if (
@@ -31,6 +30,20 @@ function AuthenticationProvider({ children }) {
     } else {
       //production build - use firebase auth
       console.log('Production');
+      try {
+        console.log('waiting response form firebase auth');
+        const temp = await auth().createUserWithEmailAndPassword(email, password);
+        const temp2 = await firebase.auth().currentUser.getIdToken(true);
+        console.log(temp);
+        console.log(temp2);
+        console.log('firebase auth responded successfully?');
+      } catch (e) {
+          console.log('failed to signup with firebase');
+          throw new Error('Failed to signup with firebase auth');
+
+      }
+
+
     }
   };
   const value = {
