@@ -16,7 +16,7 @@ function AuthenticationProvider({ children }) {
     }
   };
   const signup = async ({ email, displayName, password }) => {
-    if (__DEV__) {
+    if (false) {
       //developement build -  use mock data
       console.log('Developement');
       if (
@@ -34,12 +34,9 @@ function AuthenticationProvider({ children }) {
       console.log('Production');
       try {
         console.log('waiting response from firebase auth');
-        const temp = await auth().createUserWithEmailAndPassword(email, password);
-        const temp2 = await firebase.auth().currentUser.getIdToken(true);
-        //ToDO: set uid and token into a state
-
-        console.log(temp);
-        console.log(temp2);
+        const sign = await auth().createUserWithEmailAndPassword(email, password);
+        const token = await firebase.auth().currentUser.getIdToken(true);
+        setUser({email: email, displayName:displayName, uid: sign.user.uid, token: token});
       } catch (e) {
           console.log('failed to signup with firebase');
           throw new Error('Failed to signup with firebase auth');
