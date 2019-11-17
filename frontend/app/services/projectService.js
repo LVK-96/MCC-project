@@ -16,14 +16,8 @@ const getAll = async () => {
 const createProject = async (project) => {
 	try {
 		console.log('Creating project', project.name);
-
-		// const response = await axios.post(baseUrl);
-		// return response.data;
-
-		// Remove these when back-end supports project creation.
-		project.creationDate = new Date();
-		project.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-		return project;
+		const response = await axios.post(baseUrl, project);
+		return response.data;
 	} catch (exception) {
 		console.log('Error creating project', exception);
 		throw exception;

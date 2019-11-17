@@ -8,7 +8,7 @@ function AuthenticationProvider({ children }) {
   const isLoggedIn = !!user;
   const login = async ({ email, password }) => {
     if (email === 'placeholder@email.com' && password === 'password') {
-      setUser({ email, displayName: 'placeholder' });
+      setUser({ email, displayName: 'placeholder', id: 1});
       return {};
     } else {
       throw new Error("Failed to log in");
@@ -20,7 +20,7 @@ function AuthenticationProvider({ children }) {
       && password === 'password'
       && displayName === 'placeholder'
     ) {
-      setUser({ email, displayName });
+      setUser({ email, displayName, id: 1 });
       return {};
     } else {
       throw new Error("Failed to sign up");
