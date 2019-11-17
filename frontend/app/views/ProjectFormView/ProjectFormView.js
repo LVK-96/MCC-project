@@ -18,6 +18,7 @@ import {
 import styles from './styles';
 import ProjectContext from '../../contexts/ProjectContext';
 import formValidators from '../../util/formValidators';
+import AuthenticationContext from '../../contexts/AuthenticationContext';
 
 // Component that renders the project form for creating a new project.
 function ProjectFormView({ navigation }) {
@@ -31,6 +32,7 @@ function ProjectFormView({ navigation }) {
 
     // We create the project through the project provider.
     const context = useContext(ProjectContext);
+    const authContext = useContext(AuthenticationContext);
 
     const handleDateSelection = async () => {
         try {
@@ -80,7 +82,7 @@ function ProjectFormView({ navigation }) {
             description,
             deadline,
             keywords,
-            favorite: true,
+            owner: authContext.user.id,
         };
 
         // Project information is valid.
