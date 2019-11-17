@@ -19,7 +19,9 @@ npm install
 
 ##
 
-Create a .env file similar to the .env.example file. Generate a new private key in the [firebase console](https://console.firebase.google.com/u/0/project/mcc-fall-2019-g20/overview) > settings > service accounts. Save the private key to mcc-fall-2019-g20/backend/secret. Replace the service account path with the path to your private key. Note! the service account path is relative to the folder backend/utils so the path will be '../secret/name-of-your-private-key.json'.
+Set up private key for the firebase admin sdk:
+
+Create a .env file similar to the .env.example file. Generate a new private key in the [firebase console](https://console.firebase.google.com/u/0/project/mcc-fall-2019-g20/overview) > settings > service accounts. Save the private key to mcc-fall-2019-g20/backend/secret. Replace the service account path with the path to your private key. Note! the service account path is relative to the directory backend/utils so the path will be '../secret/name-of-your-private-key.json'.
 
 ##
 
