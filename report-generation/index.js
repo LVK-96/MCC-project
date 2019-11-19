@@ -20,6 +20,12 @@ const createPDF = (body) => {
   };
 
   const printer = new PdfPrinter(fonts);
+  /*
+   *TODO: Report must contain:
+   *  - Project name
+   *  - List of members
+   *  - List of tasks sorted by date
+   */
   const docDefinition = {
     content: [
       `${body.name}`,
@@ -51,5 +57,5 @@ exports.generatePDF = async (request, response) => {
     default:
       response.status(400).end('Brokenk');
       break;
-  } 
+  }
 }
