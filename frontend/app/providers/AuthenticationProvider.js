@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import AuthenticationContext from '../contexts/AuthenticationContext';
 import auth, { firebase } from '@react-native-firebase/auth';
 import mockData from '../../mock.json';
+import projectService from '../services/projects';
 
 /*Encapsulates authentication logic inside one component.*/
 function AuthenticationProvider({ children }) {
@@ -13,14 +14,16 @@ function AuthenticationProvider({ children }) {
       console.log('developement');
       if (email === 'placeholder@email.com' && password === 'password') {
         setUser({email: 'placeholder@email.com', displayName: 'placeholder', uid: mockData.UID, token: mockData.TOKEN});
+        projectService.setToken(mockData.TOKEN);
       } else {
         throw new Error('Failed to log in');
       }
     } else {
       console.log('production');
       const sign = await auth().signInWithEmailAndPassword(email, password);
-      const token = await firebase.auth().currentUser.getIdToken(true); //does firebase track signed in users
-      setUser({email: email, uid: sign.user.uid, token: token}); //how should tokens be stored //how to retrieve displayName
+      const token = await auth().currentUser.getIdToken(true); //does firebase track signed in users
+      setUser({email: email, uid: sign.user.uid}); //how to retrieve displayName
+      projectService.setToken(token);
     }
   };
   const signup = async ({ email, displayName, password }) => {
@@ -33,7 +36,8 @@ function AuthenticationProvider({ children }) {
         && displayName === 'placeholder'
       ) {
         //ToDO: set uid and token into a state
-        setUser({email: email, displayName: displayName, uid: mockData.UID, token: mockData.TOKEN});
+        setUser({email: email, displayName: displayName, uid: mockData.UID});
+        projectService.setToken(mockData.TOKEN);
       } else {
         throw new Error('Failed to sign up with mock');
       }
@@ -44,7 +48,9 @@ function AuthenticationProvider({ children }) {
         console.log('waiting response from firebase auth');
         const sign = await auth().createUserWithEmailAndPassword(email, password);
         const token = await firebase.auth().currentUser.getIdToken(true); //does firebase track signed in users - how does signing out work
-        setUser({email: email, displayName:displayName, uid: sign.user.uid, token: token}); //how should tokens be stored?
+        setUser({email: email, displayName:displayName, uid: sign.user.uid});
+        projectService.setToken(token);
+
       } catch (e) {
           console.log('failed to signup with firebase');
           throw new Error('Failed to signup with firebase auth');

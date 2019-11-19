@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ProjectContext from '../contexts/ProjectContext';
 import projectsService from '../services/projects';
+import AuthenticationContext from '../contexts/AuthenticationContext';
 
 const mockprojects = [
   {
@@ -59,19 +60,21 @@ const mockprojects = [
 function ProjectProvider({ children }) {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [projects, setProjects] = useState([]);
+  const authContext = useContext(AuthenticationContext);
 
   useEffect(() => {
-    const getProjects = async () => {
-      const fetchedProjects = await projectsService.getAll();
-      if (fetchedProjects) {
-        setProjects(fetchedProjects);
-      } else { // Set mock data if connection fails, TODO: remove this before deployment
-        setProjects(mockprojects);
-      }
-    };
-
-    getProjects();
-  }, []);
+    if (authContext.isLoggedIn){
+      const getProjects = async () => {
+        const fetchedProjects = await projectsService.getAll();
+        if (fetchedProjects) {
+          setProjects(fetchedProjects);
+        } else { // Set mock data if connection fails, TODO: remove this before deployment
+          setProjects(mockprojects);
+        }
+      };
+      getProjects();
+    }
+  }, [authContext.isLoggedIn]);
 
   const allWithId = id => projects.filter(project => project.id === id);
   const selectProject = async (projectId) => {
