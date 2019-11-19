@@ -1,23 +1,40 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Text,
   View,
   Image,
   TouchableOpacity,
 } from 'react-native';
+import ImagePicker from 'react-native-image-picker';
 import Button from '../Button';
 import styles from './styles';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
 
 function ProfileView({ navigation }) {
+  const [newProfilepic, setNewProfilepic] = useState('');
+
   const authenticationContext = useContext(AuthenticationContext);
 
   const changeProfilePic = () => {
-    console.log('Change profile pic');
+    const options = {
+        title: 'Select profile picture',
+        storageOptions: {
+            skipBackup: true,
+            path: 'images',
+        },
+    };
+
+    ImagePicker.launchImageLibrary(options, response => {
+        if (!response.didCancel && !response.error) {
+            setNewProfilepic(response.uri);
+        } else {
+            console.log('Image picking failed: ', response);
+        }
+    });
+    // TODO: Set profilepic for user in authenticationContext
   }
 
   const changePassword = () => {
-    console.log('Change password');
     navigation.navigate('ChangePassword');
   }
 
