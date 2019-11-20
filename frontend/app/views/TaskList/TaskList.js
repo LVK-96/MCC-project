@@ -1,21 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
     Text,
-    View,
 } from 'react-native';
-import TasksContext from '../../contexts/TasksContext';
 
-function TaskList({ navigation }) {
-    const tasksContext = useContext(TasksContext);
-
+function TaskList() {
     return (
-        <View>
-            {tasksContext.tasks.map(task =>
-                <View key={task.id}>
-                    <Text>{task.description}</Text>
-                </View>
-            )}
-        </View>
+        <Text>this is real tasks test</Text>
     );
 }
 
