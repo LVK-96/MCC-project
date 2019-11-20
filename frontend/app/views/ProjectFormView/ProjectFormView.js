@@ -82,7 +82,7 @@ function ProjectFormView({ navigation }) {
             description,
             deadline,
             keywords,
-            owner: authContext.user.id,
+            owner: authContext.user.uid,
         };
 
         // Project information is valid.
