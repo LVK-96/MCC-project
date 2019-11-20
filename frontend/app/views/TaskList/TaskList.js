@@ -41,8 +41,8 @@ function TaskList({ navigation }) {
             Project tasks
           </Text>
           {contentArea}
-          <TouchableOpacity onPress={() => navigation.navigate('ProjectForm')}
-            style={styles.createProjectButtonContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('TaskForm')}
+            style={styles.createTaskButtonContainer}>
             <PlusIcon />
           </TouchableOpacity>
         </View>
