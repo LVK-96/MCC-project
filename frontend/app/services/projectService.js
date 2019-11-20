@@ -30,4 +30,15 @@ const createProject = async (project) => {
 	}
 };
 
-export default { getAll, createProject };
+// Fetch tasks by project id.
+const getTasksByProjectId = async (projectId) => {
+	try {
+		const response = await axios.get(`${baseUrl}/${projectId}/tasks`);
+		return response.data;
+	} catch (error) {
+		console.log('Error', error);
+		return null;
+	}
+};
+
+export default { getAll, createProject, getTasksByProjectId };
