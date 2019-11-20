@@ -6,6 +6,7 @@ export default StyleSheet.create({
     margin: 10,
     padding: 10,
     elevation: 12,
+    flexDirection: 'row',
   },
   name: {
     fontWeight: 'bold',
