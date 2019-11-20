@@ -36,13 +36,22 @@ function TasksProvider({ children, projectId }) {
             // Set to mock tasks if fetch fails.
             setTasks(fetched ? fetched : mockTasks);
         };
-
         getTasks();
     // We want to run the effect every time the context's
     // projectId changes.
     }, [projectId]);
 
-    const contextValue = { tasks };
+    // Updates the task with id 'id' to the value 'task.
+    const updateTask = async (id, task) => {
+        // TODO: Back-end implementation.
+        const updated = tasks.map(t => t.id === id ? task : t);
+        setTasks(updated);
+    };
+
+    const contextValue = {
+        tasks,
+        updateTask,
+    };
 
     return (
         <TasksContext.Provider value={contextValue}>

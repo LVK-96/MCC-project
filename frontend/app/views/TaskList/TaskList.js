@@ -34,7 +34,7 @@ function TaskList({ navigation }) {
           <ActivityIndicator size="large" color={colors.corporateBlue}/>
         </View>
       );
-    
+
       return (
         <View style={styles.container}>
           <Text>
