@@ -5,7 +5,6 @@ import AuthenticationView from '../AuthenticationView';
 import ProfileView from '../ProfileView';
 import AuthenticationProvider from '../../providers/AuthenticationProvider';
 import ProjectProvider from '../../providers/ProjectProvider';
-import ProjectList from '../ProjectList';
 import RootNavigator from '../../navigators/RootNavigator';
 
 /*A component that hosts everything application specific in the application

@@ -3,10 +3,19 @@ import axios from 'axios';
 
 const baseUrl = 'http://10.0.2.2:3000/projects'; // TODO: use env var for this
 
+let token = null;
+
+const setToken = (newToken) => {
+  token = newToken;
+};
 
 const getAll = async () => {
 	try {
-		const response = await axios.get(baseUrl);
+		const response = await axios.get(baseUrl, {
+			headers: {
+			Authorization: token,
+			},
+		});
 		return response.data;
 	} catch (exception) {
 		return null;
@@ -16,14 +25,8 @@ const getAll = async () => {
 const createProject = async (project) => {
 	try {
 		console.log('Creating project', project.name);
-
-		// const response = await axios.post(baseUrl);
-		// return response.data;
-
-		// Remove these when back-end supports project creation.
-		project.creationDate = new Date();
-		project.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-		return project;
+		const response = await axios.post(baseUrl, project);
+		return response.data;
 	} catch (exception) {
 		console.log('Error creating project', exception);
 		throw exception;
@@ -41,4 +44,4 @@ const getTasksByProjectId = async (projectId) => {
 	}
 };
 
-export default { getAll, createProject, getTasksByProjectId };
+export default { getAll, createProject, getTasksByProjectId, setToken };
