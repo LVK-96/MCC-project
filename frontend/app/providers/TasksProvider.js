@@ -26,7 +26,9 @@ const mockTasks = [
 /* Context provider for the tasks. This provider handles logic
 (fetching, creating, selecting) related to project tasks. */
 function TasksProvider({ children, projectId }) {
-    const [tasks, setTasks] = useState([]);
+    // Initialize to null to indicate that the tasks haven't been
+    // fetched yet.
+    const [tasks, setTasks] = useState(null);
 
     useEffect(() => {
         const getTasks = async () => {
