@@ -10,8 +10,12 @@ admin.initializeApp({
 });
 
 let db = admin.firestore();
+let auth = admin.auth();
+
+console.log(admin.app().name);
 
 module.exports = {
   db,
   PORT,
+  auth,
 };

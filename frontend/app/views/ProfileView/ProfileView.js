@@ -47,7 +47,7 @@ function ProfileView({ navigation }) {
           </TouchableOpacity>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
-              <Text style={styles.name}>User</Text>
+              <Text style={styles.name}>{authenticationContext.user.displayName}</Text>
             </View>
             <Button title={'Logout'} style={styles.profileButton} />
             <Button title={'Change password'} onPress={changePassword} style={styles.profileButton} />

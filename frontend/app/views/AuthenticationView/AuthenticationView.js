@@ -43,24 +43,29 @@ function AuthenticationView({
     out.*/
   const formFilled = (email.length > 0) && (password.length > 0) && ((form === "login") || (displayName.length > 0));
   /*Logs in or signs up based on the values currently in the fields*/
-  const performAuthentication = () => {
+  const performAuthentication = async () => {
     if (form === "login") {
-      authenticationContext
-        .login({ email, password })
-        .catch(() => Alert.alert(
-          "Failed to log in",
-          "Please recheck your credentials.",
+      try {
+        await authenticationContext.login({ email, password });
+        navigation.navigate('Profile');
+      } catch (e) {
+        Alert.alert(
+          "Login failed",
+          "Try another display name.",
           [{ text: 'OK', onPress: () => {}}],
-        ));
-      navigation.navigate('Main');
+        );
+      }
     } else {
-      authenticationContext
-        .signup({ email, password, displayName })
-        .catch(() => Alert.alert(
+      try {
+        await authenticationContext.signup({ email, password, displayName });
+        navigation.navigate('Profile');
+      } catch (e) {
+        Alert.alert(
           "Signup failed",
           "Try another display name.",
           [{ text: 'OK', onPress: () => {}}],
-        ));
+        );
+      }
     }
   };
   return (

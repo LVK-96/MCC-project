@@ -1,7 +1,7 @@
 const projectsRouter = require('express').Router();
 const Project = require('../models/project');
 const Task = require('../models/task');
-let { db } = require('../utils/config');
+let { db, auth } = require('../utils/config');
 
 projectsRouter.post('/', async (request, response, next) => {
   try {
@@ -16,6 +16,7 @@ projectsRouter.post('/', async (request, response, next) => {
 
 projectsRouter.get('/', async (request, response, next) => {
   try {
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString()); //decodedToken.uid 
     const collection = await db.collection('projects').get();
     const docs = collection.docs;
     let projects = [];
