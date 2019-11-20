@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import projectService from '../services/projectService';
 import TasksContext from '../contexts/TasksContext';
+import taskService from '../services/taskService';
 
 const mockTasks = [
     {
@@ -32,7 +32,7 @@ function TasksProvider({ children, projectId }) {
 
     useEffect(() => {
         const getTasks = async () => {
-            const fetched = await projectService.getTasksByProjectId(projectId);
+            const fetched = await taskService.getTasksByProjectId(projectId);
             // Set to mock tasks if fetch fails.
             setTasks(fetched ? fetched : mockTasks);
         };
@@ -43,9 +43,16 @@ function TasksProvider({ children, projectId }) {
 
     // Updates the task with id 'id' to the value 'task.
     const updateTask = async (id, task) => {
-        // TODO: Back-end implementation.
-        const updated = tasks.map(t => t.id === id ? task : t);
-        setTasks(updated);
+        const response = await taskService.updateTask(id, task);
+        if (response) {
+            const updated = tasks.map(t => t.id === id ? task : t);
+            setTasks(updated);
+        // TODO: Handle actual failure, now update always fails
+        // because it doesn't use a real back-end endpoint.
+        } else {
+            const updated = tasks.map(t => t.id === id ? task : t);
+            setTasks(updated);
+        }
     };
 
     const contextValue = {
