@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import {
   Text,
   View,
@@ -6,15 +6,17 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import { firebase } from '@react-native-firebase/storage';
+import RNFetchBlob from 'rn-fetch-blob';
 import Button from '../Button';
 import styles from './styles';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
 
 function ProfileView({ navigation }) {
-  const [newProfilepic, setNewProfilepic] = useState('');
-
   const authenticationContext = useContext(AuthenticationContext);
 
+  console.log(authenticationContext.user);
+  // TODO: Move most of this logic to some other file
   const changeProfilePic = () => {
     const options = {
         title: 'Select profile picture',
@@ -24,15 +26,25 @@ function ProfileView({ navigation }) {
         },
     };
 
-    ImagePicker.launchImageLibrary(options, response => {
+    ImagePicker.launchImageLibrary(options, async response => {
         if (!response.didCancel && !response.error) {
-            setNewProfilepic(response.uri);
+            try {
+              const stats = await RNFetchBlob.fs.stat(response.uri);
+              const storageRef = firebase.storage().ref();
+              const profilepicRef = storageRef.child(`profilepics/${authenticationContext.user.uid}.png`);
+              await profilepicRef.putFile(stats.path);
+              const imageUrl = await profilepicRef.getDownloadURL();
+              await authenticationContext.setProfilepic(imageUrl);
+            } catch (exception ) {
+              console.log(exception);
+            }
         } else {
             console.log('Image picking failed: ', response);
         }
     });
-    // TODO: Set profilepic for user in authenticationContext
+
   }
+
 
   const changePassword = () => {
     navigation.navigate('ChangePassword');
@@ -43,7 +55,7 @@ function ProfileView({ navigation }) {
           <View style={styles.header}/>
           <TouchableOpacity style={styles.avatarContainer} onPress={changeProfilePic}>
             <Image style={styles.avatar}
-              source={{uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'}}/>
+              source={{ uri: authenticationContext.user.photoURL }}/>
           </TouchableOpacity>
           <View style={styles.body}>
             <View style={styles.bodyContent}>

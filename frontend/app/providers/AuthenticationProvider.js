@@ -16,10 +16,11 @@ function AuthenticationProvider({ children }) {
     } else {
       const sign = await auth().signInWithEmailAndPassword(email, password);
       const token = await auth().currentUser.getIdToken(true); //does firebase track signed in users
-      setUser({email: email, uid: sign.user.uid}); //how to retrieve displayName
+      setUser({ email: email, photoURL: sign.user.photoURL, uid: sign.user.uid }); //how to retrieve displayName
       projectService.setToken(token);
     }
   };
+
   const signup = async ({ email, displayName, password }) => {
     //production build - use firebase auth
     console.log('Production');
@@ -34,15 +35,23 @@ function AuthenticationProvider({ children }) {
         throw new Error('Failed to signup with firebase auth');
     }
   };
+
+  const setProfilepic = async (url) => {
+    setUser({ ...user, photoUrl: url });
+    await firebase.auth().currentUser.updateProfile({ photoURL: url });
+  }
+
   const value = {
     login,
     signup,
+    setProfilepic,
     user,
     /*By providing this, we can avoid the reimplementation of the logic that
       checks if a user is logged in outside of this component.*/
     /*userid and token also needed*/
     isLoggedIn,
   };
+
   return (
     <AuthenticationContext.Provider value={value}>
       {children}
