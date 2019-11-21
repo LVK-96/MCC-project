@@ -29,12 +29,17 @@ function TasksProvider({ children, projectId }) {
     // Initialize to null to indicate that the tasks haven't been
     // fetched yet.
     const [tasks, setTasks] = useState(null);
+    // The task that is currently selected to be viewed.
+    const [selectedTask, setSelectedTask] = useState(null);
 
     useEffect(() => {
         const getTasks = async () => {
             const fetched = await taskService.getTasksByProjectId(projectId);
             // Set to mock tasks if fetch fails.
             setTasks(fetched ? fetched : mockTasks);
+            // Whenever the tasks are reloaded, the currently
+            // selected task should be set to null.
+            setSelectedTask(null);
         };
         getTasks();
     // We want to run the effect every time the context's
@@ -55,9 +60,24 @@ function TasksProvider({ children, projectId }) {
         }
     };
 
+    // Sets the currently selected task to the one specified
+    // by taskId, if it exists in local state. Returns a boolean
+    // indicating whether the selection was successful.
+    const selectTask = (taskId) => {
+        const task = tasks.find(t => t.id === taskId);
+        if (task !== undefined) {
+            setSelectedTask(task);
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     const contextValue = {
         tasks,
         updateTask,
+        selectTask,
+        selectedTask,
     };
 
     return (
