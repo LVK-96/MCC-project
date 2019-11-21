@@ -52,11 +52,13 @@ function TasksProvider({ children, projectId }) {
         if (response) {
             const updated = tasks.map(t => t.id === id ? task : t);
             setTasks(updated);
+            return true;
         // TODO: Handle actual failure, now update always fails
         // because it doesn't use a real back-end endpoint.
         } else {
             const updated = tasks.map(t => t.id === id ? task : t);
             setTasks(updated);
+            return true;
         }
     };
 

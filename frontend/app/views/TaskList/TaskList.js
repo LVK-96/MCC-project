@@ -13,10 +13,13 @@ import colors from '../../values/colors';
 import PlusIcon from '../PlusIcon';
 
 function TaskList({ navigation }) {
-    const { tasks } = useContext(TasksContext);
+    const { tasks, selectTask } = useContext(TasksContext);
 
+    // Sets the selected task and changes to task view.
     const viewTask = (taskId) => {
-
+      if (selectTask(taskId)) {
+        navigation.navigate('TaskView');
+      }
     };
 
     const contentArea = tasks ? (
