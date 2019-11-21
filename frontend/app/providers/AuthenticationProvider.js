@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import AuthenticationContext from '../contexts/AuthenticationContext';
-import auth, { firebase } from '@react-native-firebase/auth';
-import mockData from '../../mock.json';
+import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
+import RNFetchBlob from 'rn-fetch-blob';
 import projectService from '../services/projectService';
 
 /*Encapsulates authentication logic inside one component.*/
@@ -36,9 +37,19 @@ function AuthenticationProvider({ children }) {
     }
   };
 
-  const setProfilepic = async (url) => {
-    setUser({ ...user, photoUrl: url });
-    await firebase.auth().currentUser.updateProfile({ photoURL: url });
+  const setProfilepic = async (uri) => {
+    try {
+      const stats = await RNFetchBlob.fs.stat(uri);
+      const storageRef = storage().ref();
+      const profilepicRef = storageRef.child(`profilepics/${user.uid}.png`);
+      await profilepicRef.putFile(stats.path);
+      const imageUrl = await profilepicRef.getDownloadURL();
+      await auth().currentUser.updateProfile({ photoURL: imageUrl });
+      setUser({ ...user, photoURL:  imageUrl });
+    } catch (e) {
+      console.log(e);
+      throw new Error('Failed to save profile picture to cloud storage');
+    }
   }
 
   const value = {
