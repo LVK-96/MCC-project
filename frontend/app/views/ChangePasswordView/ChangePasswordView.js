@@ -22,6 +22,7 @@ function ChangePasswordView({ navigation }) {
           setOldPassword('');
           setNewPasswordAgain('');
           setNewPassword('');
+          Alert.alert('Password changed successfully!');
           navigation.navigate('Profile');
         } catch (e) {
           Alert.alert('Something went wrong');
