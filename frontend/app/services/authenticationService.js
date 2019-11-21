@@ -53,4 +53,33 @@ const changeProfilePic = async (uri, uid) => {
   }
 };
 
-export default { login, signup, changeProfilePic };
+const checkPassword = async (oldPassword) => {
+  try {
+    const credential = auth.EmailAuthProvider.credential(
+      auth().currentUser.email,
+      oldPassword
+    );
+    await auth().currentUser.reauthenticateWithCredential(credential);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+const changePassword = async (newPassword) => {
+  try {
+    // For some reason try-catch doesnt catch this? Maybe some bug with rn firebase.
+    if (newPassword === '') throw new Error('Empty password!');
+    await auth().currentUser.updatePassword(newPassword);
+  } catch (e) {
+    throw e;
+  }
+};
+
+export default {
+  login,
+  signup,
+  changeProfilePic,
+  checkPassword,
+  changePassword
+};

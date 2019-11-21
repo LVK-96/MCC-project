@@ -3,17 +3,35 @@ import {
   View,
   Text,
   TextInput,
+  Alert,
 } from 'react-native';
+import authenticationService from '../../services/authenticationService';
 import Button from '../Button';
 import styles from './styles';
 
-function ChangePasswordView() {
+function ChangePasswordView({ navigation }) {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordAgain, setNewPasswordAgain] = useState('');
 
-  const changePassword = () => {
-    console.log('Change password');
+  const changePassword = async () => {
+    if (newPassword === newPasswordAgain) {
+      if (await authenticationService.checkPassword(oldPassword)) {
+        try {
+          await authenticationService.changePassword(newPassword);
+          setOldPassword('');
+          setNewPasswordAgain('');
+          setNewPassword('');
+          navigation.navigate('Profile');
+        } catch (e) {
+          Alert.alert('Something went wrong');
+        }
+      } else {
+        Alert.alert('The old password is wrong!');
+      }
+    } else {
+      Alert.alert('New passwords do not match!');
+    }
   }
 
   return (
