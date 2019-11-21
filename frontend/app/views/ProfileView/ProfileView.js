@@ -26,7 +26,7 @@ function ProfileView({ navigation }) {
     ImagePicker.launchImageLibrary(options, async response => {
       if (!response.didCancel && !response.error) {
         try {
-          await authenticationContext.setProfilepic(response.uri);
+          await authenticationContext.changeProfilePic(response.uri);
         } catch (e) {
           Alert.alert('Failed to set profile picture!');
         }

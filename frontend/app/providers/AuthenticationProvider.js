@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import AuthenticationContext from '../contexts/AuthenticationContext';
-import auth from '@react-native-firebase/auth';
-import storage from '@react-native-firebase/storage';
-import RNFetchBlob from 'rn-fetch-blob';
-import projectService from '../services/projectService';
+import authenticationService from '../services/authenticationService';
 
 /*Encapsulates authentication logic inside one component.*/
 function AuthenticationProvider({ children }) {
@@ -13,38 +10,31 @@ function AuthenticationProvider({ children }) {
   const login = async ({ email, password }) => {
     //TODO: remove this in production
     if (email === 'placeholder@email.com'){
-      setUser({email: 'placeholder@email.com', uid: '13456' });
+      setUser({ email: 'placeholder@email.com', uid: '13456' });
     } else {
-      const sign = await auth().signInWithEmailAndPassword(email, password);
-      const token = await auth().currentUser.getIdToken(true); //does firebase track signed in users
-      setUser({ email: email, photoURL: sign.user.photoURL, uid: sign.user.uid }); //how to retrieve displayName
-      projectService.setToken(token);
+      try {
+        const loggedUser = await authenticationService.login(email, password);
+        setUser(loggedUser);
+      } catch (e) {
+        console.log('failed to login with firebase');
+        throw new Error('Failed to login with firebase auth');
+      }
     }
   };
 
   const signup = async ({ email, displayName, password }) => {
-    //production build - use firebase auth
-    console.log('Production');
     try {
-      console.log('waiting response from firebase auth');
-      const sign = await auth().createUserWithEmailAndPassword(email, password);
-      const token = await auth().currentUser.getIdToken(true); //does firebase track signed in users - how does signing out work
-      setUser({email: email, displayName:displayName, uid: sign.user.uid});
-      projectService.setToken(token);
+      const signedUser = await authenticationService.signup(email, displayName, password);
+      setUser(signedUser);
     } catch (e) {
-        console.log('failed to signup with firebase');
-        throw new Error('Failed to signup with firebase auth');
+      console.log('failed to signup with firebase');
+      throw new Error('Failed to signup with firebase auth');
     }
   };
 
-  const setProfilepic = async (uri) => {
+  const changeProfilePic = async (uri) => {
     try {
-      const stats = await RNFetchBlob.fs.stat(uri);
-      const storageRef = storage().ref();
-      const profilepicRef = storageRef.child(`profilepics/${user.uid}.png`);
-      await profilepicRef.putFile(stats.path);
-      const imageUrl = await profilepicRef.getDownloadURL();
-      await auth().currentUser.updateProfile({ photoURL: imageUrl });
+      const imageUrl = await authenticationService.changeProfilePic(uri, user.uid);
       setUser({ ...user, photoURL:  imageUrl });
     } catch (e) {
       console.log(e);
@@ -55,7 +45,7 @@ function AuthenticationProvider({ children }) {
   const value = {
     login,
     signup,
-    setProfilepic,
+    changeProfilePic,
     user,
     /*By providing this, we can avoid the reimplementation of the logic that
       checks if a user is logged in outside of this component.*/
