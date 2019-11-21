@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import AuthenticationContext from '../contexts/AuthenticationContext';
-import auth, { firebase } from '@react-native-firebase/auth';
-import mockData from '../../mock.json';
+import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
+import RNFetchBlob from 'rn-fetch-blob';
 import projectService from '../services/projectService';
 
 /*Encapsulates authentication logic inside one component.*/
@@ -16,10 +17,11 @@ function AuthenticationProvider({ children }) {
     } else {
       const sign = await auth().signInWithEmailAndPassword(email, password);
       const token = await auth().currentUser.getIdToken(true); //does firebase track signed in users
-      setUser({email: email, uid: sign.user.uid}); //how to retrieve displayName
+      setUser({ email: email, photoURL: sign.user.photoURL, uid: sign.user.uid }); //how to retrieve displayName
       projectService.setToken(token);
     }
   };
+
   const signup = async ({ email, displayName, password }) => {
     //production build - use firebase auth
     console.log('Production');
@@ -34,15 +36,33 @@ function AuthenticationProvider({ children }) {
         throw new Error('Failed to signup with firebase auth');
     }
   };
+
+  const setProfilepic = async (uri) => {
+    try {
+      const stats = await RNFetchBlob.fs.stat(uri);
+      const storageRef = storage().ref();
+      const profilepicRef = storageRef.child(`profilepics/${user.uid}.png`);
+      await profilepicRef.putFile(stats.path);
+      const imageUrl = await profilepicRef.getDownloadURL();
+      await auth().currentUser.updateProfile({ photoURL: imageUrl });
+      setUser({ ...user, photoURL:  imageUrl });
+    } catch (e) {
+      console.log(e);
+      throw new Error('Failed to save profile picture to cloud storage');
+    }
+  }
+
   const value = {
     login,
     signup,
+    setProfilepic,
     user,
     /*By providing this, we can avoid the reimplementation of the logic that
       checks if a user is logged in outside of this component.*/
     /*userid and token also needed*/
     isLoggedIn,
   };
+
   return (
     <AuthenticationContext.Provider value={value}>
       {children}
