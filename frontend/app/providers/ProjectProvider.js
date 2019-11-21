@@ -13,6 +13,7 @@ const mockprojects = [
     created: '2019-06-06',
     modified: '2019-09-09',
     keywords: ['test', 'project', 'placeholder'],
+    type: 'GROUP',
   },
   {
     id: 101,
@@ -23,6 +24,7 @@ const mockprojects = [
     created: '2019-06-06',
     modified: '2019-09-09',
     keywords: ['test', 'project', 'placeholder'],
+    type: 'PERSONAL',
   },
   {
     id: 102,
@@ -33,6 +35,7 @@ const mockprojects = [
     created: '2019-06-06',
     modified: '2019-11-01',
     keywords: ['test', 'project', 'placeholder'],
+    type: 'GROUP',
   },
   {
     id: 103,
@@ -43,6 +46,7 @@ const mockprojects = [
     created: '2019-06-06',
     modified: '2019-10-10',
     keywords: ['test', 'project', 'placeholder'],
+    type: 'PERSONAL',
   },
   {
     id: 104,
@@ -53,6 +57,7 @@ const mockprojects = [
     created: '2018-06-06',
     modified: '2019-09-09',
     keywords: ['test', 'project', 'placeholder'],
+    type: 'GROUP',
   },
 ];
 
