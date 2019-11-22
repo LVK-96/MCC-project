@@ -6,7 +6,7 @@ import projectService from '../services/projectService';
 const login = async (email, password) => {
   try {
     const sign = await auth().signInWithEmailAndPassword(email, password);
-    const token = await auth().currentUser.getIdToken(true); //does firebase track signed in users
+    const token = await auth().currentUser.getIdToken(true);
     projectService.setToken(token);
     return {
       displayName: sign.user.displayName,
@@ -34,6 +34,14 @@ const signup = async (email, displayName, password) => {
       photoURL: defaultUrl,
       uid: sign.user._user.uid
     };
+  } catch (e) {
+    throw e;
+  }
+};
+
+const logout = async () => {
+  try {
+    await auth().signOut();
   } catch (e) {
     throw e;
   }
@@ -79,6 +87,7 @@ const changePassword = async (newPassword) => {
 export default {
   login,
   signup,
+  logout,
   changeProfilePic,
   checkPassword,
   changePassword

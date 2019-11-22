@@ -32,6 +32,15 @@ function AuthenticationProvider({ children }) {
     }
   };
 
+  const logout = async () => {
+    try {
+      await authenticationService.logout();
+      setUser(null);
+    } catch (e) {
+      throw new Error('Logout failed');
+    }
+  };
+
   const changeProfilePic = async (uri) => {
     try {
       const imageUrl = await authenticationService.changeProfilePic(uri, user.uid);
@@ -45,6 +54,7 @@ function AuthenticationProvider({ children }) {
   const value = {
     login,
     signup,
+    logout,
     changeProfilePic,
     user,
     /*By providing this, we can avoid the reimplementation of the logic that
