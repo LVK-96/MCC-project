@@ -40,25 +40,37 @@ function ProfileView({ navigation }) {
     navigation.navigate('ChangePassword');
   }
 
-  return (
-    <View style={styles.container}>
-        <View style={styles.header}/>
-        <TouchableOpacity style={styles.avatarContainer} onPress={changeProfilePic}>
-          <Image style={styles.avatar}
-            source={{
-              uri: authenticationContext.user.photoURL,
-            }}
-          />
-        </TouchableOpacity>
-        <View style={styles.body}>
-          <View style={styles.bodyContent}>
-            <Text style={styles.name}>{authenticationContext.user.displayName}</Text>
-          </View>
-          <Button title={'Logout'} style={styles.profileButton} />
-          <Button title={'Change password'} onPress={changePassword} style={styles.profileButton} />
+  const logout = async () => {
+    try {
+      await authenticationContext.logout();
+    } catch (e) {
+      Alert.alert('Failed to logout');
+    }
+  }
+
+  if (authenticationContext.isLoggedIn) {
+    return (
+      <View style={styles.container}>
+          <View style={styles.header}/>
+          <TouchableOpacity style={styles.avatarContainer} onPress={changeProfilePic}>
+            <Image style={styles.avatar}
+              source={{
+                uri: authenticationContext.user.photoURL,
+              }}
+            />
+          </TouchableOpacity>
+          <View style={styles.body}>
+            <View style={styles.bodyContent}>
+              <Text style={styles.name}>{authenticationContext.user.displayName}</Text>
+            </View>
+            <Button title={'Change password'} onPress={changePassword} style={styles.profileButton} />
+            <Button title={'Logout'} style={styles.profileButton} onPress={logout} color={'red'} />
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
+
+  return null;
 }
 
 export default ProfileView;
