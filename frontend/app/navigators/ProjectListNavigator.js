@@ -3,6 +3,7 @@ import {
   createMaterialTopTabNavigator,
 } from 'react-navigation-tabs';
 import ProjectList from '../views/ProjectList';
+import ProjectSearch from '../views/ProjectSearch';
 import SearchIcon from '../views/SearchIcon';
 
 function DateList() {
@@ -17,10 +18,6 @@ function UpcomingDeadlineList() {
   return <ProjectList filter="upcomingDeadline"/>;
 }
 
-function SearchProjects() {
-  return null;
-}
-
 /*This is a tab-controlled navigator that allows the user to choose
   between the different filters of project lists.*/
 export default createMaterialTopTabNavigator({
@@ -28,7 +25,7 @@ export default createMaterialTopTabNavigator({
   Date: DateList,
   UpcomingDeadline: UpcomingDeadlineList,
   Search: {
-    screen: SearchProjects,
+    screen: ProjectSearch,
     navigationOptions: {
       tabBarLabel: <SearchIcon />,
     },
