@@ -10,15 +10,15 @@ import ProjectList from '../ProjectList';
 
 function ProjectSearch() {
   const [switchValue, setSwitchValue] = useState(false);
-  const [searchCriteria, setSearchCriteria] = useState('Name');
+  const [searchCriteria, setSearchCriteria] = useState('name');
   const [searchParam, setSearchParam] = useState('');
 
   const toggleSwitch = () => {
     setSwitchValue(!switchValue);
     if (!switchValue) {
-      setSearchCriteria('Keyword');
+      setSearchCriteria('keyword');
     } else {
-      setSearchCriteria('Name');
+      setSearchCriteria('name');
     }
   };
 
@@ -32,7 +32,7 @@ function ProjectSearch() {
         </View>
       </View>
       <View style={styles.projectContainer}>
-        <ProjectList filter="name" searchName={searchParam} />
+        <ProjectList filter={searchCriteria} searchParam={searchParam} />
       </View>
     </View>
   );
