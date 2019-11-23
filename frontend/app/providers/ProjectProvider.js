@@ -12,7 +12,7 @@ const mockprojects = [
     favorite: true,
     created: '2019-06-06',
     modified: '2019-09-09',
-    keywords: ['test', 'project', 'placeholder'],
+    keywords: ['test', 'project', 'placeholder', 'different'],
   },
   {
     id: 101,
@@ -32,7 +32,7 @@ const mockprojects = [
     favorite: true,
     created: '2019-06-06',
     modified: '2019-11-01',
-    keywords: ['test', 'project', 'placeholder'],
+    keywords: ['test', 'project', 'placeholder', 'different'],
   },
   {
     id: 103,

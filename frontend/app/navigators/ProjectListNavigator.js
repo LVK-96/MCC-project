@@ -3,6 +3,8 @@ import {
   createMaterialTopTabNavigator,
 } from 'react-navigation-tabs';
 import ProjectList from '../views/ProjectList';
+import ProjectSearch from '../views/ProjectSearch';
+import SearchIcon from '../views/SearchIcon';
 
 function DateList() {
   return <ProjectList filter="date"/>;
@@ -22,4 +24,10 @@ export default createMaterialTopTabNavigator({
   Favorite: FavoriteList,
   Date: DateList,
   UpcomingDeadline: UpcomingDeadlineList,
+  Search: {
+    screen: ProjectSearch,
+    navigationOptions: {
+      tabBarLabel: <SearchIcon />,
+    },
+  },
 });
