@@ -25,6 +25,7 @@ import PlusIcon from '../PlusIcon';
 function ProjectList({
   filter,
   navigation,
+  searchName,
 }) {
   const {
     projects,
@@ -33,6 +34,7 @@ function ProjectList({
   const headerText = (filter === 'favorite') ? 'Favorite projects'
                    : (filter === 'date') ? 'All projects'
                    : (filter === 'upcomingDeadline') ? 'Projects with upcoming deadlines'
+                   : (filter === 'name') ? 'Search by name'
                    : '';
   const favorites = projects && projects
     .filter(({ favorite }) => favorite)
@@ -42,9 +44,13 @@ function ProjectList({
   const byUpcomingDeadline = projects && projects
     .filter(({ deadline }) => dateIsWithinAWeek(deadline))
     .sort((a, b) => compareDates(a.deadline, b.deadline));
+  const byName = projects && searchName ? projects
+    .filter(p => p.name.includes(searchName))
+    : [];
   const selectedProjects = (filter === 'favorite') ? favorites
                          : (filter === 'date') ? byDate
                          : (filter === 'upcomingDeadline') ? byUpcomingDeadline
+                         : (filter === 'name') ? byName
                          : undefined;
   const viewProject = async (projectId) => {
     const selected = await selectProject(projectId);

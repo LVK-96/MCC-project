@@ -3,6 +3,8 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     width: '100%',
     height: '100%',
   },
@@ -24,7 +26,8 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  searchToggle: {
-    transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
-  },
+  projectContainer: {
+    marginVertical: 20,
+    height: '90%'
+  }
 });
