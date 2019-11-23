@@ -19,7 +19,7 @@ function SearchField({ isTextInput, searchParam, setSearchParam }) {
     const keywords = [ ...new Set(projectContext.projects.map(p => p.keywords).flat()) ];
     return (
       <Picker style={styles.keywordPicker} mode="dropdown"
-        value={searchParam}
+        selectedValue={searchParam}
         onValueChange={value => setSearchParam(value)}>
         {keywords.map(k =>
           <Picker.Item label={k} value={k} key={keywords.indexOf(k)} />
