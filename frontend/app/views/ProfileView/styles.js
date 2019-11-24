@@ -55,6 +55,15 @@ const styles = StyleSheet.create({
     marginTop: '55%',
     marginHorizontal: 20,
   },
+  resPicker: {
+    width: '80%',
+    height: 40,
+  },
+  modal: {
+    flex: 1,
+    justifyContent: 'center',
+    height: 80,
+  },
 });
 
 export default styles;
