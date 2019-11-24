@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 import colors from '../../values/colors';
-import fontSizes from '../../values/fontSizes';
 
 const buttonCommon = {
   width: '100%',
@@ -9,6 +8,13 @@ const buttonCommon = {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    width: '100%',
+    height: '100%',
+  },
   header:{
     backgroundColor: colors.corporateBlue,
     height: 200,
@@ -43,6 +49,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 10,
     borderRadius: 30,
+  },
+  settingsButton: {
+    alignSelf: 'flex-end',
+    marginTop: '55%',
+    marginHorizontal: 20,
   },
 });
 

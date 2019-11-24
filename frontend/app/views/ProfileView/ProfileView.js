@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import Button from '../Button';
+import SettingsIcon from '../SettingsIcon';
 import styles from './styles';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
 
@@ -65,6 +66,9 @@ function ProfileView({ navigation }) {
             </View>
             <Button title={'Change password'} onPress={changePassword} style={styles.profileButton} />
             <Button title={'Logout'} style={styles.profileButton} onPress={logout} color={'red'} />
+            <TouchableOpacity style={styles.settingsButton}>
+              <SettingsIcon />
+            </TouchableOpacity>
         </View>
       </View>
     );
