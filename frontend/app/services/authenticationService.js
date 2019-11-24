@@ -1,6 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
+import { applyResSetting } from '../util/applyResSetting';
 import projectService from '../services/projectService';
 
 const login = async (email, password) => {
@@ -8,10 +9,11 @@ const login = async (email, password) => {
     const sign = await auth().signInWithEmailAndPassword(email, password);
     const token = await auth().currentUser.getIdToken(true);
     projectService.setToken(token);
+    const photoURL = applyResSetting(sign.user.photoURL);
     return {
       displayName: sign.user.displayName,
       email: sign.user.email,
-      photoURL: sign.user.photoURL,
+      photoURL: photoURL,
       uid: sign.user.uid
     };
   } catch (e) {
@@ -25,13 +27,14 @@ const signup = async (email, displayName, password) => {
     const storageRef = storage().ref();
     const defaultRef = storageRef.child('profilepics/default.jpg');
     const defaultUrl = await defaultRef.getDownloadURL();
+    const photoURL = applyResSetting(defaultUrl);
     await auth().currentUser.updateProfile({ displayName: displayName, photoURL: defaultUrl });
     const token = await auth().currentUser.getIdToken(true);
     projectService.setToken(token);
     return {
       displayName: displayName,
       email: sign.user._user.email,
-      photoURL: defaultUrl,
+      photoURL: photoURL,
       uid: sign.user._user.uid
     };
   } catch (e) {
@@ -55,7 +58,7 @@ const changeProfilePic = async (uri, uid) => {
     await profilepicRef.putFile(stats.path);
     const imageUrl = await profilepicRef.getDownloadURL();
     await auth().currentUser.updateProfile({ photoURL: imageUrl });
-    return imageUrl;
+    return applyResSetting(imageUrl);
   } catch (e) {
     throw e;
   }

@@ -64,7 +64,7 @@ function ProfileView({ navigation }) {
             <Picker style={styles.resPicker}
               prompt="Image resolution"
               selectedValue={authenticationContext.imageRes}
-              onValueChange={value => authenticationContext.setImageRes(value)}>
+              onValueChange={value => authenticationContext.setAndStoreImageRes(value)}>
               <Picker.Item label="Full" value="full" />
               <Picker.Item label="High" value="high" />
               <Picker.Item label="Low" value="low" />
