@@ -5,7 +5,7 @@ import authenticationService from '../services/authenticationService';
 /*Encapsulates authentication logic inside one component.*/
 function AuthenticationProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [highResImages, setHighResImages] = useState(false);
+  const [imageRes, setImageRes] = useState('full'); // low, high or full
   /*We are logged in if the user is set (not null).*/
   const isLoggedIn = !!user;
   const login = async ({ email, password }) => {
@@ -58,8 +58,8 @@ function AuthenticationProvider({ children }) {
     logout,
     changeProfilePic,
     user,
-    highResImages,
-    setHighResImages,
+    imageRes,
+    setImageRes,
     /*By providing this, we can avoid the reimplementation of the logic that
       checks if a user is logged in outside of this component.*/
     /*userid and token also needed*/

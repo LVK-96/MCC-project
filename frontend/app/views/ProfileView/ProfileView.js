@@ -63,10 +63,11 @@ function ProfileView({ navigation }) {
           <View style={styles.bodyContent}>
             <Picker style={styles.resPicker}
               prompt="Image resolution"
-              selectedValue={authenticationContext.highResImages}
-              onValueChange={value => authenticationContext.setHighResImages(value)}>
-              <Picker.Item label="High" value={true} />
-              <Picker.Item label="Low" value={false} />
+              selectedValue={authenticationContext.imageRes}
+              onValueChange={value => authenticationContext.setImageRes(value)}>
+              <Picker.Item label="Full" value="full" />
+              <Picker.Item label="High" value="high" />
+              <Picker.Item label="Low" value="low" />
             </Picker>
             <Button title="Go back" onPress={() => setModalVisible(false)} style={styles.profileButton} color={'grey'} />
           </View>
