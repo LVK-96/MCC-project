@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import AuthenticationContext from '../contexts/AuthenticationContext';
 import authenticationService from '../services/authenticationService';
+import { setResSetting } from '../util/applyResSetting';
 
 /*Encapsulates authentication logic inside one component.*/
 function AuthenticationProvider({ children }) {
@@ -15,9 +16,11 @@ function AuthenticationProvider({ children }) {
         const value = await AsyncStorage.getItem('@res');
         if (value !== null) {
           setImageRes(value);
+          setResSetting(value);
         }
       } catch (e) {
         setImageRes('full'); // default setting
+        setResSetting('full'); // default setting
       }
     };
 
@@ -75,13 +78,13 @@ function AuthenticationProvider({ children }) {
       const imageUrl = await authenticationService.changeProfilePic(uri, user.uid);
       setUser({ ...user, photoURL:  imageUrl });
     } catch (e) {
-      console.log(e);
       throw new Error('Failed to save profile picture to cloud storage');
     }
   };
 
   const setAndStoreImageRes = async (setting) => {
     storeRes(setting);
+    setResSetting(setting);
     setImageRes(setting);
   };
 

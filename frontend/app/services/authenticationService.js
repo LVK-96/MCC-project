@@ -9,7 +9,8 @@ const login = async (email, password) => {
     const sign = await auth().signInWithEmailAndPassword(email, password);
     const token = await auth().currentUser.getIdToken(true);
     projectService.setToken(token);
-    const photoURL = applyResSetting(sign.user.photoURL);
+    const photoURL = await applyResSetting(sign.user.photoURL);
+    console.log('New photoUrl', photoURL);
     return {
       displayName: sign.user.displayName,
       email: sign.user.email,
@@ -26,9 +27,9 @@ const signup = async (email, displayName, password) => {
     const sign = await auth().createUserWithEmailAndPassword(email, password);
     const storageRef = storage().ref();
     const defaultRef = storageRef.child('profilepics/default.jpg');
-    const defaultUrl = await defaultRef.getDownloadURL();
-    const photoURL = applyResSetting(defaultUrl);
-    await auth().currentUser.updateProfile({ displayName: displayName, photoURL: defaultUrl });
+    const path = defaultRef.toString();
+    await auth().currentUser.updateProfile({ displayName: displayName, photoURL: path });
+    const photoURL = await applyResSetting(path);
     const token = await auth().currentUser.getIdToken(true);
     projectService.setToken(token);
     return {
@@ -56,9 +57,9 @@ const changeProfilePic = async (uri, uid) => {
     const storageRef = storage().ref();
     const profilepicRef = storageRef.child(`profilepics/${uid}.png`);
     await profilepicRef.putFile(stats.path);
-    const imageUrl = await profilepicRef.getDownloadURL();
-    await auth().currentUser.updateProfile({ photoURL: imageUrl });
-    return applyResSetting(imageUrl);
+    const path = profilepicRef.toString();
+    await auth().currentUser.updateProfile({ photoURL: path });
+    return await applyResSetting(path);
   } catch (e) {
     throw e;
   }
