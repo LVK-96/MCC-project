@@ -87,6 +87,7 @@ function AuthenticationProvider({ children }) {
   const setAndStoreImageRes = async (setting) => {
     storeRes(setting);
     setImageRes(setting);
+    // TODO: Should we also reload images in new res?
   };
 
   const value = {

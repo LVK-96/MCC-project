@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   Alert,
   Modal,
-  Picker,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import Button from '../Button';
 import SettingsIcon from '../SettingsIcon';
 import styles from './styles';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
+import SettingsView from '../SettingsView';
 
 function ProfileView({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -57,20 +57,8 @@ function ProfileView({ navigation }) {
       <View style={styles.container}>
         <Modal style={styles.modal}
           visible={modalVisible}
-          presentationStyle="pageSheet"
           onRequestClose={() => setModalVisible(false)}>
-          <Text>Choose image resolution</Text>
-          <View style={styles.bodyContent}>
-            <Picker style={styles.resPicker}
-              prompt="Image resolution"
-              selectedValue={authenticationContext.imageRes}
-              onValueChange={value => authenticationContext.setAndStoreImageRes(value)}>
-              <Picker.Item label="Full" value="full" />
-              <Picker.Item label="High" value="high" />
-              <Picker.Item label="Low" value="low" />
-            </Picker>
-            <Button title="Go back" onPress={() => setModalVisible(false)} style={styles.profileButton} color={'grey'} />
-          </View>
+          <SettingsView setModalVisible={setModalVisible} />
         </Modal>
         <View style={styles.header}/>
           <TouchableOpacity style={styles.avatarContainer} onPress={changeProfilePic}>
