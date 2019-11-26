@@ -24,14 +24,14 @@ const signup = async (email, displayName, password) => {
     const sign = await auth().createUserWithEmailAndPassword(email, password);
     const storageRef = storage().ref();
     const defaultRef = storageRef.child('profilepics/default.jpg');
-    const defaultUrl = await defaultRef.getDownloadURL();
-    await auth().currentUser.updateProfile({ displayName: displayName, photoURL: defaultUrl });
+    const path = defaultRef.toString();
+    await auth().currentUser.updateProfile({ displayName: displayName, photoURL: path });
     const token = await auth().currentUser.getIdToken(true);
     projectService.setToken(token);
     return {
       displayName: displayName,
       email: sign.user._user.email,
-      photoURL: defaultUrl,
+      photoURL: path,
       uid: sign.user._user.uid
     };
   } catch (e) {
@@ -53,9 +53,9 @@ const changeProfilePic = async (uri, uid) => {
     const storageRef = storage().ref();
     const profilepicRef = storageRef.child(`profilepics/${uid}.png`);
     await profilepicRef.putFile(stats.path);
-    const imageUrl = await profilepicRef.getDownloadURL();
-    await auth().currentUser.updateProfile({ photoURL: imageUrl });
-    return imageUrl;
+    const path = profilepicRef.toString();
+    await auth().currentUser.updateProfile({ photoURL: path });
+    return await applyResSetting(path);
   } catch (e) {
     throw e;
   }

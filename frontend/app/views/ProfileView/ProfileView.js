@@ -1,17 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Text,
   View,
   Image,
   TouchableOpacity,
   Alert,
+  Modal,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import Button from '../Button';
+import SettingsIcon from '../SettingsIcon';
 import styles from './styles';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
+import SettingsView from '../SettingsView';
 
 function ProfileView({ navigation }) {
+  const [modalVisible, setModalVisible] = useState(false);
   const authenticationContext = useContext(AuthenticationContext);
 
   const changeProfilePic = () => {
@@ -34,11 +38,11 @@ function ProfileView({ navigation }) {
           console.log('Image picking failed: ', response);
       }
     });
-  }
+  };
 
   const changePassword = () => {
     navigation.navigate('ChangePassword');
-  }
+  };
 
   const logout = async () => {
     try {
@@ -46,12 +50,17 @@ function ProfileView({ navigation }) {
     } catch (e) {
       Alert.alert('Failed to logout');
     }
-  }
+  };
 
   if (authenticationContext.isLoggedIn) {
     return (
       <View style={styles.container}>
-          <View style={styles.header}/>
+        <Modal style={styles.modal}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}>
+          <SettingsView setModalVisible={setModalVisible} />
+        </Modal>
+        <View style={styles.header}/>
           <TouchableOpacity style={styles.avatarContainer} onPress={changeProfilePic}>
             <Image style={styles.avatar}
               source={{
@@ -65,6 +74,9 @@ function ProfileView({ navigation }) {
             </View>
             <Button title={'Change password'} onPress={changePassword} style={styles.profileButton} />
             <Button title={'Logout'} style={styles.profileButton} onPress={logout} color={'red'} />
+            <TouchableOpacity style={styles.settingsButton} onPress={() => setModalVisible(true)}>
+              <SettingsIcon />
+            </TouchableOpacity>
         </View>
       </View>
     );
