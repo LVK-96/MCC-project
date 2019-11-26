@@ -1,12 +1,6 @@
 import storage from '@react-native-firebase/storage';
 
-let setting = null;
-
-export const setResSetting = (value) => {
-  setting = value;
-};
-
-export const applyResSetting = async (path) => {
+const fetchCorrectRes = async (path, setting) => {
   const ref = storage().refFromURL(path);
   switch (setting) {
     case 'low':
@@ -29,3 +23,4 @@ export const applyResSetting = async (path) => {
   }
 };
 
+export default fetchCorrectRes;

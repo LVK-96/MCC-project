@@ -1,7 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
-import { applyResSetting } from '../util/applyResSetting';
 import projectService from '../services/projectService';
 
 const login = async (email, password) => {
@@ -9,12 +8,10 @@ const login = async (email, password) => {
     const sign = await auth().signInWithEmailAndPassword(email, password);
     const token = await auth().currentUser.getIdToken(true);
     projectService.setToken(token);
-    const photoURL = await applyResSetting(sign.user.photoURL);
-    console.log('New photoUrl', photoURL);
     return {
       displayName: sign.user.displayName,
       email: sign.user.email,
-      photoURL: photoURL,
+      photoURL: sign.user.photoURL,
       uid: sign.user.uid
     };
   } catch (e) {
@@ -29,13 +26,12 @@ const signup = async (email, displayName, password) => {
     const defaultRef = storageRef.child('profilepics/default.jpg');
     const path = defaultRef.toString();
     await auth().currentUser.updateProfile({ displayName: displayName, photoURL: path });
-    const photoURL = await applyResSetting(path);
     const token = await auth().currentUser.getIdToken(true);
     projectService.setToken(token);
     return {
       displayName: displayName,
       email: sign.user._user.email,
-      photoURL: photoURL,
+      photoURL: path,
       uid: sign.user._user.uid
     };
   } catch (e) {

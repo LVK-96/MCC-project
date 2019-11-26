@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import AuthenticationContext from '../contexts/AuthenticationContext';
 import authenticationService from '../services/authenticationService';
-import { setResSetting } from '../util/applyResSetting';
+import fetchCorrectRes from '../util/fetchCorrectRes';
 
 /*Encapsulates authentication logic inside one component.*/
 function AuthenticationProvider({ children }) {
@@ -16,11 +16,9 @@ function AuthenticationProvider({ children }) {
         const value = await AsyncStorage.getItem('@res');
         if (value !== null) {
           setImageRes(value);
-          setResSetting(value);
         }
       } catch (e) {
         setImageRes('full'); // default setting
-        setResSetting('full'); // default setting
       }
     };
 
@@ -46,8 +44,10 @@ function AuthenticationProvider({ children }) {
     } else {
       try {
         const loggedUser = await authenticationService.login(email, password);
-        setUser(loggedUser);
+        const url = await fetchCorrectRes(loggedUser.photoURL, imageRes);
+        setUser({ ...loggedUser, photoURL: url });
       } catch (e) {
+        // TODO: If profile pic fetching fails dont fail login just set empty url
         console.log('failed to login with firebase');
         throw new Error('Failed to login with firebase auth');
       }
@@ -57,8 +57,10 @@ function AuthenticationProvider({ children }) {
   const signup = async ({ email, displayName, password }) => {
     try {
       const signedUser = await authenticationService.signup(email, displayName, password);
-      setUser(signedUser);
+      const url = await fetchCorrectRes(signedUser.photoURL, imageRes);
+      setUser({ ...signedUser, photoURL: url });
     } catch (e) {
+      // TODO: If profile pic fetching fails dont fail login just set empty url
       console.log('failed to signup with firebase');
       throw new Error('Failed to signup with firebase auth');
     }
@@ -84,7 +86,6 @@ function AuthenticationProvider({ children }) {
 
   const setAndStoreImageRes = async (setting) => {
     storeRes(setting);
-    setResSetting(setting);
     setImageRes(setting);
   };
 
