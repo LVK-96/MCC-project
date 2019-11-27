@@ -25,7 +25,11 @@ const getAll = async () => {
 const createProject = async (project) => {
 	try {
 		console.log('Creating project', project.name);
-		const response = await axios.post(baseUrl, project);
+		const response = await axios.post(baseUrl, project, {
+			headers: {
+        Authorization: token,
+			},
+    });
 		return response.data;
 	} catch (exception) {
 		console.log('Error creating project', exception);

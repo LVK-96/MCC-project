@@ -5,8 +5,9 @@ let { db, auth } = require('../utils/config');
 
 projectsRouter.post('/', async (request, response, next) => {
   try {
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const { body } = request;
-    const project = new Project(body);
+    const project = new Project({ ...body, owner: decodedToken.uid });
     await db.collection('projects').doc(project.id).set({ ...project });
     response.status(201).json(project);
   } catch (exception) {
@@ -16,31 +17,10 @@ projectsRouter.post('/', async (request, response, next) => {
 
 projectsRouter.get('/', async (request, response, next) => {
   try {
-    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString()); //decodedToken.uid 
-    const collection = await db.collection('projects').get();
-    const docs = collection.docs;
-    let projects = [];
-    for (let doc of docs) {
-      projects.push(doc.data());
-    }
-    response.json(projects);
-  } catch (exception) {
-    next(exception);
-  }
-});
-
-projectsRouter.get('/search', async (request, response, next) => {
-  try {
-    const { query } = request;
-    let collection;
-    if (query.tags) {
-      collection = await db.collection('projects')
-        .where('name', '==', query.name).where('tags', 'array-contains-any', [query.tags]).get();
-    } else {
-      collection = await db.collection('projects')
-        .where('name', '==', query.name).get();
-    }
-    const docs = collection.docs;
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
+    const owner = await db.collection('projects').where('owner', '==', decodedToken.uid).get();
+    const member = await db.collectionGroup('members').where('uid', '==', decodedToken.uid).get();
+    const docs = owner.docs.concat(member.docs);
     let projects = [];
     for (let doc of docs) {
       projects.push(doc.data());
@@ -55,6 +35,8 @@ projectsRouter.get('/:id', async (request, response, next) => {
   try {
     const document = await db.collection('projects').doc(request.params.id).get();
     const project = document.data();
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
+    if (project.owner !== decodedToken.uid) return response.status(403).end();
     response.json(project);
   } catch (exception) {
     next(exception);
@@ -64,9 +46,12 @@ projectsRouter.get('/:id', async (request, response, next) => {
 projectsRouter.post('/:id/members', async (request, response, next) => {
   try {
     const { body } = request;
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString()); //decodedToken.uid 
+    const project = await db.collection('projects').doc(request.params.id).get();
+    if (project.owner !== decodedToken.uid) return response.status(403).end();
     for (let member of body.users) {
       await db.collection('projects').doc(request.params.id).collection('members')
-        .doc(member.name).set({ ...member });
+        .doc(member.uid).set({ ...member });
     }
     response.json({ message: 'Members added', members: body.users });
   } catch (exception) {
@@ -91,6 +76,9 @@ projectsRouter.get('/:id/members', async (request, response, next) => {
 projectsRouter.post('/:id/files', async (request, response, next) => {
   try {
     const { body } = request;
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
+    const project = await db.collection('projects').doc(request.params.id).get();
+    if (project.owner !== decodedToken.uid) return response.status(403).end();
     for (let file of body.files) {
       await db.collection('projects').doc(request.params.id).collection('files')
         .doc(file).set({ file });
@@ -118,6 +106,9 @@ projectsRouter.get('/:id/files', async (request, response, next) => {
 projectsRouter.post('/:id/images', async (request, response, next) => {
   try {
     const { body } = request;
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
+    const project = await db.collection('projects').doc(request.params.id).get();
+    if (project.owner !== decodedToken.uid) return response.status(403).end();
     for (let image of body.images) {
       await db.collection('projects').doc(request.params.id).collection('images')
         .doc(image).set({ image });
@@ -144,6 +135,9 @@ projectsRouter.get('/:id/images', async (request, response, next) => {
 
 projectsRouter.delete('/:id', async (request, response, next) => {
   try {
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
+    const project = await db.collection('projects').doc(request.params.id).get();
+    if (project.owner !== decodedToken.uid) return response.status(403).end();
     await db.collection('projects').doc(request.params.id).delete();
     response.json({ message: 'Project deleted' });
   } catch (exception) {
@@ -154,6 +148,9 @@ projectsRouter.delete('/:id', async (request, response, next) => {
 projectsRouter.post('/:id/tasks', async (request, response, next) => {
   try {
     const { body } = request;
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
+    const project = await db.collection('projects').doc(request.params.id).get();
+    if (project.owner !== decodedToken.uid) return response.status(403).end();
     const task = new Task(body);
     await db.collection('projects').doc(request.params.id).collection('tasks')
       .doc(task.id).set({ ...task });
@@ -206,6 +203,9 @@ projectsRouter.post('/:project_id/tasks/:task_id/status', async (request, respon
 projectsRouter.post('/:project_id/tasks/:task_id/asignees', async (request, response, next) => {
   try {
     const { body } = request;
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
+    const project = await db.collection('projects').doc(request.params.id).get();
+    if (project.owner !== decodedToken.uid) return response.status(403).end();
     for (let user of body.users) {
       await db.collection('projects').doc(request.params.project_id)
         .collection('tasks').doc(request.params.task_id).collection('asignees').doc(user).set({ user });
