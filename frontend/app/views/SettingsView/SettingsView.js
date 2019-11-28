@@ -4,18 +4,18 @@ import {
   View,
   Button,
 } from 'react-native';
-import AuthenticationContext from '../../contexts/AuthenticationContext';
+import SettingsContext from '../../contexts/SettingsContext';
 import styles from './styles';
 
 function SettingsView({ setModalVisible }) {
-  const authenticationContext = useContext(AuthenticationContext);
+  const settingsContext = useContext(SettingsContext);
 
   return (
     <View style={styles.bodyContent}>
       <Picker style={styles.resPicker}
         prompt="Image resolution"
-        selectedValue={authenticationContext.imageRes}
-        onValueChange={value => authenticationContext.setAndStoreImageRes(value)}>
+        selectedValue={settingsContext.imageRes}
+        onValueChange={value => settingsContext.setAndStoreImageRes(value)}>
         <Picker.Item label="Full" value="full" />
         <Picker.Item label="High" value="high" />
         <Picker.Item label="Low" value="low" />
