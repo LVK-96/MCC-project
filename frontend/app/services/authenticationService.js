@@ -50,8 +50,9 @@ const logout = async () => {
 const changeProfilePic = async (uri, uid) => {
   try {
     const stats = await RNFetchBlob.fs.stat(uri);
+    const format = stats.path.split('.')[1];
     const storageRef = storage().ref();
-    const profilepicRef = storageRef.child(`profilepics/${uid}.png`);
+    const profilepicRef = storageRef.child(`profilepics/${uid}.${format}`);
     await profilepicRef.putFile(stats.path);
     const path = profilepicRef.toString();
     await auth().currentUser.updateProfile({ photoURL: path });
