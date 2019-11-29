@@ -34,7 +34,11 @@ const createProject = async (project) => {
     const iconRef = storageRef.child(`projectIcons/${await UUIDGenerator.getRandomUUID()}.${format}`);
     await iconRef.putFile(stats.path);
     const path = iconRef.toString();
-    const response = await axios.post(baseUrl, { ...project, iconSource: path });
+    const response = await axios.post(baseUrl, { ...project, iconSource: path }, {
+			headers: {
+        Authorization: token,
+			},
+    });
     return response.data;
 	} catch (exception) {
 		console.log('Error creating project', exception);
