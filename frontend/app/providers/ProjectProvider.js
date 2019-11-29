@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import ProjectContext from '../contexts/ProjectContext';
 import projectsService from '../services/projectService';
 import AuthenticationContext from '../contexts/AuthenticationContext';
+import fetchCorrectRes from '../util/fetchCorrectRes';
 
 const mockprojects = [
   {
@@ -91,7 +92,8 @@ function ProjectProvider({ children }) {
   const createProject = async (project) => {
     try {
       const created = await projectsService.createProject(project);
-      setProjects(prevProjects => [created, ...prevProjects]);
+      const url = await fetchCorrectRes(created.iconSource);
+      setProjects(prevProjects => [{ ...created, iconSource: url }, ...prevProjects]);
       return true;
     } catch (error) {
       console.log('Error', error);
