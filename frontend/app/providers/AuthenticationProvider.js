@@ -54,7 +54,8 @@ function AuthenticationProvider({ children }) {
   const changeProfilePic = async (uri) => {
     try {
       const imageUrl = await authenticationService.changeProfilePic(uri, user.uid);
-      setUser({ ...user, photoURL:  imageUrl });
+      const url = await fetchCorrectRes(imageUrl, settingsContext.imageRes);
+      setUser({ ...user, photoURL: url });
     } catch (e) {
       throw new Error('Failed to save profile picture to cloud storage');
     }

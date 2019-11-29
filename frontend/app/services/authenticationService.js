@@ -55,7 +55,7 @@ const changeProfilePic = async (uri, uid) => {
     await profilepicRef.putFile(stats.path);
     const path = profilepicRef.toString();
     await auth().currentUser.updateProfile({ photoURL: path });
-    return await applyResSetting(path);
+    return path;
   } catch (e) {
     throw e;
   }
