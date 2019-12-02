@@ -6,22 +6,8 @@ usersRouter.post('/', async (request, response, next) => {
   try {
     const { body } = request;
     const user = new User(body);
-    await db.collection('users').doc(user.id).set({ ...user });
+    await db.collection('users').doc(user.uid).set({ ...user });
     response.status(201).json(user);
-  } catch (exception) {
-    next(exception);
-  }
-});
-
-usersRouter.get('/', async (request, response, next) => {
-  try {
-    const collection = await db.collection('users').get();
-    const docs = collection.docs;
-    let users = [];
-    for (let doc of docs) {
-      users.push(doc.data());
-    }
-    response.json(users);
   } catch (exception) {
     next(exception);
   }
@@ -37,7 +23,7 @@ usersRouter.get('/:id', async (request, response, next) => {
   }
 });
 
-usersRouter.post('/:id', async (request, response, next) => {
+usersRouter.put('/:id', async (request, response, next) => {
   try {
     const { body } = request;
     const document = await db.collection('users').doc(request.params.id).get();
