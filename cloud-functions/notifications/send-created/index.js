@@ -5,7 +5,6 @@ const { SERVICE_ACCOUNT_PATH } = process.env;
 const serviceAccount = require(SERVICE_ACCOUNT_PATH);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'mcc-fall-2019-g20.appspot.com/',
 });
 
 exports.sendCreated = async (request, response) => {
@@ -14,20 +13,19 @@ exports.sendCreated = async (request, response) => {
       try {
         console.log('Sending project created notification!');
         const { body } = request;
-        const user = await db.collection('users').doc(body.owner).get();
         const message = {
           notification: {
-            body: `Project ${body.name} created!`,
+            body: `Project ${body.project.name} created!`,
             title: 'Project created',
           },
           data: {
-            body: `Project ${body.name} created!`,
+            body: `Project ${body.project.name} created!`,
             title: 'Project created',
           },
           android: {
             priority: 'high',
           },
-          token: user.data().fcmToken,
+          token: body.user.fcmToken,
         };
 
         await admin.messaging().send(message);

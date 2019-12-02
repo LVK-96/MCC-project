@@ -1,8 +1,10 @@
 const axios = require('axios');
+const admin = require('firebase-admin');
 
 const sendProjectCreated = async (project) => {
   try {
-    await axios.post(process.env.SEND_CREATED_PATH, project);
+    const user = await admin.firestore().collection('users').doc(project.owner).get();
+    await axios.post(process.env.SEND_CREATED_PATH, {project: project, user: user.data() });
   } catch (e) {
     console.log(e);
     console.log('Invoking cloud function failed');

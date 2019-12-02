@@ -43,10 +43,15 @@ const signup = async (email, displayName, password) => {
 };
 
 const saveFcmToken = async (uid, fcmToken) => {
-  await axios.post(baseUrl, {
-    uid: uid,
-    fcmToken: fcmToken,
-  });
+  try {
+    await axios.post(baseUrl, {
+      uid: uid,
+      fcmToken: fcmToken,
+    });
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
 };
 
 const logout = async () => {
