@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import NotificationContext from '../contexts/NotificationContext';
 
 function NotificationProvider({ children }) {
+  const [fcmToken, setFcmToken] = useState('');
   useEffect(() => {
     checkPermission();
     messageListener();
@@ -31,6 +32,7 @@ function NotificationProvider({ children }) {
   const getFcmToken = async () => {
     try {
       const t = await messaging().getToken();
+      setFcmToken(t);
       console.log(t);
     } catch (e) {
       console.log('Failed fetching fcm token');
@@ -54,7 +56,7 @@ function NotificationProvider({ children }) {
     );
   };
 
-  const value = { showAlert };
+  const value = { showAlert, fcmToken };
 
   return (
     <NotificationContext.Provider value={value}>

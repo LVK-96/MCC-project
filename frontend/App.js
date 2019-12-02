@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import AppView from './app/views/AppView';
 
+
 function App() {
   return (
     <>
