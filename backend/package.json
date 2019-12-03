@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:production": "NODE_ENV=production node index.js",
+    "start": "NODE_ENV=production node index.js",
     "emulator-db": "firebase emulators:start --only firestore",
     "watch": "NODE_ENV=development FIRESTORE_EMULATOR_HOST=localhost:9080 nodemon index.js",
     "yrjis": "sleep 2 && npm run watch",
