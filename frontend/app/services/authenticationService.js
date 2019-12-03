@@ -1,7 +1,10 @@
 import auth from '@react-native-firebase/auth';
+import axios from 'axios';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import projectService from '../services/projectService';
+
+const baseUrl = 'http://10.0.2.2:3000/users'; // TODO: use env var for this
 
 const login = async (email, password) => {
   try {
@@ -35,6 +38,18 @@ const signup = async (email, displayName, password) => {
       uid: sign.user._user.uid
     };
   } catch (e) {
+    throw e;
+  }
+};
+
+const saveFcmToken = async (uid, fcmToken) => {
+  try {
+    await axios.post(baseUrl, {
+      uid: uid,
+      fcmToken: fcmToken,
+    });
+  } catch (e) {
+    console.log(e);
     throw e;
   }
 };
@@ -89,6 +104,7 @@ export default {
   login,
   signup,
   logout,
+  saveFcmToken,
   changeProfilePic,
   checkPassword,
   changePassword
