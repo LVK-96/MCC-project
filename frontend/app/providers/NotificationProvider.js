@@ -27,7 +27,7 @@ function NotificationProvider({ children }) {
       // User has rejected permissions
       console.log('permission rejected');
     }
-  }
+  };
 
   const getFcmToken = async () => {
     try {
