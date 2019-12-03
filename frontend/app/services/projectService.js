@@ -28,16 +28,16 @@ const getAll = async () => {
 const createProject = async (project) => {
 	try {
 		console.log('Creating project', project.name);
-    const stats = await RNFetchBlob.fs.stat(project.iconSource);
-    const format = stats.path.split('.')[1];
-    const storageRef = storage().ref();
-    const iconRef = storageRef.child(`projectIcons/${await UUIDGenerator.getRandomUUID()}.${format}`);
-    await iconRef.putFile(stats.path);
-    const path = iconRef.toString();
-    const response = await axios.post(baseUrl, { ...project, iconSource: path }, {
-			headers: {
-        Authorization: token,
-			},
+		const stats = await RNFetchBlob.fs.stat(project.iconSource);
+		const format = stats.path.split('.')[1];
+		const storageRef = storage().ref();
+		const iconRef = storageRef.child(`projectIcons/${await UUIDGenerator.getRandomUUID()}.${format}`);
+		await iconRef.putFile(stats.path);
+		const path = iconRef.toString();
+		const response = await axios.post(baseUrl, { ...project, iconSource: path }, {
+		headers: {
+			Authorization: token,
+		},
     });
     return response.data;
 	} catch (exception) {
