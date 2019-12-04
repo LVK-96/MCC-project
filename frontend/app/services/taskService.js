@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { mockTasks } from '../providers/TasksProvider';
 
 // This is a tentative route assumption. Tasks may alternatively be
 // located under api/project/{projectId}/tasks endpoint.
@@ -26,4 +27,14 @@ const updateTask = async (id, task) => {
     }
 };
 
-export default { getTasksByProjectId, updateTask };
+// Creates a task for the project designated by projectId.
+const createTask = async (projectId, task) => {
+    try {
+        task.project = projectId;
+        return task;
+    } catch (error) {
+        return null;
+    }
+};
+
+export default { getTasksByProjectId, updateTask, createTask };

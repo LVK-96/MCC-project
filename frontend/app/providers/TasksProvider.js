@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import TasksContext from '../contexts/TasksContext';
 import taskService from '../services/taskService';
 
-const mockTasks = [
+export const mockTasks = [
     {
         id: 0,
         description: 'Task 1 description',
         status: 'PENDING',
         deadline: '2014-01-01T23:28:56.782Z',
         assignees: [],
+        project: 100,
     },
     {
         id: 1,
@@ -16,6 +17,7 @@ const mockTasks = [
         status: 'ON_GOING',
         deadline: '2014-01-01T23:28:56.782Z',
         assignees: [],
+        project: 100,
     },
     {
         id: 2,
@@ -23,6 +25,7 @@ const mockTasks = [
         status: 'PENDING',
         deadline: '2014-01-01T23:28:56.782Z',
         assignees: [],
+        project: 101,
     },
 ];
 
@@ -103,11 +106,24 @@ function TasksProvider({ children, projectId }) {
                 [field]: value,
             }));
         }
-    }
+    };
+
+    // Creates a task for the selected project.
+    // Returns whether creation was successful.
+    const createTask = (task) => {
+        try {
+            const created = taskService.createTask(projectId, task);
+            setTasks(prev => [...prev, created]);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    };
 
     const contextValue = {
         tasks,
         updateTask,
+        createTask,
         selectTask,
         selectedTask,
         setSelectedTaskField,
