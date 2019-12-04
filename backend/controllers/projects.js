@@ -15,6 +15,12 @@ const isMember = async (token, projectRef) => {
   return false;
 };
 
+const isAssigned = async (token, taskRef) => {
+  const assigned = await taskRef.collection('assignees').get();
+  if (assigned.docs.includes(token.uid)) return true;
+  return false;
+};
+
 projectsRouter.post('/', async (request, response, next) => {
   try {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
@@ -175,11 +181,11 @@ projectsRouter.post('/:id/tasks', async (request, response, next) => {
   try {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
-    const project = await projectRef.doc(request.params.id).get();
+    const project = await projectRef.get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
     const { body } = request;
     const task = new Task(body);
-    await projectRef.doc(request.params.id).collection('tasks').doc(task.id).set({ ...task });
+    await projectRef.collection('tasks').doc(task.id).set({ ...task });
     response.json(task);
   } catch (exception) {
     next(exception);
@@ -190,9 +196,9 @@ projectsRouter.get('/:id/tasks', async (request, response, next) => {
   try {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
-    const project = await projectRef.doc(request.params.id).get();
+    const project = await projectRef.get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
-    const collection = await projectRef.doc(request.params.id).collection('tasks').get();
+    const collection = await projectRef.collection('tasks').get();
     const docs = collection.docs;
     let tasks = [];
     for (let doc of docs) {
@@ -213,6 +219,24 @@ projectsRouter.get('/:project_id/tasks/:task_id', async (request, response, next
     const document = await projectRef.collection('tasks').doc(request.params.task_id).get();
     const task = document.data();
     response.json(task);
+  } catch (exception) {
+    next(exception);
+  }
+});
+
+projectsRouter.put('/:project_id/tasks/:task_id', async (request, response, next) => {
+  try {
+    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
+    const projectRef = db.collection('projects').doc(request.params.project_id);
+    const taskRef = projectRef.collection('tasks').doc(request.params.task_id);
+    const project = await projectRef.get();
+    if (!isOwner(decodedToken, project) && !isAssigned(decodedToken, taskRef)) return response.status(403).end();
+    const { body } = request;
+    const document = await taskRef.get();
+    const task = document.data();
+    const updated = { ...task, ...body };
+    await taskRef.set(updated);
+    response.json(updated);
   } catch (exception) {
     next(exception);
   }

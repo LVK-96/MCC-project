@@ -5,7 +5,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import UUIDGenerator from 'react-native-uuid-generator';
 import api_url from '../util/config';
 
-const baseUrl = api_url + 'projects';
+const baseUrl = api_url + '/projects';
 
 let token = null;
 
