@@ -1,7 +1,6 @@
 const projectsRouter = require('express').Router();
 const Project = require('../models/project');
 const Task = require('../models/task');
-const notify = require('../utils/notify');
 let { db, auth } = require('../utils/config');
 
 const isOwner = (token, project) => {
@@ -22,7 +21,6 @@ projectsRouter.post('/', async (request, response, next) => {
     const { body } = request;
     const project = new Project({ ...body, owner: decodedToken.uid });
     await db.collection('projects').doc(project.id).set({ ...project });
-    notify.sendProjectCreated(project);
     response.status(201).json(project);
   } catch (exception) {
     next(exception);

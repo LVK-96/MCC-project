@@ -1,18 +1,18 @@
 const admin = require("firebase-admin");
 
-exports.projectCreated = async (project) => {
+exports.taskAssigned = async (task) => {
   try {
-    const doc = await admin.firestore().collection('users').doc(project.owner).get();
+    const doc = await admin.firestore().collection('users').doc(task.assignedTo).get();
     const user = doc.data();
-    console.log(`Sending project created notification to ${user.fcmToken}`);
+    console.log(`Sending task as-signed notification to ${user.fcmToken}`);
     const message = {
       notification: {
-        body: `Project ${project.name} created!`,
-        title: 'Project created',
+        body: `Assigned to ${task.name}`,
+        title: 'Assigned to task',
       },
       data: {
-        body: `Project ${project.name} created!`,
-        title: 'Project created',
+        body: `Assigned to ${task.name}`,
+        title: 'Assigned to task',
       },
       android: {
         priority: 'high',
@@ -26,3 +26,4 @@ exports.projectCreated = async (project) => {
     console.log('Sending notification failed');
   }
 };
+
