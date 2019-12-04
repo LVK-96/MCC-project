@@ -3,6 +3,7 @@ import {
 	Text,
 	TouchableOpacity,
 	CheckBox,
+	Alert
 } from 'react-native';
 import styles from './styles';
 import TasksContext from '../../contexts/TasksContext';
@@ -23,7 +24,14 @@ function TaskPreview({
 		} else {
 			task.status = 'PENDING';
 		}
-		updateTask(task.id, task);
+		const result = updateTask(task.id, task);
+		if (!result) {
+			Alert.alert(
+				'Setting project status failed',
+				'Try another time.',
+				[{ text: 'OK', onPress: () => {}}],
+			);
+		}
 	};
 
 	return (
