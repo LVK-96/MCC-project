@@ -55,7 +55,7 @@ function TasksProvider({ children, projectId }) {
 
     // Updates the task with id 'id' to the value 'task.
     const updateTask = async (id, task) => {
-        const response = await taskService.updateTask(id, task);
+        const response = await taskService.updateTask(projectId, id, task);
         if (response) {
             const updated = tasks.map(t => t.id === id ? task : t);
             setTasks(updated);
