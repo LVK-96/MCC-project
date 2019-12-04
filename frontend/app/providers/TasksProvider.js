@@ -37,6 +37,7 @@ function TasksProvider({ children, projectId }) {
             const fetched = await taskService.getTasksByProjectId(projectId);
             // Set to mock tasks if fetch fails.
             setTasks(fetched ? fetched : mockTasks);
+
             // Whenever the tasks are reloaded, the currently
             // selected task should be set to null.
             setSelectedTask(null);
@@ -52,12 +53,27 @@ function TasksProvider({ children, projectId }) {
         if (response) {
             const updated = tasks.map(t => t.id === id ? task : t);
             setTasks(updated);
+
+            // Update the selected task if this was it.
+            if (id === selectedTask.id) {
+                // TODO: Use actual response object
+                setSelectedTask(task);
+            }
+
             return true;
+
         // TODO: Handle actual failure, now update always fails
         // because it doesn't use a real back-end endpoint.
         } else {
+            // Update the selected task if this was it.
+            if (id === selectedTask.id) {
+                // TODO: Use actual response object
+                setSelectedTask(task);
+            }
+
             const updated = tasks.map(t => t.id === id ? task : t);
             setTasks(updated);
+
             return true;
         }
     };
@@ -75,11 +91,23 @@ function TasksProvider({ children, projectId }) {
         }
     };
 
+    // Updates a field in the selected task. This is
+    // necessary in the task view.
+    const setSelectedTaskField = (field, value) => {
+        if (selectedTask != null) {
+            setSelectedTask(prevState => ({
+                ...prevState,
+                [field]: value,
+            }));
+        }
+    }
+
     const contextValue = {
         tasks,
         updateTask,
         selectTask,
         selectedTask,
+        setSelectedTaskField,
     };
 
     return (
