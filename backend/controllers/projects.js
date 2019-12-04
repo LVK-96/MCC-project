@@ -175,11 +175,11 @@ projectsRouter.post('/:id/tasks', async (request, response, next) => {
   try {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
-    const project = await projectRef.doc(request.params.id).get();
+    const project = await projectRef.get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
     const { body } = request;
     const task = new Task(body);
-    await projectRef.doc(request.params.id).collection('tasks').doc(task.id).set({ ...task });
+    await projectRef.collection('tasks').doc(task.id).set({ ...task });
     response.json(task);
   } catch (exception) {
     next(exception);

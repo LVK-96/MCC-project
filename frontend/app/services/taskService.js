@@ -38,7 +38,11 @@ const updateTask = async (projectId, taskId, task) => {
 // Creates a task for the project designated by projectId.
 const createTask = async (projectId, task) => {
     try {
-        const response = await axios.put(`${baseUrl}/${projectId}/tasks`, task);
+        const response = await axios.post(`${baseUrl}/${projectId}/tasks`, task,{
+          headers: {
+          Authorization: token,
+          },
+        });
         return response.data;
     } catch (error) {
         // TODO: Remove this
