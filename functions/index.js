@@ -6,6 +6,7 @@ const { generatePDF } = require('./report-generation/generatePDF');
 const { projectCreated } = require('./notifications/projectCreated');
 const { memberAdded } = require('./notifications/memberAdded');
 const { taskAssigned } = require('./notifications/taskAssigned');
+const { deadlineCheck } = require('./notifications/deadlineCheck');
 
 const { SERVICE_ACCOUNT_PATH } = process.env;
 
@@ -25,6 +26,13 @@ if (SERVICE_ACCOUNT_PATH) {
 // exports.helloWorld = functions.https.onRequest((request, response) => {
 //  response.send("Hello from Firebase!");
 // });
+//
+
+exports.deadline = functions.region('europe-west1')
+  .pubsub.schedule('* * * * *') // Check deadlines every hour
+  .onRun(async (context) => {
+    deadlineCheck();
+});
 
 exports.projectCreated = functions.region('europe-west1')
   .firestore
