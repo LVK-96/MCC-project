@@ -5,6 +5,7 @@ import {
     View,
 } from 'react-native';
 import userService from '../../services/userService';
+import styles from './styles';
 
 // Users are stored as IDs, but we want their
 // names (and possibly other data) to be displayed.
@@ -33,9 +34,12 @@ function UserList({ displayUsers }) {
     }, [users, displayUsers]);
 
     return (
-        <View>
+        <View style={styles.container}>
             {rendered.map(user =>
-                <Text key={user.id}>{user.name}</Text>
+                <Text key={user.id}
+                    style={styles.item}>
+                    {user.name}
+                </Text>
             )}
         </View>
     );

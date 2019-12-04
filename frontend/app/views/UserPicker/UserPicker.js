@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     Picker,
+    Text,
 } from 'react-native';
 import userService from '../../services/userService';
 
@@ -33,12 +34,13 @@ function UserPicker({
             }}
         >
             {defaultLabel &&
-                <Picker.Item value={-1}
+                <Picker.Item
+                    value={-1}
                     label={defaultLabel}/>}
             {users.map(user =>
                 <Picker.Item
                     key={user.id}
-                    label={user.name}
+                    label={'  \u2022  ' + user.name}
                     value={user.id}/>
             )}
         </Picker>
