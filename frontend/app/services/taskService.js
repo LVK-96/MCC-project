@@ -31,6 +31,7 @@ const updateTask = async (id, task) => {
 const createTask = async (projectId, task) => {
     try {
         task.project = projectId;
+        task.status = 'PENDING';
         return task;
     } catch (error) {
         return null;
