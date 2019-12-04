@@ -8,18 +8,21 @@ const mockTasks = [
         description: 'Task 1 description',
         status: 'PENDING',
         deadline: '2014-01-01T23:28:56.782Z',
+        assignees: [],
     },
     {
         id: 1,
         description: 'Task 2 description',
         status: 'ON_GOING',
         deadline: '2014-01-01T23:28:56.782Z',
+        assignees: [],
     },
     {
         id: 2,
         description: 'Task 3 description',
         status: 'PENDING',
         deadline: '2014-01-01T23:28:56.782Z',
+        assignees: [],
     },
 ];
 

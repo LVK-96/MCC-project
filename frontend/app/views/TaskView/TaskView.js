@@ -12,6 +12,8 @@ import ProjectContext from '../../contexts/ProjectContext';
 import TasksContext from '../../contexts/TasksContext';
 import { withNavigation } from 'react-navigation';
 import styles from './styles';
+import UserPicker from '../UserPicker/UserPicker';
+import UserList from '../UserList/UserList';
 
 function TaskView() {
     const projectType = useContext(ProjectContext).selectedProject.type;
@@ -35,6 +37,16 @@ function TaskView() {
             }
         } catch (error) {
             console.log('Error selecting deadline date', error);
+        }
+    };
+
+    // TODO: Disable assignee adding if the
+    // logged user isn't the project administrator.
+    const addAssignee = (userId) => {
+        // Cannot add the same user twice
+        if (task.assignees.indexOf(userId) === -1) {
+            updateTask(task.id, { ...task,
+                assignees: [...task.assignees, userId] });
         }
     };
 
@@ -84,6 +96,9 @@ function TaskView() {
                 projectType === 'GROUP' &&
                 <View>
                     <Text style={styles.label}>Task assignees</Text>
+                    <UserPicker defaultLabel={'Add assignee'}
+                        onSelectCallback={addAssignee}/>
+                    <UserList displayUsers={task.assignees}/>
                 </View>}
             </View>
         </View>
