@@ -1,0 +1,229 @@
+swagger: "2.0"
+info:
+  description: "REST API for task management app."
+  title: "Task management API"
+  version: "1.0.0"
+host: "mcc-fall-2019-g20.appspot.com"
+schemes:
+  - "https"
+
+paths:
+  /users:
+    post:
+      operationId: createUser
+      produces:
+        - application/json
+      responses:
+        201:
+          description: Successful User creation
+        default:
+          description: Unexpected error
+    get:
+      operationId: readUsers
+      produces:
+       - application/json
+      responses:
+        200:
+          description: Successful read of Users
+        default:
+          description: Unexpected error
+
+  /users/{userId}:
+    parameters:
+      - name: userId
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: readUser
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful User read
+        default:
+          description: Unexpected error
+    put:
+      operationId: updateUser
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful User update
+        default:
+          description: Unexpected error
+
+  /projects:
+    post:
+      operationId: projectCreate
+      produces:
+        - application/json
+      responses:
+        201:
+          description: Successful project creation
+        default:
+          description: Unexpected error
+    get:
+      operationId: projectsRead
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful projects read
+        default:
+          description: Unexpected error
+
+  /projects/{projectId}:
+    parameters:
+      - name: projectId
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: readProject
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful project read
+        default:
+          description: Unexpected error
+    delete:
+      operationId: deleteProject
+      produces:
+        - applications/json
+      responses:
+        200:
+          description: Successful project deletion
+        default:
+          description: Unexpected error
+
+  /projects/{projectId}/members:
+    parameters:
+      - name: projectId
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: addMembers
+      produces:
+        - application/json
+      responses:
+        201:
+          description: Successfully added members
+        default:
+          description: Unexpected error
+    get:
+      operationId: getMembers
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfully read members
+        default:
+          description: Unexpected error
+
+  /projects/{projectId}/files:
+    parameters:
+      - name: projectId
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: addFiles
+      produces:
+        - application/json
+      responses:
+        201:
+          description: Successfully added files
+        default:
+          description: Unexpected error
+    get:
+      operationId: getFiles
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfully read files
+        default:
+          description: Unexpected error
+
+  /projects/{projectId}/images:
+    parameters:
+      - name: projectId
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: addImages
+      produces:
+        - application/json
+      responses:
+        201:
+          description: Successfully added images
+        default:
+          description: Unexpected error
+    get:
+      operationId: getImages
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfully read images
+        default:
+          description: Unexpected error
+
+  /projects/{projectId}/tasks:
+    parameters:
+      - name: projectId
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: addTask
+      produces:
+        - application/json
+      responses:
+        201:
+          description: Successfully added task
+        default:
+          description: Unexpected error
+    get:
+      operationId: getTasks
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfully read Tasks
+        default:
+          description: Unexpected error
+
+  /projects/{projectId}/tasks/{taskId}:
+    parameters:
+      - name: projectId
+        type: string
+        in: path
+        required: true
+      - name: taskId
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: readTask
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfully read task
+        default:
+          description: Unexpected error
+    put:
+      operationId: updateTask
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfully updated task
+        default:
+          description: Unexpected error
+
