@@ -23,7 +23,10 @@ function UserList({ displayUsers }) {
     }, []);
 
     const rendered = useMemo(() => {
-        if (users.length === 0) {
+        if (!users || !users.length) {
+            return [];
+        }
+        if (!displayUsers || !displayUsers.length) {
             return [];
         }
         return displayUsers.map(id => users.find(usr => usr.id === id));

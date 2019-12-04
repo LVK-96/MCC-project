@@ -27,4 +27,15 @@ const updateTask = async (id, task) => {
     }
 };
 
-export default { getTasksByProjectId, updateTask };
+// Creates a task for the project designated by projectId.
+const createTask = async (projectId, task) => {
+    try {
+        task.project = projectId;
+        task.status = 'PENDING';
+        return task;
+    } catch (error) {
+        return null;
+    }
+};
+
+export default { getTasksByProjectId, updateTask, createTask };

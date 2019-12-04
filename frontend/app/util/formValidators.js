@@ -4,6 +4,11 @@ const projectIsValid = (project) => {
         && project.description.length > 0
         && project.keywords.length >= 0
         && project.keywords.length <= 3;
+};
+
+const taskIsValid = (task) => {
+    return task.description.length > 0
+        && !isNaN(new Date(task.deadline).getTime())
 }
 
-export default { projectIsValid };
+export default { projectIsValid, taskIsValid };
