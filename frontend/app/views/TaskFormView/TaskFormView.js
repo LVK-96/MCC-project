@@ -83,22 +83,22 @@ function ProjectFormView({ navigation }) {
     return (
         <View style={styles.outerContainer}>
             <Header
-                leftComponent={{ text: '-', style: { color: '#fff' } }}
+                containerStyle={styles.header}
                 centerComponent={{
-                    text: project.name,
-                    style: { color: '#fff', left: 0 }
+                    text: 'Project: ' + project.name,
+                    style: { color: '#fff', top: -10 },
                 }}
             />
             <View style={styles.container}>
                 <View>
-                    <Text>New task</Text>
+                    <Text style={styles.label}>New task</Text>
                     <TextInput
                         value={description}
                         placeholder="Description"
                         onChangeText={text => setDescription(text)} />
                 </View>
                 <View>
-                    <Text>Deadline</Text>
+                    <Text style={styles.label}>Deadline</Text>
                     <TouchableOpacity onPress={handleDateSelection}>
                         <View pointerEvents={'none'}>
                             <TextInput
@@ -111,12 +111,12 @@ function ProjectFormView({ navigation }) {
                 this task is associated with is a group project. */
                 project.type === 'GROUP' &&
                 <View>
-                    <Text>Assigned to</Text>
+                    <Text style={styles.label}>Assigned to</Text>
                         <UserPicker defaultLabel={'Add assignee'}
                             onSelectCallback={addAssignee}/>
                         <UserList displayUsers={assignees}/>
                 </View>}
-                <View>
+                <View style={styles.saveButton}>
                     <Button title="Save"
                         onPress={handleSavePress}/>
                 </View>
