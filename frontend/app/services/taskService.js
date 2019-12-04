@@ -27,7 +27,11 @@ const getTasksByProjectId = async (projectId) => {
 // Update the task specified by id with the payload specified by task.
 const updateTask = async (projectId, taskId, task) => {
     try {
-        const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}`, task);
+        const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}`, task, {
+          headers: {
+          Authorization: token,
+          },
+        });
         return response.data;
     } catch (error) {
         console.log('Error updating task', error);
@@ -59,7 +63,11 @@ const createTask = async (projectId, task) => {
 const updateTaskStatus = async (projectId, taskId, status) => {
     try {
         const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}`,
-        { status: status });
+        { status: status }, {
+          headers: {
+          Authorization: token,
+          },
+        });
         return response.data;
     } catch (error) {
         return null;

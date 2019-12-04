@@ -57,13 +57,13 @@ function TasksProvider({ children, projectId }) {
     const updateTask = async (id, task) => {
         const response = await taskService.updateTask(projectId, id, task);
         if (response) {
-            const updated = tasks.map(t => t.id === id ? task : t);
+            const updated = tasks.map(t => t.id === id ? response : t);
             setTasks(updated);
 
             // Update the selected task if this was it.
             if (id === selectedTask.id) {
                 // TODO: Use actual response object
-                setSelectedTask(task);
+                setSelectedTask(response);
             }
 
             return true;
@@ -128,12 +128,12 @@ function TasksProvider({ children, projectId }) {
                 task.status = status;
             }
             // Update tasks
-            const updatedTasks = tasks.map(t => t.id === task.id ? task : t);
+            const updatedTasks = tasks.map(t => t.id === task.id ? updated : t);
             setTasks(updatedTasks);
 
             // Update selected task
             if (selectedTask && task.id === selectedTask.id) {
-                setSelectedTask(task);
+                setSelectedTask(updated);
             }
 
             return true;
