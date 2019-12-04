@@ -40,4 +40,17 @@ const createTask = async (projectId, task) => {
     }
 };
 
-export default { getTasksByProjectId, updateTask, createTask };
+// Updates the status of this task.
+// Returns the updated task.
+const updateTaskStatus = async (projectId, taskId, status) => {
+    try {
+        const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}`,
+        { status: status });
+        return response.data;
+    } catch (error) {
+        return null;
+    }
+};
+
+export default { getTasksByProjectId, updateTask, createTask,
+    updateTaskStatus };

@@ -72,7 +72,7 @@ function TasksProvider({ children, projectId }) {
         // because it doesn't use a real back-end endpoint.
         } else {
             // Update the selected task if this was it.
-            if (id === selectedTask.id) {
+            if (selectedTask && id === selectedTask.id) {
                 // TODO: Use actual response object
                 setSelectedTask(task);
             }
@@ -120,9 +120,32 @@ function TasksProvider({ children, projectId }) {
         }
     };
 
+    const updateStatus = async (task, status) => {
+        try {
+            const updated = await taskService.updateTaskStatus(projectId, task.id, status);
+            // TODO: Remove this.
+            if (updated === null) {
+                task.status = status;
+            }
+            // Update tasks
+            const updatedTasks = tasks.map(t => t.id === task.id ? task : t);
+            setTasks(updatedTasks);
+
+            // Update selected task
+            if (selectedTask && task.id === selectedTask.id) {
+                setSelectedTask(task);
+            }
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
     const contextValue = {
         tasks,
         updateTask,
+        updateStatus,
         createTask,
         selectTask,
         selectedTask,

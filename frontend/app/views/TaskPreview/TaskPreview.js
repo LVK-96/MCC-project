@@ -15,16 +15,12 @@ function TaskPreview({
 	task,
 	onPress,
 }) {
-	const { updateTask } = useContext(TasksContext);
+	const { updateStatus } = useContext(TasksContext);
 
 	// TODO: This needs spec.
 	const onStatusChange = (value) => {
-		if (value) {
-			task.status = 'COMPLETED';
-		} else {
-			task.status = 'PENDING';
-		}
-		const result = updateTask(task.id, task);
+		let status = value ? 'COMPLETED' : 'PENDING';
+		const result = updateStatus(task, status);
 		if (!result) {
 			Alert.alert(
 				'Setting project status failed',

@@ -21,6 +21,7 @@ function TaskView() {
         selectedTask: task,
         setSelectedTaskField: setField ,
         updateTask,
+        updateStatus,
     } = useContext(TasksContext);
 
     const handleDateSelection = async () => {
@@ -74,7 +75,7 @@ function TaskView() {
                         {
                             // This induces a necessary re-render.
                             setField('status', value);
-                            updateTask(task.id, { ...task, status: value });
+                            updateStatus(task, value);
                         }}>
                         <Picker.Item label="Pending" value="PENDING" />
                         <Picker.Item label="On-going" value="ONGOING" />
