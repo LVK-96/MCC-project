@@ -1,5 +1,8 @@
 /* Service that provides project data from the backend */
 import axios from 'axios';
+import storage from '@react-native-firebase/storage';
+import RNFetchBlob from 'rn-fetch-blob';
+import UUIDGenerator from 'react-native-uuid-generator';
 
 const baseUrl = 'http://10.0.2.2:3000/projects'; // TODO: use env var for this
 
@@ -25,8 +28,18 @@ const getAll = async () => {
 const createProject = async (project) => {
 	try {
 		console.log('Creating project', project.name);
-		const response = await axios.post(baseUrl, project);
-		return response.data;
+    const stats = await RNFetchBlob.fs.stat(project.iconSource);
+    const format = stats.path.split('.')[1];
+    const storageRef = storage().ref();
+    const iconRef = storageRef.child(`projectIcons/${await UUIDGenerator.getRandomUUID()}.${format}`);
+    await iconRef.putFile(stats.path);
+    const path = iconRef.toString();
+    const response = await axios.post(baseUrl, { ...project, iconSource: path }, {
+			headers: {
+        Authorization: token,
+			},
+    });
+    return response.data;
 	} catch (exception) {
 		console.log('Error creating project', exception);
 		throw exception;

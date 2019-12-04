@@ -9,7 +9,7 @@ function MainScreen({
   const authenticationContext = useContext(AuthenticationContext);
   /*If not logged in, navigate to Authentication screen*/
   useEffect(() => {
-    if (!authenticationContext && navigation) {
+    if (!authenticationContext.isLoggedIn) {
       navigation.navigate("Authentication");
     }
   });

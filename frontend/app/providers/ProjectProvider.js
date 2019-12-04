@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import ProjectContext from '../contexts/ProjectContext';
 import projectsService from '../services/projectService';
 import AuthenticationContext from '../contexts/AuthenticationContext';
+import fetchCorrectRes from '../util/fetchCorrectRes';
 
 const mockprojects = [
   {
@@ -12,7 +13,7 @@ const mockprojects = [
     favorite: true,
     created: '2019-06-06',
     modified: '2019-09-09',
-    keywords: ['test', 'project', 'placeholder'],
+    keywords: ['test', 'project', 'placeholder', 'different'],
     type: 'GROUP',
   },
   {
@@ -34,8 +35,8 @@ const mockprojects = [
     favorite: true,
     created: '2019-06-06',
     modified: '2019-11-01',
-    keywords: ['test', 'project', 'placeholder'],
-    type: 'GROUP',
+    keywords: ['test', 'project', 'placeholder', 'different'],
+    type: 'GROUP'
   },
   {
     id: 103,
@@ -96,7 +97,8 @@ function ProjectProvider({ children }) {
   const createProject = async (project) => {
     try {
       const created = await projectsService.createProject(project);
-      setProjects(prevProjects => [created, ...prevProjects]);
+      const url = await fetchCorrectRes(created.iconSource);
+      setProjects(prevProjects => [{ ...created, iconSource: url }, ...prevProjects]);
       return true;
     } catch (error) {
       console.log('Error', error);

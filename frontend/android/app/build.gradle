@@ -187,6 +187,9 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-auth:19.1.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
+    implementation "com.google.firebase:firebase-messaging:15.0.2"
+
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";

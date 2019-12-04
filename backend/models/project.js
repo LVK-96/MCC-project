@@ -3,6 +3,7 @@ const uniqid = require('uniqid');
 class Project {
   constructor(params) {
     this.id = uniqid();
+    this.iconSource = params.iconSource;
     this.name = params.name;
     this.description = params.description;
     this.deadline = params.deadline;
