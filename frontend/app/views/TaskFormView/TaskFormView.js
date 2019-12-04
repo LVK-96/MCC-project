@@ -62,7 +62,7 @@ function ProjectFormView({ navigation }) {
             const creationSuccessful = await context.createTask(task);
             // If project was created succesfully, go back to projects view.
             if (creationSuccessful) {
-                navigation.navigate('ProjectList');
+                navigation.navigate('TaskList');
             } else {
                 Alert.alert(
                     'Task creation failed', ''
@@ -85,7 +85,7 @@ function ProjectFormView({ navigation }) {
             <Header
                 leftComponent={{ text: '-', style: { color: '#fff' } }}
                 centerComponent={{
-                    text: project.description,
+                    text: project.name,
                     style: { color: '#fff', left: 0 }
                 }}
             />
