@@ -1,8 +1,9 @@
 import axios from 'axios';
+import api_url from '../util/config';
 
 // This is a tentative route assumption. Tasks may alternatively be
 // located under api/project/{projectId}/tasks endpoint.
-const baseUrl = 'http://10.0.2.2:3000/tasks'; // TODO: use env var for this
+const baseUrl = api_url + 'tasks';
 
 // Fetch tasks by project id.
 const getTasksByProjectId = async (projectId) => {

@@ -3,8 +3,9 @@ import axios from 'axios';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import projectService from '../services/projectService';
+import api_url from '../util/config';
 
-const baseUrl = 'http://10.0.2.2:3000/users'; // TODO: use env var for this
+const baseUrl = api_url + 'users';
 
 const login = async (email, password) => {
   try {
@@ -44,6 +45,7 @@ const signup = async (email, displayName, password) => {
 
 const saveFcmToken = async (uid, fcmToken) => {
   try {
+    console.log(baseUrl);
     await axios.post(baseUrl, {
       uid: uid,
       fcmToken: fcmToken,

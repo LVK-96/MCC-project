@@ -3,8 +3,9 @@ import axios from 'axios';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import UUIDGenerator from 'react-native-uuid-generator';
+import api_url from '../util/config';
 
-const baseUrl = 'http://10.0.2.2:3000/projects'; // TODO: use env var for this
+const baseUrl = api_url + 'projects';
 
 let token = null;
 
