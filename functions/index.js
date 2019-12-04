@@ -24,10 +24,13 @@ if (SERVICE_ACCOUNT_PATH) {
 //  response.send("Hello from Firebase!");
 // });
 
-exports.generatePDF = functions.region('europe-west1').https.onRequest((request, response) => {
-  generatePDF(request, response);
+exports.projectCreated = functions.region('europe-west1')
+  .firestore
+  .document('projects/{projectId}')
+  .onCreate((snap, context) => {
+  projectCreated(snap.data());
 });
 
-exports.projectCreated = functions.region('europe-west1').https.onRequest((request, response) => {
-  projectCreated(request, response);
+exports.generatePDF = functions.region('europe-west1').https.onRequest((request, response) => {
+  generatePDF(request, response);
 });

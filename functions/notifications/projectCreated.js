@@ -1,33 +1,28 @@
 const admin = require("firebase-admin");
-const functions = require('firebase-functions');
 
-exports.projectCreated = functions.https.onRequest(async (request, response) => {
-  if (request.method === 'POST') {
-    try {
-      const { body } = request;
-      console.log(`Sending project created notification to ${body.user.fcmToken}`);
-      const message = {
-        notification: {
-          body: `Project ${body.project.name} created!`,
-          title: 'Project created',
-        },
-        data: {
-          body: `Project ${body.project.name} created!`,
-          title: 'Project created',
-        },
-        android: {
-          priority: 'high',
-        },
-        token: body.user.fcmToken,
-      };
+exports.projectCreated = async (project) => {
+  try {
+    const doc = await admin.firestore().collection('users').doc(project.owner).get();
+    const user = doc.data();
+    console.log(`Sending project created notification to ${user.fcmToken}`);
+    const message = {
+      notification: {
+        body: `Project ${project.name} created!`,
+        title: 'Project created',
+      },
+      data: {
+        body: `Project ${project.name} created!`,
+        title: 'Project created',
+      },
+      android: {
+        priority: 'high',
+      },
+      token: user.fcmToken,
+    };
 
-      await admin.messaging().send(message);
-      response.status(200).json({ message: 'Notification sent!' });
-    } catch (e) {
-      console.log(e);
-      console.log('Sending notification failed');
-    }
-  } else {
-    response.status(400).end('Brokenk');
+    await admin.messaging().send(message);
+  } catch (e) {
+    console.log(e);
+    console.log('Sending notification failed');
   }
-});
+};
