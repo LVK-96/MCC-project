@@ -1,7 +1,6 @@
 #!/bin/bash
 
 echo "Deploying cloud resources and configuring things..."
-# Redirect output to log files
 # Deploy Database and Storage rules, Cloud functions
 firebase deploy
 # Ready-made image resizing extension for firebase
