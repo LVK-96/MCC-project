@@ -4,6 +4,7 @@ const admin = require("firebase-admin");
 
 const { generatePDF } = require('./report-generation/generatePDF');
 const { projectCreated } = require('./notifications/projectCreated');
+const { memberAdded } = require('./notifications/memberAdded');
 
 const { SERVICE_ACCOUNT_PATH } = process.env;
 
@@ -29,6 +30,15 @@ exports.projectCreated = functions.region('europe-west1')
   .document('projects/{projectId}')
   .onCreate((snap, context) => {
   projectCreated(snap.data());
+});
+
+exports.memberAdded = functions.region('europe-west1')
+  .firestore
+  .document('projects/{projectId}/members/{userId}')
+  .onCreate(async (snap, context) => {
+    const doc = await admin.firestore().collection('projects').doc(projectId).get();
+    const project = doc.data();
+    memberAdded(snap.data(), project);
 });
 
 exports.generatePDF = functions.region('europe-west1').https.onRequest((request, response) => {
