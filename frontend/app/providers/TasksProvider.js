@@ -110,9 +110,9 @@ function TasksProvider({ children, projectId }) {
 
     // Creates a task for the selected project.
     // Returns whether creation was successful.
-    const createTask = (task) => {
+    const createTask = async (task) => {
         try {
-            const created = taskService.createTask(projectId, task);
+            const created = await taskService.createTask(projectId, task);
             setTasks(prev => [...prev, created]);
             return true;
         } catch (error) {
