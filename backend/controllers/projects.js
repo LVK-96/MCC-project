@@ -190,9 +190,9 @@ projectsRouter.get('/:id/tasks', async (request, response, next) => {
   try {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
-    const project = await projectRef.doc(request.params.id).get();
+    const project = await projectRef.get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
-    const collection = await projectRef.doc(request.params.id).collection('tasks').get();
+    const collection = await projectRef.collection('tasks').get();
     const docs = collection.docs;
     let tasks = [];
     for (let doc of docs) {

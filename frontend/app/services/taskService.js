@@ -3,10 +3,20 @@ import api_url from '../util/config';
 
 const baseUrl = api_url + '/projects';
 
+let token = null;
+
+const setToken = (newToken) => {
+  token = newToken;
+};
+
 // Fetch tasks by project id.
 const getTasksByProjectId = async (projectId) => {
 	try {
-		const response = await axios.get(`${baseUrl}/${projectId}/tasks`);
+		const response = await axios.get(`${baseUrl}/${projectId}/tasks`, {
+        headers: {
+        Authorization: token,
+        },
+    });
 		return response.data;
 	} catch (error) {
 		console.log('Error fetching tasks', error);
@@ -53,4 +63,4 @@ const updateTaskStatus = async (projectId, taskId, status) => {
 };
 
 export default { getTasksByProjectId, updateTask, createTask,
-    updateTaskStatus };
+    updateTaskStatus, setToken };
