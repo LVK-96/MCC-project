@@ -60,11 +60,11 @@ const getFilesByProjectId = async (id) => {
 const createFile = async (projectId, file) => {
 	try {
 		// Create the file in firebase storage.
-		console.log('uri is', file.uri)
-		const stats = await RNFetchBlob.fs.stat(file.uri);
-		const format = stats.path.split('.')[1];
+		const stats = await RNFetchBlob.fs.stat(file.path);
+		const format = stats.path.split('.').reverse()[0];
 		const storageRef = storage().ref();
 		const uuid = await UUIDGenerator.getRandomUUID();
+
 		const fileRef = storageRef.child(`projectFiles/${uuid}.${format}`);
 		await fileRef.putFile(stats.path);
 		const path = fileRef.toString();
@@ -72,7 +72,7 @@ const createFile = async (projectId, file) => {
 		// Make the request.
 		file.source = path;
 		file.uuid = uuid;
-		console.log("file is", file)
+
 		const response = await axios.post(`${baseUrl}/${projectId}/files`, {
 			files: [file],
 		}, {
