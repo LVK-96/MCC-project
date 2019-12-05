@@ -29,14 +29,19 @@ const styles = StyleSheet.create({
     height: 130,
   },
   body:{
-    marginTop: 20,
-  },
-  bodyContent: {
     flex: 1,
-    alignItems: 'center',
-    padding: 30,
+    flexDirection: 'column',
+    marginTop: 20,
+    justifyContent: 'space-between',
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
   },
   name:{
+    marginTop: 20,
+    alignSelf: 'center',
     fontSize: 32,
     color: colors.gray,
     fontWeight: "600",
@@ -45,14 +50,12 @@ const styles = StyleSheet.create({
   profileButton: {
     ...buttonCommon,
     height: 45,
-    flexDirection: 'column',
-    justifyContent: 'center',
     marginBottom: 10,
     borderRadius: 30,
   },
   settingsButton: {
     alignSelf: 'flex-end',
-    marginTop: '55%',
+    marginBottom: 10,
     marginHorizontal: 20,
   },
   resPicker: {

@@ -3,6 +3,8 @@ import AuthenticationContext from '../contexts/AuthenticationContext';
 import SettingsContext from '../contexts/SettingsContext';
 import NotificationContext from '../contexts/NotificationContext';
 import authenticationService from '../services/authenticationService';
+import projectService from '../services/projectService';
+import taskService from '../services/taskService';
 import fetchCorrectRes from '../util/fetchCorrectRes';
 
 /*Encapsulates authentication logic inside one component.*/
@@ -22,6 +24,8 @@ function AuthenticationProvider({ children }) {
     } else {
       try {
         const loggedUser = await authenticationService.login(email, password);
+        const authToken = await authenticationService.getAuthToken();
+        setToken(authToken);
         await saveFcmToken(loggedUser);
         const url = await fetchCorrectRes(loggedUser.photoURL, settingsContext.imageRes);
         setUser({ ...loggedUser, photoURL: url });
@@ -36,6 +40,8 @@ function AuthenticationProvider({ children }) {
   const signup = async ({ email, displayName, password }) => {
     try {
       const signedUser = await authenticationService.signup(email, displayName, password);
+      const authToken = await authenticationService.getAuthToken();
+      setToken(authToken);
       await saveFcmToken(signedUser);
       const url = await fetchCorrectRes(signedUser.photoURL, settingsContext.imageRes);
       setUser({ ...signedUser, photoURL: url });
@@ -73,6 +79,11 @@ function AuthenticationProvider({ children }) {
     } catch (e) {
       throw new Error('Failed to save profile picture to cloud storage');
     }
+  };
+
+  const setToken = (token) => {
+    projectService.setToken(token);
+    taskService.setToken(token);
   };
 
   const value = {
