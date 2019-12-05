@@ -110,8 +110,12 @@ function ProjectProvider({ children }) {
   // This assumes that file has fields name and uri.
   // Returns the created files.
   const addFile = async (project, file) => {
-    const created = await projectService.createFile(project.id, file);
-    return created ? created.files : null;
+    try {
+      const created = await projectService.createFile(project.id, file);
+      return created;
+    } catch (e) {
+      throw e;
+    }
   };
 
   const [selectedProject] = allWithId(selectedProjectId);

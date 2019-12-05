@@ -35,7 +35,7 @@ function ProjectFiles() {
 	}, [selectedProject]);
 
 	const handleFileUpload = async () => {
-		FilePickerManager.showFilePicker(null, res => {
+		FilePickerManager.showFilePicker(null, async res => {
 			if (res.didCancel || res.error) {
 				console.log('Failed to pick file');
 				return;
@@ -46,19 +46,19 @@ function ProjectFiles() {
 				path: res.path,
 			};
 
-			const ret = addFile(selectedProject, file);
-			// TODO: Don't if this wasn't successful.
-			if (ret || !ret) {
-				// TODO: Use real response object.
-				setFiles(prev => [...prev, file]);
-			}
+      try {
+        const ret = await addFile(selectedProject, file);
+        setFiles(prev => [...prev, ret]);
+      } catch (e) {
+        console.log('Adding file failed!');
+      }
 		});
 	};
 
 	const handleFileDownload = async (file) => {
 		try {
-			const storageRef = storage().ref();
-			const url = await storageRef.child(file.source).getDownloadURL();
+			const storageRef = storage().refFromURL(file.source);
+			const url = await storageRef.getDownloadURL();
 			const dirs = RNFetchBlob.fs.dirs;
 			RNFetchBlob.config({ path: dirs.DocumentDir })
 				.fetch('GET', url);
@@ -72,7 +72,7 @@ function ProjectFiles() {
 			{files.length > 0 ?
 			files.map(file =>
 				// TODO: Only use uuid as key.
-				<View key={file.uuid || file.uri}>
+				<View key={file.uid}>
 					<TouchableOpacity onPress={() => handleFileDownload(file)}>
 						<Text>{file.name}</Text>
 					</TouchableOpacity>

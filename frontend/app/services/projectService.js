@@ -49,7 +49,11 @@ const createProject = async (project) => {
 
 const getFilesByProjectId = async (id) => {
 	try {
-		const response = await axios.get(`${baseUrl}/${id}/files`);
+		const response = await axios.get(`${baseUrl}/${id}/files`, {
+			headers: {
+			Authorization: token,
+			},
+		});
 		return response.data;
 	} catch (exception) {
 		console.log("Error fetching project files");
@@ -70,12 +74,11 @@ const createFile = async (projectId, file) => {
 		const path = fileRef.toString();
 
 		// Make the request.
+    file.name = stats.filename;
 		file.source = path;
-		file.uuid = uuid;
+		file.uid = uuid;
 
-		const response = await axios.post(`${baseUrl}/${projectId}/files`, {
-			files: [file],
-		}, {
+		const response = await axios.post(`${baseUrl}/${projectId}/files`, file, {
 			headers: {
 			Authorization: token,
 			},
