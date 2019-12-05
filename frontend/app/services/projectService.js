@@ -64,7 +64,7 @@ const createFile = async (projectId, file) => {
 		const format = stats.path.split('.')[1];
 		const storageRef = storage().ref();
 		const uuid = await UUIDGenerator.getRandomUUID();
-		const fileRef = storageRef.child(`projectIcons/${uuid}.${format}`);
+		const fileRef = storageRef.child(`projectFiles/${uuid}.${format}`);
 		await fileRef.putFile(stats.path);
 		const path = fileRef.toString();
 
