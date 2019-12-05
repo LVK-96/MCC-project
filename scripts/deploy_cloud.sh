@@ -2,7 +2,7 @@
 
 # Deploy Database and Storage rules, Cloud functions
 echo "Deploying cloud functions and rules..."
-cd functions && npm install && cd ..
+cd functions && npm ci && cd ..
 firebase deploy --force
 # Ready-made image resizing extension for firebase
 echo "Deploying image resizing..."

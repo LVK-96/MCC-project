@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd frontend
-npm install
+npm ci
 react-native bundle \
     --platform android \
     --dev false \
