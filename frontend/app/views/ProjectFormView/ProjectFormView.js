@@ -111,6 +111,7 @@ function ProjectFormView({ navigation }) {
             />
             <View style={styles.container}>
                 <View>
+                    <Text style={styles.label}>Icon</Text>
                     <TouchableOpacity onPress={handleIconPress}>
                         <Image
                             style={styles.icon}
@@ -119,36 +120,48 @@ function ProjectFormView({ navigation }) {
                                     'https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png'
                             }} />
                     </TouchableOpacity>
-                    <Text>Icon</Text>
                 </View>
-                <TextInput
-                    value={name}
-                    placeholder="Name"
-                    onChangeText={text => setName(text)} />
-                <TextInput
-                    value={description}
-                    placeholder="Description"
-                    onChangeText={text => setDescription(text)} />
-                <Text>Deadline</Text>
-                <TouchableOpacity onPress={handleDateSelection}>
-                    <View pointerEvents={'none'}>
-                        <TextInput
-                            editable={false}
-                            value={deadline} />
+                <View>
+                    <Text style={styles.label}>Name</Text>
+                    <TextInput
+                        value={name}
+                        placeholder="Name here..."
+                        onChangeText={text => setName(text)} />
+                </View>
+                <View>
+                    <Text style={styles.label}>Description</Text>
+                    <TextInput
+                        value={description}
+                        placeholder="Description here..."
+                        onChangeText={text => setDescription(text)} />
+                </View>
+                <View>
+                    <Text style={styles.label}>Deadline</Text>
+                    <TouchableOpacity onPress={handleDateSelection}>
+                        <View pointerEvents={'none'}>
+                            <TextInput
+                                editable={false}
+                                value={deadline} />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <Text style={styles.label}>Keywords</Text>
+                    <TextInput
+                        value={keywordInput}
+                        onChangeText={text => setKeywordInput(text)}
+                        onSubmitEditing={handleKeywordAdding}
+                        placeholder="Add keyword" />
+                    <View style={styles.keywordsContainer}>
+                        {keywords.map((keyword, index) =>
+                            <Text
+                                key={index}
+                                style={styles.keyword}>
+                                {keyword}
+                            </Text>
+                        )}
                     </View>
-                </TouchableOpacity>
-                <TextInput
-                    value={keywordInput}
-                    onChangeText={text => setKeywordInput(text)}
-                    onSubmitEditing={handleKeywordAdding}
-                    placeholder="Add keyword" />
-                {keywords.map((keyword, index) =>
-                    <Text
-                        key={index}
-                        style={styles.keyword}>
-                        {keyword}
-                    </Text>
-                )}
+                </View>
             </View>
         </View>
     );
