@@ -55,7 +55,37 @@ const getFilesByProjectId = async (id) => {
 		console.log("Error fetching project files");
 		return [];
 	}
-}
+};
+
+const createFile = async (projectId, file) => {
+	try {
+		// Create the file in firebase storage.
+		const stats = await RNFetchBlob.fs.stat(file.path);
+		const format = stats.path.split('.').reverse()[0];
+		const storageRef = storage().ref();
+		const uuid = await UUIDGenerator.getRandomUUID();
+
+		const fileRef = storageRef.child(`projectFiles/${uuid}.${format}`);
+		await fileRef.putFile(stats.path);
+		const path = fileRef.toString();
+
+		// Make the request.
+		file.source = path;
+		file.uuid = uuid;
+
+		const response = await axios.post(`${baseUrl}/${projectId}/files`, {
+			files: [file],
+		}, {
+			headers: {
+			Authorization: token,
+			},
+		});
+		return response.data;
+	} catch (exception) {
+		console.log('Error creating project file', exception);
+		return null;
+	}
+};
 
 export default { getAll, createProject, setToken,
-	getFilesByProjectId };
+	getFilesByProjectId, createFile };

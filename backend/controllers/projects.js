@@ -104,6 +104,7 @@ projectsRouter.post('/:id/files', async (request, response, next) => {
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
     const { body } = request;
     for (let file of body.files) {
+      file.uploaded = new Date().toISOString();
       await projectRef.collection('files').doc(file).set({ file });
     }
     response.json({ message: 'Files added', files: body.files });
