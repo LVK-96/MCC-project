@@ -47,4 +47,15 @@ const createProject = async (project) => {
 	}
 };
 
-export default { getAll, createProject, setToken };
+const getFilesByProjectId = async (id) => {
+	try {
+		const response = await axios.get(`${baseUrl}/${id}/files`);
+		return response.data;
+	} catch (exception) {
+		console.log("Error fetching project files");
+		return [];
+	}
+}
+
+export default { getAll, createProject, setToken,
+	getFilesByProjectId };
