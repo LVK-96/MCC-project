@@ -5,6 +5,7 @@ class Task {
     this.id = uniqid();
     this.description = params.description;
     this.status = 'Pending';
+    this.created = new Date().toISOString();
   }
 }
 

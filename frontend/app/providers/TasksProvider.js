@@ -10,6 +10,7 @@ export const mockTasks = [
         deadline: '2014-01-01T23:28:56.782Z',
         assignees: [],
         project: 100,
+        created: '2014-01-01T23:28:56.782Z',
     },
     {
         id: 1,
@@ -18,6 +19,7 @@ export const mockTasks = [
         deadline: '2014-01-01T23:28:56.782Z',
         assignees: [],
         project: 100,
+        created: '2014-01-01T23:28:56.782Z',
     },
     {
         id: 2,
@@ -26,6 +28,7 @@ export const mockTasks = [
         deadline: '2014-01-01T23:28:56.782Z',
         assignees: [],
         project: 101,
+        created: '2014-01-01T23:28:56.782Z',
     },
 ];
 
