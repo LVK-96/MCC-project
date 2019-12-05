@@ -13,7 +13,7 @@ export default StyleSheet.create({
         right: 30,
         alignSelf: 'flex-end',
     },
-    file: {
+    contentArea: {
         marginLeft: 20,
     },
 });

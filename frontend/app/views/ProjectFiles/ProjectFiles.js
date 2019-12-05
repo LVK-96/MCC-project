@@ -18,7 +18,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 function ProjectFiles() {
 	const { selectedProject, addFile } = useContext(ProjectContext);
-	const [files, setFiles] = useState([]);
+	const [files, setFiles] = useState(null);
 
 	// Re-fetch the files when the selected project changes.
 	useEffect(() => {
@@ -67,17 +67,20 @@ function ProjectFiles() {
 		}
 	};
 
-	const contentArea = selectedProject ? (
-		<ScrollView >
-			{files.map(file =>
+	const contentArea = files ? (
+		<ScrollView style={styles.contentArea}>
+			{files.length > 0 ?
+			files.map(file =>
 				// TODO: Only use uuid as key.
-				<View key={file.uuid || file.uri}
-					style={styles.file}>
+				<View key={file.uuid || file.uri}>
 					<TouchableOpacity onPress={() => handleFileDownload(file)}>
 						<Text>{file.name}</Text>
 					</TouchableOpacity>
 				</View>
-			)}
+			) :
+			<Text styles={styles}>
+				This project has no attached files
+			</Text>}
 		</ScrollView>
 	) : (<View >
 			<ActivityIndicator size="large" color={colors.corporateBlue} />
@@ -87,7 +90,7 @@ function ProjectFiles() {
 		<View style={styles.container}>
 			<Text style={styles.header}>
 				Project files
-      </Text>
+			</Text>
 			{contentArea}
 			<TouchableOpacity onPress={handleFileUpload}
 				style={styles.buttonContainer}>
