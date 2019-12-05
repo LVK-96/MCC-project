@@ -12,7 +12,7 @@ import PlusIcon from '../PlusIcon';
 import colors from '../../values/colors';
 import projectService from '../../services/projectService';
 import styles from './styles';
-import FilePickerManager from 'react-native-file-picker';
+import DocumentPicker from 'react-native-document-picker';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
 
@@ -34,25 +34,24 @@ function ProjectFiles() {
 
 	}, [selectedProject]);
 
-	const handleFileUpload = () => {
-		FilePickerManager.showFilePicker(null, res => {
-			if (res.didCancel || res.error) {
-				console.log('Failed to pick file');
-				return;
-			}
+	const handleFileUpload = async () => {
+		const res = await DocumentPicker.pick();
+		if (res.didCancel || res.error) {
+			console.log('Failed to pick file');
+			return;
+		}
 
-			const file = {
-				name: res.fileName,
-				uri: res.uri,
-			};
+		const file = {
+			name: res.name,
+			uri: res.uri,
+		};
 
-			const ret = addFile(selectedProject, file);
-			// TODO: Don't if this wasn't successful.
-			if (ret || !ret) {
-				// TODO: Use real response object.
-				setFiles(prev => [...prev, file]);
-			}
-		});
+		const ret = addFile(selectedProject, file);
+		// TODO: Don't if this wasn't successful.
+		if (ret || !ret) {
+			// TODO: Use real response object.
+			setFiles(prev => [...prev, file]);
+		}
 	};
 
 	const handleFileDownload = async (file) => {
