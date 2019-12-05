@@ -8,8 +8,9 @@ const { memberAdded } = require('./notifications/memberAdded');
 const { taskAssigned } = require('./notifications/taskAssigned');
 
 const { SERVICE_ACCOUNT_PATH } = process.env;
+const { DEVELOPMENT } = process.env;
 
-if (SERVICE_ACCOUNT_PATH) {
+if (DEVELOPMENT) {
   const serviceAccount = require(SERVICE_ACCOUNT_PATH);
   admin.initializeApp({
    credential: admin.credential.cert(serviceAccount),

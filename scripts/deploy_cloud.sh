@@ -1,9 +1,18 @@
 #!/bin/bash
 
-echo "Deploying cloud resources and configuring things..."
 # Deploy Database and Storage rules, Cloud functions
-firebase deploy
+echo "Deploying cloud functions and rules..."
+cd functions && npm install && cd ..
+firebase deploy --force
 # Ready-made image resizing extension for firebase
-yes Y | firebase ext:install storage-resize-images --params .resize.config
+echo "Deploying image resizing..."
+if firebase ext:configure storage-resize-images --params .resize.config; then
+    echo "Image resizing configured!"
+else
+    echo "Installing image resizing..."
+    echo y | firebase ext:install storage-resize-images --params .resize.config
+fi
 # Deploy REST API
-yes Y | gcloud app deploy backend --promote
+echo "Deploying API..."
+gcloud -q endpoints services deploy backend/openapi-appengine.yaml
+gcloud -q app deploy backend --promote
