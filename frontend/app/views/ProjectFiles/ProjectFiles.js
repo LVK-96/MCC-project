@@ -11,9 +11,10 @@ import PlusIcon from '../PlusIcon';
 import colors from '../../values/colors';
 import projectService from '../../services/projectService';
 import styles from './styles';
+import FilePickerManager from 'react-native-file-picker';
 
 function ProjectFiles() {
-  const { selectedProject } = useContext(ProjectContext);
+  const { selectedProject, addFile } = useContext(ProjectContext);
   const [files, setFiles] = useState([]);
 
   // Re-fetch the files when the selected project changes.
@@ -30,16 +31,37 @@ function ProjectFiles() {
 
   }, [selectedProject]);
 
-  const handleUploadFile = async () => {
+  const handleUploadFile = () => {
+    FilePickerManager.showFilePicker(null, res => {
+      if (res.didCancel || res.error) {
+        console.log('Failed to pick file');
+        return;
+      }
 
+      const file = {
+        name: res.fileName,
+        uri: res.uri,
+      };
+
+      const ret = addFile(selectedProject, file);
+      // TODO: Don't if this wasn't successful.
+      if (ret || !ret) {
+        // TODO: Use real response object.
+        setFiles(prev => [...prev, file]);
+      }
+    });
   };
 
   const contentArea = selectedProject ? (
     <ScrollView >
       {files.map(file =>
+      // TODO: Only use uuid as key.
+      <View key={file.uuid || file.uri}
+        style={styles.file}>
         <Text>
           {file.name}
         </Text>
+      </View>
       )}
     </ScrollView>
   ) : (
@@ -54,7 +76,7 @@ function ProjectFiles() {
         Project files
       </Text>
       {contentArea}
-      <TouchableOpacity onPress={() => handleUploadFile}
+      <TouchableOpacity onPress={handleUploadFile}
         style={styles.buttonContainer}>
         <PlusIcon />
       </TouchableOpacity>
