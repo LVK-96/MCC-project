@@ -4,6 +4,7 @@ import {
   Text,
   Image,
 } from 'react-native';
+import styles from './styles';
 
 /*Component for displaying thumbnails of users.*/
 function UserThumbnail({
