@@ -1,8 +1,9 @@
 import {
   StyleSheet
 } from 'react-native';
+import colors from '../../values/colors';
 
-const size = 22;
+const size = 30;
 
 const rounded = {
   width: size,
@@ -16,5 +17,12 @@ export default StyleSheet.create({
   },
   fallback: {
     ...rounded,
+    backgroundColor: colors.corporateBlue,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: size / 10,
+  },
+  fallbackText: {
+    color: 'white',
   },
 });
