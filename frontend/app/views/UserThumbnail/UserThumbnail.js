@@ -15,7 +15,7 @@ function UserThumbnail({
 }) {
   return (
     image
-    ? <Image src={image} style={styles.image}/>
+    ? <Image source={image} style={styles.image}/>
     : <View style={styles.fallback}>
         <Text style={styles.fallbackText}>
           {(name.length > 0) ? name[0] : "?"}
