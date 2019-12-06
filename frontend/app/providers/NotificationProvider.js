@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import PushNotification from 'react-native-push-notification';
 import NotificationContext from '../contexts/NotificationContext';
 
 function NotificationProvider({ children }) {
@@ -9,6 +9,13 @@ function NotificationProvider({ children }) {
     checkPermission();
     messageListener();
   },[]);
+
+  PushNotification.configure({
+    // (required) Called when a remote or local notification is opened or received
+    onNotification: function(notification) {
+      PushNotification.cancelLocalNotifications({id: notification.id}); // cancel on press
+    },
+  });
 
   const checkPermission = async () => {
     const enabled = await messaging().hasPermission();
@@ -41,22 +48,18 @@ function NotificationProvider({ children }) {
 
   const messageListener = async () => {
     messaging().onMessage((message) => {
-      console.log(message.data);
-      showAlert(message.data.title, message.data.body); // TODO: Show this as push notification?
+      showNotification(message.data.title, message.data.body);
     });
   };
 
-  const showAlert = (title, body) => {
-    Alert.alert(
-      title, body,
-      [
-          { text: 'OK', onPress: () => console.log('OK Pressed') },
-      ],
-      { cancelable: false },
-    );
+  const showNotification = async (title, body) => {
+    PushNotification.localNotification({
+      title: title,
+      message: body,
+    });
   };
 
-  const value = { showAlert, fcmToken };
+  const value = { fcmToken };
 
   return (
     <NotificationContext.Provider value={value}>
