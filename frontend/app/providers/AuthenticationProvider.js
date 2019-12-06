@@ -6,6 +6,7 @@ import authenticationService from '../services/authenticationService';
 import projectService from '../services/projectService';
 import taskService from '../services/taskService';
 import fetchCorrectRes from '../util/fetchCorrectRes';
+import memberService from '../services/memberService';
 
 /*Encapsulates authentication logic inside one component.*/
 function AuthenticationProvider({ children }) {
@@ -84,6 +85,7 @@ function AuthenticationProvider({ children }) {
   const setToken = (token) => {
     projectService.setToken(token);
     taskService.setToken(token);
+    memberService.setToken(token);
   };
 
   const value = {
