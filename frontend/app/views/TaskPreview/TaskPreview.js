@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import {
 	Text,
 	TouchableOpacity,
-	CheckBox,
 	Alert
 } from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 import styles from './styles';
 import TasksContext from '../../contexts/TasksContext';
 

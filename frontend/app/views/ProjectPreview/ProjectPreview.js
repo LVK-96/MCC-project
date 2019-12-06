@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import styles from './styles';
 import ContextMenu from '../ContextMenu';
+import FavoriteStar from '../FavoriteStar';
 
 /*Offers a preview of a project in a project list. Contains only essential
   information, as the goal is to keep the preview small enough to be usable
@@ -18,6 +19,7 @@ function ProjectPreview({
   created,
   favorite,
   onPress,
+  setFavorite,
 }) {
   return (
     <TouchableOpacity
@@ -36,6 +38,10 @@ function ProjectPreview({
         </Text>
       </View>
       <View style={styles.menuContainer}>
+        <FavoriteStar
+          isFavorite={favorite}
+          setFavorite={setFavorite}
+        />
         <ContextMenu options={[
           { text: "Delete", onSelect: () => console.warn("TODO: Delete")},
           { text: "Show project content", onSelect: () => console.warn("TODO: Show")},
