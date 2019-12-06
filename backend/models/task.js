@@ -6,6 +6,7 @@ class Task {
     this.description = params.description;
     this.status = 'Pending';
     this.created = new Date().toISOString();
+    this.deadlineNotified = false;
   }
 }
 

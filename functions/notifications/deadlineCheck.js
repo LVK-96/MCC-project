@@ -20,7 +20,7 @@ const checkProjects = async (projectsRef) => {
     for (let d of projects.docs) {
       const project = d.data();
       const dl = new Date(project.deadline);
-      if (dateIsWithinADay(dl)) {
+      if (dateIsWithinADay(dl) && !project.deadlineNotified) {
         const members = admin.firestore().collection('projects').doc(project.id).collection('members').get();
         allMembers.push(members);
         const doc = admin.firestore().collection('users').doc(project.owner).get();
@@ -66,7 +66,7 @@ const checkTasks = async (tasksRef) => {
     for (let d of tasks.docs) {
       const task = d.data();
       const dl = new Date(task.deadline);
-      if (dateIsWithinADay(dl)) {
+      if (dateIsWithinADay(dl) && !task.deadlineNotified) {
         const asignees = admin.firestore().collectionGroup('tasks').doc(task.id).collection('asignees').get();
         allAsignees.push(asignees);
         tasksToNotify.push(task);
@@ -131,21 +131,26 @@ exports.deadlineCheck = async () => {
     const tasksRef = admin.firestore().collectionGroup('tasks');
     const tasksUsers = await checkTasks(tasksRef);
 
-    let awaitThis1 = []
+    let awaitThis = []
     for (i = 0; i < projectsUsers.projects.length; ++i) {
       for (let u of projectsUsers.users[i]) {
-        awaitThis1.push(sendNotification(u, projectsUsers.projects[i].name));
+        const project = projectsUsers.projects[i];
+        awaitThis.push(sendNotification(u, project.name));
+        awaitThis.push(admin.firestore().collection('projects').doc(project.id)
+          .set({ ...project, deadlineNotified: true }));
       }
     }
 
-    let awaitThis2 = []
     for (i = 0; i < tasksUsers.tasks.length; ++i) {
       for (let u of tasksUsers.users[i]) {
-        awaitThis2.push(sendNotification(u, tasksUsers.tasks[i].description));
+        const task = tasksUsers.tasks[i];
+        awaitThis.push(sendNotification(u, task.description));
+        awaitThis.push(admin.firestore().collectionGroup('tasks').doc(task.id)
+          .set({ ...task, deadlineNotified: true }));
       }
     }
 
-    await Promise.all(awaitThis1, awaitThis2);
+    await Promise.all(awaitThis);
   } catch (e) {
     console.log('e in deadlineCheck');
     console.log(e);
