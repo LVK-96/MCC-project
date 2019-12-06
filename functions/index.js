@@ -29,7 +29,7 @@ if (DEVELOPMENT) {
 // });
 //
 
-/*
+/* TODO: Use this cron job trigger in prod
  *exports.deadline = functions.region('europe-west1')
  *  .pubsub.schedule('* * * * *') // Check deadlines every minute
  *  .onRun(async (context) => {
@@ -38,7 +38,9 @@ exports.deadline = functions.region('europe-west1')
   .https.onRequest(async (request, response) => {
     try {
       await deadlineCheck();
+      response.end();
     } catch (e) {
+      response.status(404).end();
       console.log('Deadline check failed')
     }
 });
