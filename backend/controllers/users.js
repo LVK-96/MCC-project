@@ -13,6 +13,22 @@ usersRouter.post('/', async (request, response, next) => {
   }
 });
 
+// TODO: endpoint for getting all users
+
+usersRouter.get('/search', async (request, response, next) => {
+  try {
+    const { query } = request;
+    const users = await db.collection('users').where('name', '>=', query.name).get();
+    let resp = [];
+    for (let d of users.docs) {
+      resp.push(d.data());
+    }
+    response.json(resp);
+  } catch (exception) {
+    next(exception);
+  }
+});
+
 usersRouter.get('/:id', async (request, response, next) => {
   try {
     const document = await db.collection('users').doc(request.params.id).get();

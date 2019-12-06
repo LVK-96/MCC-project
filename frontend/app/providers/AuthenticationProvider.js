@@ -62,11 +62,11 @@ function AuthenticationProvider({ children }) {
     }
   };
 
-  const saveFcmToken = async (user) => {
+  const saveFcmToken = async (user2save) => {
     // Save fcm token into user collection of database
     // For receiving notifications
     try {
-      await authenticationService.saveFcmToken(user.uid, notificationContext.fcmToken);
+      await authenticationService.saveFcmToken(user2save.displayName, user2save.uid, notificationContext.fcmToken);
     } catch (e) {
       console.log("Saving fcm token failed");
     }

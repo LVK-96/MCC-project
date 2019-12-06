@@ -32,4 +32,19 @@ const getAll = async () => {
     }
 };
 
-export default { getAll };
+const searchByName = async (name) => {
+  try {
+    const response = await axios.get(`${baseUrl}/search?name=${name}`, {
+      headres: {
+			Authorization: token,
+      },
+    });
+    return response.data;
+  } catch (exception) {
+    console.log('User search failed', exception);
+    return [];
+  }
+}
+
+
+export default { getAll, searchByName };

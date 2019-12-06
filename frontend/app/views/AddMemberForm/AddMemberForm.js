@@ -8,51 +8,29 @@ import {
   ScrollView,
 } from 'react-native';
 import styles from './styles';
+import userService from '../../services/userService';
 
 const AddMemberForm = ({ setModalVisible }) => {
   const [searchName, setSearchName] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
   const handleSearch = async (value) => {
-    if (value.length > 2) {
-      setSearchName(value);
-      // TODO: get actual results
-      const mockResults = [
-        {
-          name: 'result1',
-          uid: 1,
-        },
-        {
-          name: 'result2',
-          uid: 2,
-        },
-        {
-          name: 'result1',
-          uid: 3,
-        },
-        {
-          name: 'result1',
-          uid: 4,
-        },
-        {
-          name: 'result1',
-          uid: 5,
-        },
-        {
-          name: 'result1',
-          uid: 6,
-        },
-      ]
-      setSearchResults(mockResults);
-    } else {
-      setSearchName(value);
-      setSearchResults([]);
+    try {
+      if (value.length > 2) {
+        setSearchName(value);
+        const result = await userService.searchByName(value);
+        setSearchResults(result);
+      } else {
+        setSearchName(value);
+        setSearchResults([]);
+      }
+    } catch (e) {
+      console.log('search failed');
     }
   };
 
   const handleMemberAdd = async (uid) => {
     const memberToAdd = searchResults.find(r => r.uid === uid);
-    console.log('member to add', memberToAdd);
   };
 
   return (
