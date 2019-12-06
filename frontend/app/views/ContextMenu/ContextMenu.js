@@ -5,6 +5,7 @@ import {
   MenuOptions,
   MenuOption,
 } from 'react-native-popup-menu';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 /*A component that displays a small contextual menu triggered by a menu icon.*/
 function ContextMenu({
@@ -12,7 +13,9 @@ function ContextMenu({
 }) {
   return (
     <Menu onSelect={index => options[index].onSelect()}>
-      <MenuTrigger text="MENU TRIGGER"/>
+      <MenuTrigger>
+        <Icon name="options-vertical" size={22}/>
+      </MenuTrigger>
       <MenuOptions>
         {
           options.map((option, index) =>
