@@ -29,9 +29,13 @@ if (DEVELOPMENT) {
 // });
 //
 
+/*
+ *exports.deadline = functions.region('europe-west1')
+ *  .pubsub.schedule('* * * * *') // Check deadlines every minute
+ *  .onRun(async (context) => {
+ */
 exports.deadline = functions.region('europe-west1')
-  .pubsub.schedule('* * * * *') // Check deadlines every minute
-  .onRun(async (context) => {
+  .https.onRequest(async (request, response) => {
     try {
       await deadlineCheck();
     } catch (e) {
