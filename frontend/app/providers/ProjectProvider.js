@@ -3,6 +3,7 @@ import ProjectContext from '../contexts/ProjectContext';
 import projectsService from '../services/projectService';
 import AuthenticationContext from '../contexts/AuthenticationContext';
 import fetchCorrectRes from '../util/fetchCorrectRes';
+import projectService from '../services/projectService';
 
 const mockprojects = [
   {
@@ -106,12 +107,24 @@ function ProjectProvider({ children }) {
     }
   };
 
+  // This assumes that file has fields name and uri.
+  // Returns the created files.
+  const addFile = async (project, file) => {
+    try {
+      const created = await projectService.createFile(project.id, file);
+      return created;
+    } catch (e) {
+      throw e;
+    }
+  };
+
   const [selectedProject] = allWithId(selectedProjectId);
   const value = {
     projects,
     selectProject,
     selectedProject,
     createProject,
+    addFile,
   };
   return (
     <ProjectContext.Provider value={value}>

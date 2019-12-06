@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import styles from './styles';
+import ContextMenu from '../ContextMenu';
 
 /*Offers a preview of a project in a project list. Contains only essential
   information, as the goal is to keep the preview small enough to be usable
@@ -23,15 +24,24 @@ function ProjectPreview({
       style={styles.container}
       onPress={onPress}
     >
-      <Text style={styles.name}>
-        {name}
-      </Text>
-      <Text style={styles.description}>
-        {description}
-      </Text>
-      <Text style={styles.deadline}>
-        {(new Date(deadline)).toString()}
-      </Text>
+      <View style={styles.infoContainer}>
+        <Text style={styles.name}>
+          {name}
+        </Text>
+        <Text style={styles.description}>
+          {description}
+        </Text>
+        <Text style={styles.deadline}>
+          {(new Date(deadline)).toString()}
+        </Text>
+      </View>
+      <View style={styles.menuContainer}>
+        <ContextMenu options={[
+          { text: "Delete", onSelect: () => console.warn("TODO: Delete")},
+          { text: "Show project content", onSelect: () => console.warn("TODO: Show")},
+          { text: "Generate project report", onSelect: () => console.warn("TODO: Report")},
+        ]}/>
+      </View>
     </TouchableOpacity>
   );
 }

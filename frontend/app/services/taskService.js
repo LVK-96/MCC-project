@@ -3,10 +3,20 @@ import api_url from '../util/config';
 
 const baseUrl = api_url + '/projects';
 
+let token = null;
+
+const setToken = (newToken) => {
+  token = newToken;
+};
+
 // Fetch tasks by project id.
 const getTasksByProjectId = async (projectId) => {
 	try {
-		const response = await axios.get(`${baseUrl}/${projectId}/tasks`);
+		const response = await axios.get(`${baseUrl}/${projectId}/tasks`, {
+        headers: {
+        Authorization: token,
+        },
+    });
 		return response.data;
 	} catch (error) {
 		console.log('Error fetching tasks', error);
@@ -17,7 +27,11 @@ const getTasksByProjectId = async (projectId) => {
 // Update the task specified by id with the payload specified by task.
 const updateTask = async (projectId, taskId, task) => {
     try {
-        const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}`, task);
+        const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}`, task, {
+          headers: {
+          Authorization: token,
+          },
+        });
         return response.data;
     } catch (error) {
         console.log('Error updating task', error);
@@ -28,7 +42,11 @@ const updateTask = async (projectId, taskId, task) => {
 // Creates a task for the project designated by projectId.
 const createTask = async (projectId, task) => {
     try {
-        const response = await axios.put(`${baseUrl}/${projectId}/tasks`, task);
+        const response = await axios.post(`${baseUrl}/${projectId}/tasks`, task,{
+          headers: {
+          Authorization: token,
+          },
+        });
         return response.data;
     } catch (error) {
         // TODO: Remove this
@@ -45,7 +63,11 @@ const createTask = async (projectId, task) => {
 const updateTaskStatus = async (projectId, taskId, status) => {
     try {
         const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}`,
-        { status: status });
+        { status: status }, {
+          headers: {
+          Authorization: token,
+          },
+        });
         return response.data;
     } catch (error) {
         return null;
@@ -53,4 +75,4 @@ const updateTaskStatus = async (projectId, taskId, status) => {
 };
 
 export default { getTasksByProjectId, updateTask, createTask,
-    updateTaskStatus };
+    updateTaskStatus, setToken };

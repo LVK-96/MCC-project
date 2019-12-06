@@ -10,6 +10,7 @@ export const mockTasks = [
         deadline: '2014-01-01T23:28:56.782Z',
         assignees: [],
         project: 100,
+        created: '2014-01-01T23:28:56.782Z',
     },
     {
         id: 1,
@@ -18,6 +19,7 @@ export const mockTasks = [
         deadline: '2014-01-01T23:28:56.782Z',
         assignees: [],
         project: 100,
+        created: '2014-01-01T23:28:56.782Z',
     },
     {
         id: 2,
@@ -26,6 +28,7 @@ export const mockTasks = [
         deadline: '2014-01-01T23:28:56.782Z',
         assignees: [],
         project: 101,
+        created: '2014-01-01T23:28:56.782Z',
     },
 ];
 
@@ -57,13 +60,13 @@ function TasksProvider({ children, projectId }) {
     const updateTask = async (id, task) => {
         const response = await taskService.updateTask(projectId, id, task);
         if (response) {
-            const updated = tasks.map(t => t.id === id ? task : t);
+            const updated = tasks.map(t => t.id === id ? response : t);
             setTasks(updated);
 
             // Update the selected task if this was it.
             if (id === selectedTask.id) {
                 // TODO: Use actual response object
-                setSelectedTask(task);
+                setSelectedTask(response);
             }
 
             return true;
@@ -128,12 +131,12 @@ function TasksProvider({ children, projectId }) {
                 task.status = status;
             }
             // Update tasks
-            const updatedTasks = tasks.map(t => t.id === task.id ? task : t);
+            const updatedTasks = tasks.map(t => t.id === task.id ? updated : t);
             setTasks(updatedTasks);
 
             // Update selected task
             if (selectedTask && task.id === selectedTask.id) {
-                setSelectedTask(task);
+                setSelectedTask(updated);
             }
 
             return true;

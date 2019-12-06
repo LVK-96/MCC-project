@@ -24,7 +24,10 @@ function TaskList({ navigation }) {
 
     const contentArea = tasks ? (
         <ScrollView style={styles.tasksContainer}>
-          {tasks.map(task =>
+          {/* Sort tasks by creation date */}
+          {tasks.sort((t1, t2) =>
+            new Date(t2.created).getTime() - new Date(t1.created).getTime())
+            .map(task =>
             <TaskPreview
               key={task.id}
               onPress={() => viewTask(task.id)}
