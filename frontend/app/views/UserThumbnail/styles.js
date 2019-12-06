@@ -5,22 +5,22 @@ import colors from '../../values/colors';
 
 const size = 30;
 
-const rounded = {
+const common = {
   width: size,
   height: size,
   borderRadius: size / 2,
+  justifyContent: 'center',
+  alignItems: 'center',
+  margin: size / 10,
 };
 
 export default StyleSheet.create({
   image: {
-    ...rounded,
+    ...common,
   },
   fallback: {
-    ...rounded,
+    ...common,
     backgroundColor: colors.corporateBlue,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: size / 10,
   },
   fallbackText: {
     color: 'white',
