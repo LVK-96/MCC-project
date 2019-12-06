@@ -37,7 +37,7 @@ function ProjectPreview({
         </Text>
       </View>
       <View style={styles.menuContainer}>
-        <FavoriteStar />
+        <FavoriteStar isFavorite={favorite}/>
         <ContextMenu options={[
           { text: "Delete", onSelect: () => console.warn("TODO: Delete")},
           { text: "Show project content", onSelect: () => console.warn("TODO: Show")},
