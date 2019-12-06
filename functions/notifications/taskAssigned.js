@@ -1,9 +1,9 @@
 const admin = require("firebase-admin");
 
-exports.taskAssigned = async (task) => {
+exports.taskAssigned = async (asignee, task) => {
   try {
-    const doc = await admin.firestore().collection('users').doc(task.assignedTo).get();
-    const user = doc.data();
+    const doc = await admin.firestore().collection('users').doc(asignee.uid).get();
+    const users = doc.data();
     console.log(`Sending task as-signed notification to ${user.fcmToken}`);
     const message = {
       notification: {

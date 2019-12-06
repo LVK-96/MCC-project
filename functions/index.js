@@ -6,6 +6,7 @@ const { generatePDF } = require('./report-generation/generatePDF');
 const { projectCreated } = require('./notifications/projectCreated');
 const { memberAdded } = require('./notifications/memberAdded');
 const { taskAssigned } = require('./notifications/taskAssigned');
+const { deadlineCheck } = require('./notifications/deadlineCheck');
 
 const { SERVICE_ACCOUNT_PATH } = process.env;
 const { DEVELOPMENT } = process.env;
@@ -26,32 +27,66 @@ if (DEVELOPMENT) {
 // exports.helloWorld = functions.https.onRequest((request, response) => {
 //  response.send("Hello from Firebase!");
 // });
+//
+
+/* TODO: Use this cron job trigger in prod
+ *exports.deadline = functions.region('europe-west1')
+ *  .pubsub.schedule('* * * * *') // Check deadlines every minute
+ *  .onRun(async (context) => {
+ */
+exports.deadline = functions.region('europe-west1')
+  .https.onRequest(async (request, response) => {
+    try {
+      await deadlineCheck();
+      response.end();
+    } catch (e) {
+      response.status(404).end();
+      console.log('Deadline check failed')
+    }
+});
 
 exports.projectCreated = functions.region('europe-west1')
   .firestore
   .document('projects/{projectId}')
-  .onCreate((snap, context) => {
-  projectCreated(snap.data());
+  .onCreate(async (snap, context) => {
+    try {
+      await projectCreated(snap.data());
+    } catch (e) {
+      console.log('Project created notification failed')
+    }
 });
 
 exports.memberAdded = functions.region('europe-west1')
   .firestore
   .document('projects/{projectId}/members/{userId}')
   .onCreate(async (snap, context) => {
-    const doc = await admin.firestore().collection('projects').doc(projectId).get();
-    const project = doc.data();
-    memberAdded(snap.data(), project);
+    try {
+      const doc = await admin.firestore().collection('projects').doc(projectId).get();
+      const project = doc.data();
+      await memberAdded(snap.data(), project);
+    } catch (e) {
+      console.log('Member added notification failed');
+    }
 });
 
 exports.taskAssigned = functions.region('europe-west1')
   .firestore
-  .document('projects/{projectId}/tasks/{taskId}')
+  .document('projects/{projectId}/tasks/{taskId}/asignees/{asigneeId}')
   .onCreate(async (snap, context) => {
-    const doc = await admin.firestore().collection('projects').doc(projectId).get();
-    const project = doc.data();
-    taskAssigned(snap.data());
+    try {
+      const doc = await admin.firestore().collection('projects').doc(projectId)
+        .collection('tasks').doc(taskId).get();
+      const task = doc.data();
+      await taskAssigned(snap.data(), task);
+    } catch (e) {
+      console.log('Task assigned notification failed');
+    }
 });
 
-exports.generatePDF = functions.region('europe-west1').https.onRequest((request, response) => {
-  generatePDF(request, response);
+exports.generatePDF = functions.region('europe-west1').https.onRequest(async (request, response) => {
+  try {
+    await generatePDF(request, response);
+  } catch (e) {
+    console.log('PDF generation failed');
+  }
 });

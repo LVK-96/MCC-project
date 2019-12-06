@@ -23,6 +23,6 @@ exports.projectCreated = async (project) => {
     await admin.messaging().send(message);
   } catch (e) {
     console.log(e);
-    console.log('Sending notification failed');
+    console.log('Sending project created notification failed');
   }
 };
