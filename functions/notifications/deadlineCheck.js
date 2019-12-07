@@ -21,18 +21,14 @@ const checkProjects = async (projectsRef) => {
       const project = d.data();
       const dl = new Date(project.deadline);
       if (dateIsWithinADay(dl) && !project.deadlineNotified) {
-        const members = admin.firestore().collection('projects').doc(project.id).collection('members').get();
+        const members = project.members;
         allMembers.push(members);
-        const doc = admin.firestore().collection('users').doc(project.owner).get();
-        allOwners.push(doc);
+        allOwners.push(project.owner);
         projectsToNotify.push(project);
       }
     }
 
-    allMembers = await Promise.all(allMembers);
-    allMembers = allMembers.map(m => m.docs);
-    allOwners = await Promise.all(allOwners);
-    // Nested array of members (including owners) to notify
+    // Nexted array of all project members including owner
     for (i = 0; i < allOwners.length; ++i) {
       allMembers[i] = allMembers[i].concat(allOwners[i]);
     }
@@ -41,7 +37,7 @@ const checkProjects = async (projectsRef) => {
     for (let m of allMembers) {
       let membersOfProject = [];
       for (let d of m) {
-        const doc = admin.firestore().collection('users').doc(d.data().uid).get();
+        const doc = admin.firestore().collection('users').doc(d).get();
         membersOfProject.push(doc);
       }
 
