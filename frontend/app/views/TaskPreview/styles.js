@@ -15,6 +15,10 @@ export default StyleSheet.create({
   description: {
     marginVertical: 5,
   },
+  descriptionDone: {
+    textDecorationLine: 'line-through',
+    marginVertical: 5,
+  },
   deadline: {
     color: 'gray',
     fontSize: fontSizes.small,

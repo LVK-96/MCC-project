@@ -37,7 +37,8 @@ function TaskPreview({
 		>
 			<CheckBox value={task.status === 'COMPLETED'}
 				onValueChange={onStatusChange}/>
-			<Text style={styles.description}>
+			<Text style={task.status === 'COMPLETED' ?
+				styles.descriptionDone : styles.description}>
 				{task.description}
 			</Text>
 		</TouchableOpacity>
