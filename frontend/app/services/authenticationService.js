@@ -44,7 +44,6 @@ const getAuthToken = async () => {
 
 const saveFcmToken = async (displayName, uid, fcmToken) => {
   try {
-    console.log(baseUrl);
     await axios.post(baseUrl, {
       name: displayName,
       uid: uid,

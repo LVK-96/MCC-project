@@ -13,6 +13,7 @@ class Project {
     this.modified = this.created;
     this.keywords = params.keywords;
     this.deadlineNotified = false;
+    this.members = [];
   }
 
   dateRegex(ISODateString) {
