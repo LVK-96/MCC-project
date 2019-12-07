@@ -12,6 +12,8 @@ import TaskPreview from '../TaskPreview';
 import colors from '../../values/colors';
 import PlusIcon from '../PlusIcon';
 
+/*Shows a list of previews of tasks. The user can click the tasks
+  to edit their details or mark them as done.*/
 function TaskList({ navigation }) {
     const { tasks, selectTask } = useContext(TasksContext);
 
