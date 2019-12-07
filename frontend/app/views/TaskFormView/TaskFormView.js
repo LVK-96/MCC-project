@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     Alert,
     Button,
+    ActivityIndicator,
 } from 'react-native';
 import {
     Header,
@@ -35,6 +36,8 @@ function ProjectFormView({ navigation }) {
     const [deadline, setDeadline] = useState('Press to select deadline date.');
     // List of user IDs
     const [assignees, setAssignees] = useState([]);
+    // Loading indicator for image converter.
+    const [loading, setLoading] = useState(false);
 
     // We create the task through the project provider.
     const context = useContext(TasksContext);
@@ -100,6 +103,7 @@ function ProjectFormView({ navigation }) {
                 const uri = response.uri;
 
                 try {
+                    setLoading(true);
                     // Encode the string to base-64 locally.
                     const stats = await RNFetchBlob.fs.stat(uri);
                     const base64 = await RNFetchBlob.fs.readFile(stats.path, 'base64');
@@ -135,9 +139,13 @@ function ProjectFormView({ navigation }) {
                     if (res.status === 200) {
                         const text = res.data.responses[0].textAnnotations[0].description;
                         setDescription(text);
+                    } else {
+                        Alert.alert('Failed to convert image to task.');
                     }
                 } catch (error) {
-                    console.log("Error", error)
+                    console.log('Error', error);
+                } finally {
+                    setLoading(false);
                 }
             } else {
                 console.log('Image picking failed: ', response);
@@ -162,8 +170,12 @@ function ProjectFormView({ navigation }) {
                         placeholder="Description"
                         onChangeText={text => setDescription(text)} />
                 </View>
-                <Button title="Convert from image"
-                    onPress={handleImageConversion} />
+                <View style={styles.converterContainer}>
+                    <Button title="Or convert from image"
+                        onPress={handleImageConversion} />
+                    {loading &&
+                    <ActivityIndicator />}
+                </View>
                 <View>
                     <Text style={styles.label}>Deadline</Text>
                     <TouchableOpacity onPress={handleDateSelection}>

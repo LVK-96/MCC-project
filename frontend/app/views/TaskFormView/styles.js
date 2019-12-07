@@ -20,4 +20,8 @@ export default StyleSheet.create({
         marginLeft: 50,
         marginRight: 50,
     },
+    converterContainer: {
+        marginBottom: 20,
+        flexDirection: 'row',
+    },
 });
