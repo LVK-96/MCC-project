@@ -2,6 +2,7 @@ const projectsRouter = require('express').Router();
 const Project = require('../models/project');
 const Task = require('../models/task');
 let { db, auth } = require('../utils/config');
+const notify = require('../utils/notify');
 
 const isOwner = (token, project) => {
   const projectData = project.data();
@@ -9,9 +10,9 @@ const isOwner = (token, project) => {
   return false;
 };
 
-const isMember = async (token, projectRef) => {
-  const members = await projectRef.collection('members').get();
-  if (members.docs.includes(token.uid)) return true;
+const isMember = (token, project) => {
+  const projectData = project.data();
+  if (projectData.members.includes(token.uid)) return true;
   return false;
 };
 
@@ -37,7 +38,7 @@ projectsRouter.get('/', async (request, response, next) => {
   try {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const owner = await db.collection('projects').where('owner', '==', decodedToken.uid).get();
-    const member = await db.collectionGroup('members').where('uid', '==', decodedToken.uid).get();
+    const member = await db.collection('projects').where('members', 'array-contains', decodedToken.uid).get();
     const docs = owner.docs.concat(member.docs);
     let projects = [];
     for (let doc of docs) {
@@ -54,7 +55,7 @@ projectsRouter.get('/:id', async (request, response, next) => {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const projectData = project.data();
     response.json(projectData);
   } catch (exception) {
@@ -69,10 +70,14 @@ projectsRouter.post('/:id/members', async (request, response, next) => {
     const project = await projectRef.get();
     if(!isOwner(decodedToken, project)) return response.status(403).end();
     const { body } = request;
-    for (let member of body.users) {
-      await projectRef.collection('members').doc(member.uid).set({ ...member });
+    const alreadyMember = project.data().members.includes(body.uid);
+    if (alreadyMember) {
+      return response.status(409).end();
     }
-    response.json({ message: 'Members added', members: body.users });
+    const newMembers = project.data().members.concat(body.uid);
+    await projectRef.set({ ...project.data(), members: newMembers });
+    notify.sendMemberAdded(project.data(), body.uid);
+    response.json(body);
   } catch (exception) {
     next(exception);
   }
@@ -83,14 +88,13 @@ projectsRouter.get('/:id/members', async (request, response, next) => {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
-    const collection = await projectRef.collection('members').get();
-    const docs = collection.docs;
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     let members = [];
-    for (let doc of docs) {
-      members.push(doc.data());
+    for (let m of project.data().members) {
+      members.push(db.collection('users').doc(m).get());
     }
-    response.json(members);
+    members = await Promise.all(members);
+    response.json(members.map(m => m.data()));
   } catch (exception) {
     next(exception);
   }
@@ -101,7 +105,7 @@ projectsRouter.post('/:id/files', async (request, response, next) => {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const { body } = request;
     const file = body;
     file.uploaded = new Date().toISOString();
@@ -117,7 +121,7 @@ projectsRouter.get('/:id/files', async (request, response, next) => {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const collection = await projectRef.collection('files').get();
     const docs = collection.docs;
     let files = [];
@@ -135,7 +139,7 @@ projectsRouter.post('/:id/images', async (request, response, next) => {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.doc(request.params.id).get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const { body } = request;
     for (let image of body.images) {
       await projectRef.collection('images').doc(image).set({ image });
@@ -151,7 +155,7 @@ projectsRouter.get('/:id/images', async (request, response, next) => {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.doc(request.params.id).get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const collection = await projectRef.collection('images').get();
     const docs = collection.docs;
     let images = [];
@@ -182,7 +186,7 @@ projectsRouter.post('/:id/tasks', async (request, response, next) => {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const { body } = request;
     const task = new Task(body);
     await projectRef.collection('tasks').doc(task.id).set({ ...task });
@@ -197,7 +201,7 @@ projectsRouter.get('/:id/tasks', async (request, response, next) => {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const collection = await projectRef.collection('tasks').get();
     const docs = collection.docs;
     let tasks = [];
@@ -215,7 +219,7 @@ projectsRouter.get('/:project_id/tasks/:task_id', async (request, response, next
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.doc(request.params.id).get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const document = await projectRef.collection('tasks').doc(request.params.task_id).get();
     const task = document.data();
     response.json(task);
@@ -247,7 +251,7 @@ projectsRouter.post('/:project_id/tasks/:task_id/status', async (request, respon
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.doc(request.params.id).get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const { body } = request;
     const document = projectRef.doc(request.params.project_id).collection('tasks').doc(request.params.task_id).get();
     let task = document.data();
@@ -280,7 +284,7 @@ projectsRouter.get('/:project_id/tasks/:task_id/asignees', async (request, respo
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.doc(request.params.project_id).get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, projectRef)) return response.status(403).end();
+    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const collection = await projectRef.collection('tasks').doc(request.params.task_id).collection('asignees').get();
     const docs = collection.docs;
     let asignees = [];

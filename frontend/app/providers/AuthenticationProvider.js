@@ -6,6 +6,8 @@ import authenticationService from '../services/authenticationService';
 import projectService from '../services/projectService';
 import taskService from '../services/taskService';
 import fetchCorrectRes from '../util/fetchCorrectRes';
+import memberService from '../services/memberService';
+import userService from '../services/userService';
 
 /*Encapsulates authentication logic inside one component.*/
 function AuthenticationProvider({ children }) {
@@ -61,11 +63,16 @@ function AuthenticationProvider({ children }) {
     }
   };
 
-  const saveFcmToken = async (user) => {
+  const saveFcmToken = async (user2save) => {
     // Save fcm token into user collection of database
     // For receiving notifications
     try {
-      await authenticationService.saveFcmToken(user.uid, notificationContext.fcmToken);
+      await authenticationService.saveFcmToken(
+        user2save.displayName,
+        user2save.uid,
+        notificationContext.fcmToken,
+        user2save.photoURL
+      );
     } catch (e) {
       console.log("Saving fcm token failed");
     }
@@ -84,6 +91,8 @@ function AuthenticationProvider({ children }) {
   const setToken = (token) => {
     projectService.setToken(token);
     taskService.setToken(token);
+    memberService.setToken(token);
+    userService.setToken(token);
   };
 
   const value = {

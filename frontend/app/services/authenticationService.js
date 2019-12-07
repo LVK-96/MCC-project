@@ -27,7 +27,6 @@ const signup = async (email, displayName, password) => {
     const defaultRef = storageRef.child('profilepics/default.jpg');
     const path = defaultRef.toString();
     await auth().currentUser.updateProfile({ displayName: displayName, photoURL: path });
-    const token = await auth().currentUser.getIdToken(true);
     return {
       displayName: displayName,
       email: sign.user._user.email,
@@ -43,12 +42,13 @@ const getAuthToken = async () => {
   return await auth().currentUser.getIdToken(true);
 };
 
-const saveFcmToken = async (uid, fcmToken) => {
+const saveFcmToken = async (displayName, uid, fcmToken, photoURL) => {
   try {
-    console.log(baseUrl);
     await axios.post(baseUrl, {
+      name: displayName,
       uid: uid,
       fcmToken: fcmToken,
+      photoURL: photoURL,
     });
   } catch (e) {
     console.log(e);

@@ -57,15 +57,19 @@ exports.projectCreated = functions.region('europe-west1')
 });
 
 exports.memberAdded = functions.region('europe-west1')
-  .firestore
-  .document('projects/{projectId}/members/{userId}')
-  .onCreate(async (snap, context) => {
+  .https.onRequest(async (request, response) => {
     try {
-      const doc = await admin.firestore().collection('projects').doc(projectId).get();
-      const project = doc.data();
-      await memberAdded(snap.data(), project);
+      if (request.method === 'POST') {
+        const { body } = request;
+        await memberAdded(body.member, body.project);
+        response.status(200).end();
+      } else {
+        response.status(400).end();
+      }
     } catch (e) {
+      console.log(e);
       console.log('Member added notification failed');
+      response.status(400).end();
     }
 });
 

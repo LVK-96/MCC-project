@@ -1,8 +1,8 @@
 const admin = require("firebase-admin");
 
-exports.memeberAdded = async (member, project) => {
+exports.memberAdded = async (member, project) => {
   try {
-    const doc = await admin.firestore().collection('users').doc(member.uid).get();
+    const doc = await admin.firestore().collection('users').doc(member).get();
     const user = doc.data();
     console.log(`Sending member added notification to ${user.fcmToken}`);
     const message = {

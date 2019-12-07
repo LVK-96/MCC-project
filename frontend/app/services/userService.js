@@ -19,6 +19,10 @@ const mockUsers = [
 
 let token = null;
 
+const setToken = (newToken) => {
+  token = newToken;
+};
+
 const getAll = async () => {
     try {
         const response = await axios.get(baseUrl, {
@@ -32,4 +36,20 @@ const getAll = async () => {
     }
 };
 
-export default { getAll };
+const searchByName = async (name, ownUid) => {
+  try {
+    const response = await axios.get(`${baseUrl}/search?name=${name}`, {
+      headers: {
+			Authorization: token,
+      },
+    });
+    const ret = response.data.filter(u => u.uid !== ownUid); // Cloud firestore does'nt support inequality tests
+    return ret;
+  } catch (exception) {
+    console.log('User search failed', exception);
+    return [];
+  }
+}
+
+
+export default { setToken, getAll, searchByName };
