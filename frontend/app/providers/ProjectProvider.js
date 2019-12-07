@@ -131,6 +131,12 @@ function ProjectProvider({ children }) {
     }
   };
 
+  const addMemberToProject = (member, projectId) => {
+    const toUpdate = projects.find(p => p.id === projectId);
+    const newMembers = toUpdate.members.concat(member.uid);
+    setProjects(projects.map(p => p.id === toUpdate.id ? {...p, members: newMembers } : p));
+  };
+
   const [selectedProject] = allWithId(selectedProjectId);
   const value = {
     projects,
@@ -139,6 +145,7 @@ function ProjectProvider({ children }) {
     createProject,
     addFile,
     deleteProject,
+    addMemberToProject,
   };
   return (
     <ProjectContext.Provider value={value}>

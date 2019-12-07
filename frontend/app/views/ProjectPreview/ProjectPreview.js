@@ -24,6 +24,7 @@ function ProjectPreview({
   setFavorite,
   isOwner,
   id,
+  members,
   deleteProject,
 }) {
   return (
@@ -41,9 +42,7 @@ function ProjectPreview({
         <Text style={styles.deadline}>
           {(new Date(deadline)).toString()}
         </Text>
-        <MembersProvider projectId={id}>
-          <ProjectMembersPreview />
-        </MembersProvider>
+        <ProjectMembersPreview members={members} />
       </View>
       <View style={styles.menuContainer}>
         <FavoriteStar

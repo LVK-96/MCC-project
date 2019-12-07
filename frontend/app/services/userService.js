@@ -51,5 +51,20 @@ const searchByName = async (name, ownUid) => {
   }
 }
 
+const getById = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}/${id}`, {
+      headers: {
+      Authorization: token,
+      },
+    });
+    return response.data;
+  } catch (exception) {
+    console.log('User get by id failed');
+    return {}
+  }
+};
 
-export default { setToken, getAll, searchByName };
+
+export default { setToken, getAll, searchByName, getById };
+
