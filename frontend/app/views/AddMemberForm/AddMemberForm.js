@@ -44,6 +44,7 @@ const AddMemberForm = ({ setModalVisible }) => {
     try {
       const memberToAdd = searchResults.find(r => r.uid === uid);
       await membersContext.addMember(memberToAdd);
+      await projectContext.addMemberToProject(memberToAdd, projectContext.selectedProject.id);
     } catch (e) {
       console.log(e);
       Alert.alert('Adding member failed!');
