@@ -186,7 +186,7 @@ projectsRouter.post('/:id/tasks', async (request, response, next) => {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
+    if (!isOwner(decodedToken, project)) return response.status(403).end();
     const { body } = request;
     const task = new Task(body);
     await projectRef.collection('tasks').doc(task.id).set({ ...task });
