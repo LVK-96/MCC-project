@@ -3,11 +3,15 @@ import ImageResizer from 'react-native-image-resizer';
 const createCorrectRes = async (originalPath, imageRes) => {
     let respURI = originalPath;
     switch (imageRes) {
-        case 'High':
-            respURI =  await ImageResizer.createResizedImage(originalPath, 640, 480, 'PNG', 100, 0, null); //is saved to a cache folder
+        case 'high':
+            console.log('highin');
+            respURI =  await ImageResizer.createResizedImage(originalPath, 1280, 960, 'PNG', 100, 0, null); //is saved to a cache folder
+            respURI = respURI.path;
             break;
-        case 'Low':
+        case 'low':
+            console.log('lowin');
             respURI =  await ImageResizer.createResizedImage(originalPath, 640, 480, 'PNG', 100, 0, null); //is saved to a cache folder
+            respURI = respURI.path;
             break;
     }
     return respURI;
