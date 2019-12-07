@@ -29,15 +29,19 @@ const getAll = async () => {
 	}
 };
 
-const createProject = async (project) => {
+const createProject = async (project, imageRes) => {
 	try {
+		//TODO: Fix cloud image path
 		console.log('Creating project', project.name);
-		const test = true;
 		let respURI = project.iconSource;
-		//TODO: determine if to resize and how from user input
-		if (test) {
-			//resize image
-			respURI =  await ImageResizer.createResizedImage(project.iconSource, 640, 480, 'PNG', 100, 0, null); //is saved to a cache folder
+		console.log(imageRes);
+		switch (imageRes) {
+			case 'High':
+				respURI =  await ImageResizer.createResizedImage(project.iconSource, 640, 480, 'PNG', 100, 0, null); //is saved to a cache folder
+				break;
+			case 'Low':
+				respURI =  await ImageResizer.createResizedImage(project.iconSource, 640, 480, 'PNG', 100, 0, null); //is saved to a cache folder
+				break;
 		}
 		const stats = await RNFetchBlob.fs.stat(respURI.path);
 		//parse path
