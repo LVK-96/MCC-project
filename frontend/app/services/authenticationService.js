@@ -93,7 +93,6 @@ export default {
   signup,
   logout,
   getAuthToken,
-  saveFcmToken,
   changeProfilePic,
   checkPassword,
   changePassword
