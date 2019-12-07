@@ -3,7 +3,7 @@ import axios from 'axios';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import UUIDGenerator from 'react-native-uuid-generator';
-import ImageResizer from 'react-native-image-resizer';
+import createCorrectRes from '../util/createCorrectRes';
 import api_url from '../util/config';
 
 const baseUrl = api_url + '/projects';
@@ -33,16 +33,8 @@ const createProject = async (project, imageRes) => {
 	try {
 		//TODO: Fix cloud image path
 		console.log('Creating project', project.name);
-		let respURI = project.iconSource;
-		console.log(imageRes);
-		switch (imageRes) {
-			case 'High':
-				respURI =  await ImageResizer.createResizedImage(project.iconSource, 640, 480, 'PNG', 100, 0, null); //is saved to a cache folder
-				break;
-			case 'Low':
-				respURI =  await ImageResizer.createResizedImage(project.iconSource, 640, 480, 'PNG', 100, 0, null); //is saved to a cache folder
-				break;
-		}
+		const respURI = await createCorrectRes(project.iconSource, imageRes);
+
 		const stats = await RNFetchBlob.fs.stat(respURI.path);
 		//parse path
 		const format = stats.path.split('.')[1];
