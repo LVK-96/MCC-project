@@ -2,6 +2,7 @@ const projectsRouter = require('express').Router();
 const Project = require('../models/project');
 const Task = require('../models/task');
 let { db, auth } = require('../utils/config');
+const notify = require('../utils/notify');
 
 const isOwner = (token, project) => {
   const projectData = project.data();
@@ -75,6 +76,7 @@ projectsRouter.post('/:id/members', async (request, response, next) => {
     }
     const newMembers = project.data().members.concat(body.uid);
     await projectRef.set({ ...project.data(), members: newMembers });
+    notify.sendMemberAdded(project.data(), body.uid);
     response.json(body);
   } catch (exception) {
     next(exception);
