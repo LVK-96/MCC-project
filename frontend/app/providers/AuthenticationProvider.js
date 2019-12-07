@@ -97,6 +97,16 @@ function AuthenticationProvider({ children }) {
     }
   };
 
+  const updateFavorites = async (id) => {
+    try {
+      const newUser = { ...user, favorites: user.favorites.concat(id) };
+      await userService.updateUser(newUser);
+      setUser(newUser);
+    } catch (e) {
+      throw e;
+    }
+  };
+
   const setToken = (token) => {
     projectService.setToken(token);
     taskService.setToken(token);
@@ -109,6 +119,7 @@ function AuthenticationProvider({ children }) {
     signup,
     logout,
     changeProfilePic,
+    updateFavorites,
     user,
     /*By providing this, we can avoid the reimplementation of the logic that
       checks if a user is logged in outside of this component.*/

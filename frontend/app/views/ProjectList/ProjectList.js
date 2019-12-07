@@ -91,6 +91,7 @@ function ProjectList({
           onPress={() => viewProject(project.id)}
           {...project}
           isOwner={user ? user.uid === project.owner : false}
+          isFavorite={user.favorites.includes(project.id)}
           deleteProject={handleDeletion}
         />
       )}

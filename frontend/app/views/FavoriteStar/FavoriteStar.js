@@ -30,10 +30,7 @@ function FavoriteStar({
     if (loading) {
       (async () => {
         try {
-          await userService.updateUser({
-            ...authenticationContext.user,
-            favorites: authenticationContext.user.favorites.concat(projectId)
-          });
+          await authenticationContext.updateFavorites(projectId);
           setFavorite(!isFavorite);
         } catch (e) {
           Alert.alert(
