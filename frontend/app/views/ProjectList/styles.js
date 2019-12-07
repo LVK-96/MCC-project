@@ -21,7 +21,10 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   createProjectButtonContainer: {
-    alignSelf: 'flex-end',
+    position: "absolute",
+    right: 0,
+    bottom: 0,
     marginRight: 20,
+    marginBottom: 10,
   }
 });
