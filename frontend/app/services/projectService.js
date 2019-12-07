@@ -47,6 +47,20 @@ const createProject = async (project) => {
 	}
 };
 
+const deleteProject = async (id) => {
+	try {
+		const response = await axios.delete(`${baseUrl}/${id}`, {
+			headers: {
+				Authorization: token,
+			},
+		});
+		return response.data;
+	} catch (err) {
+		console.log('Error deleting project', err);
+		return null;
+	}
+}
+
 const getFilesByProjectId = async (id) => {
 	try {
 		const response = await axios.get(`${baseUrl}/${id}/files`, {
@@ -91,4 +105,4 @@ const createFile = async (projectId, file) => {
 };
 
 export default { getAll, createProject, setToken,
-	getFilesByProjectId, createFile };
+	getFilesByProjectId, createFile, deleteProject };

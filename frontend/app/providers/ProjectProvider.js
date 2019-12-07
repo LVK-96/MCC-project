@@ -118,6 +118,19 @@ function ProjectProvider({ children }) {
     }
   };
 
+  // Deletes the project designated by id.
+  // Returns whether deletion was successful.
+  const deleteProject = async (id) => {
+    const deleted = await projectService.deleteProject(id);
+    // If successful, update local state.
+    if (deleted !== null) {
+      setProjects(prev => prev.filter(project => project.id !== id));
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const [selectedProject] = allWithId(selectedProjectId);
   const value = {
     projects,
@@ -125,6 +138,7 @@ function ProjectProvider({ children }) {
     selectedProject,
     createProject,
     addFile,
+    deleteProject,
   };
   return (
     <ProjectContext.Provider value={value}>
