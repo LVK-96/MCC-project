@@ -18,6 +18,7 @@ import {
 } from 'react-navigation';
 import styles from './styles';
 import ProjectContext from '../../contexts/ProjectContext';
+import SettingsContext from '../../contexts/SettingsContext';
 import formValidators from '../../util/formValidators';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
 
@@ -33,6 +34,7 @@ function ProjectFormView({ navigation }) {
 
     // We create the project through the project provider.
     const context = useContext(ProjectContext);
+    const settingsContext = useContext(SettingsContext);
     const authContext = useContext(AuthenticationContext);
 
     const handleDateSelection = async () => {
@@ -87,7 +89,7 @@ function ProjectFormView({ navigation }) {
 
         // Project information is valid.
         if (formValidators.projectIsValid(project)) {
-            const creationSuccessful = await context.createProject(project);
+            const creationSuccessful = await context.createProject(project, settingsContext.imageRes);
             // If project was created succesfully, go back to projects view.
             if (creationSuccessful) {
                 navigation.navigate('ProjectList');
