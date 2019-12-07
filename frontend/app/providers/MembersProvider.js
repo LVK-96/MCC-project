@@ -30,8 +30,8 @@ function MembersProvider({ children, projectId }) {
 
   const addMember = async (newMember) => {
     try {
-      const added = await memberService.addMember(newMember, projectId);
-      console.log(added);
+      let added = await memberService.addMember(newMember, projectId);
+      added.photoURL = await fetchCorrectRes(added.photoURL);
       setMembers(members.concat(added));
     } catch (e) {
       throw e;
