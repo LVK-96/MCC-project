@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MembersContext from '../contexts/MembersContext';
 import memberService from '../services/memberService';
+import fetchCorrectRes from '../util/fetchCorrectRes';
 
 function MembersProvider({ children, projectId }) {
     const [members, setMembers] = useState([]);
@@ -8,7 +9,13 @@ function MembersProvider({ children, projectId }) {
   useEffect(() => {
     const getMembers = async () => {
       try {
-        const fetched = await memberService.getMembers(projectId);
+        let fetched = await memberService.getMembers(projectId);
+        console.log(fetched);
+        let correctUrls = fetched.map(f => fetchCorrectRes(f.photoURL));;
+        correctUrls = await Promise.all(correctUrls);
+        for (let i = 0; i < correctUrls.length; ++i) {
+          fetched[i].photoURL = correctUrls[i];
+        }
         setMembers(fetched);
       } catch (e) {
         console.log('Error getting members');

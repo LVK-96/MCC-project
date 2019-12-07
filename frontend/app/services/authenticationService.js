@@ -42,12 +42,13 @@ const getAuthToken = async () => {
   return await auth().currentUser.getIdToken(true);
 };
 
-const saveFcmToken = async (displayName, uid, fcmToken) => {
+const saveFcmToken = async (displayName, uid, fcmToken, photoURL) => {
   try {
     await axios.post(baseUrl, {
       name: displayName,
       uid: uid,
       fcmToken: fcmToken,
+      photoURL: photoURL,
     });
   } catch (e) {
     console.log(e);
