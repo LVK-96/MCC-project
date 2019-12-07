@@ -141,10 +141,10 @@ projectsRouter.post('/:id/images', async (request, response, next) => {
     const project = await projectRef.doc(request.params.id).get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const { body } = request;
-    for (let image of body.images) {
-      await projectRef.collection('images').doc(image).set({ image });
-    }
-    response.json({ message: 'Images added', files: body.images });
+    const image = body;
+    image.uploaded = new Date().toISOString();
+    await projectRef.collection('images').doc(image.uid).set({ ...image });
+    response.json(image);
   } catch (exception) {
     next(exception);
   }

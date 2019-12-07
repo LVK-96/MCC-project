@@ -59,6 +59,43 @@ const deleteProject = async (id) => {
 		console.log('Error deleting project', err);
 		return null;
 	}
+};
+
+const getImagesByProjectId = async (id) => {
+	try {
+		const response = await axios.get(`${baseUrl}/${id}/images`, {
+			headers: { Authorization: token }
+		});
+		return response.data;
+	} catch (err) {
+		console.log('Error fetching project images');
+		return null;
+	}
+};
+
+const createImage = async (projectId, image) => {
+	try {
+		// Create the file in firebase storage.
+		const format = image.path.split('.').reverse()[0];
+		const storageRef = storage().ref();
+		const uuid = await UUIDGenerator.getRandomUUID();
+
+		const fileRef = storageRef.child(`projectFiles/${uuid}.${format}`);
+		await fileRef.putFile(image.path);
+		const path = fileRef.toString();
+
+		// Make the request.
+		image.source = path;
+		image.uid = uuid;
+
+		const response = await axios.post(`${baseUrl}/${projectId}/images`, image, {
+			headers: { Authorization: token },
+		});
+		return response.data;
+	} catch (exception) {
+		console.log('Error creating project image', exception);
+		return null;
+	}
 }
 
 const getFilesByProjectId = async (id) => {
@@ -88,7 +125,7 @@ const createFile = async (projectId, file) => {
 		const path = fileRef.toString();
 
 		// Make the request.
-    file.name = stats.filename;
+    	file.name = stats.filename;
 		file.source = path;
 		file.uid = uuid;
 
@@ -105,4 +142,5 @@ const createFile = async (projectId, file) => {
 };
 
 export default { getAll, createProject, setToken,
-	getFilesByProjectId, createFile, deleteProject };
+	getFilesByProjectId, createFile, deleteProject,
+	getImagesByProjectId, createImage };

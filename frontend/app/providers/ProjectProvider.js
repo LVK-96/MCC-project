@@ -64,6 +64,7 @@ const mockprojects = [
 ];
 
 /*Encapsulates project logic inside one component.*/
+const supportedTypes = ['pdf', 'mp3', 'txt', 'jpg', 'png'];
 function ProjectProvider({ children }) {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [projects, setProjects] = useState([]);
@@ -111,7 +112,18 @@ function ProjectProvider({ children }) {
   // Returns the created files.
   const addFile = async (project, file) => {
     try {
-      const created = await projectService.createFile(project.id, file);
+      // Check that file type is supported
+      const format = file.path.split('.').reverse()[0];
+				if (!supportedTypes.includes(format)) {
+					return;
+      }
+      let created;
+      // Create image if it is jpg or png. File otherwise.
+      if (format === 'png' || format === 'jpg') {
+        created = await projectService.createImage(project.id, file);
+      } else {
+        created = await projectService.createFile(project.id, file);
+      }
       return created;
     } catch (e) {
       throw e;
