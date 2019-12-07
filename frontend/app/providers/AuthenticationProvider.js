@@ -32,9 +32,26 @@ function AuthenticationProvider({ children }) {
         const fromFirestore = await userService.updateUser({ uid: loggedUser.uid, fcmToken: settingsContext.fcmToken });
         setUser({ ...fromFirestore, ...loggedUser, photoURL: url });
       } catch (e) {
-        // TODO: If profile pic fetching fails dont fail login just set empty url
-        console.log('failed to login with firebase');
-        throw new Error('Failed to login with firebase auth');
+        // In dev we might have a situation where we have a user in firebase in auth
+        // but not in firestore
+        if (e.message=== 'User update failed') {
+          const loggedUser = await authenticationService.login(email, password);
+          const authToken = await authenticationService.getAuthToken();
+          setToken(authToken);
+          const url = await fetchCorrectRes(loggedUser.photoURL, settingsContext.imageRes);
+          const fromFirestore = await userService.saveUser({
+            name: loggedUser.displayName,
+            uid: loggedUser.uid,
+            fcmToken: notificationContext.fcmToken,
+            photoURL: loggedUser.photoURL,
+            favorites: [],
+          });
+
+          setUser({ ...fromFirestore, ...loggedUser, photoURL: url });
+        } else {
+          console.log('failed to login with firebase');
+          throw new Error('Failed to login with firebase auth');
+        }
       }
     }
   };

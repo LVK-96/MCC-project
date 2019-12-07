@@ -88,6 +88,7 @@ const updateUser = async (user) => {
     return response.data;
   } catch (exception) {
     console.log('User update failed');
+    throw new Error('User update failed');
   }
 };
 
