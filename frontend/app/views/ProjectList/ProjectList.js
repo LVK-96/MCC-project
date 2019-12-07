@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {
   withNavigation,
@@ -32,7 +33,8 @@ function ProjectList({
 
   const {
     projects,
-    selectProject
+    selectProject,
+    deleteProject,
   } = useContext(ProjectContext);
   const headerText = (filter === 'favorite') ? 'Favorite projects'
                    : (filter === 'date') ? 'All projects'
@@ -67,6 +69,13 @@ function ProjectList({
     }
   };
 
+  const handleDeletion = async (id) => {
+    const successful = await deleteProject(id);
+    if (!successful) {
+      Alert.alert('Failed to delete project');
+    }
+  };
+
   const header = (
     <Text style={styles.headerText}>
       {headerText}
@@ -82,6 +91,7 @@ function ProjectList({
           onPress={() => viewProject(project.id)}
           {...project}
           isOwner={user ? user.uid === project.owner : false}
+          deleteProject={handleDeletion}
         />
       )}
       {<View style={styles.projectsBottom}/>}

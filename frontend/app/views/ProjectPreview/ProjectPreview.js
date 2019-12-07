@@ -22,6 +22,8 @@ function ProjectPreview({
   onPress,
   setFavorite,
   isOwner,
+  id,
+  deleteProject,
 }) {
   return (
     <TouchableOpacity
@@ -46,7 +48,7 @@ function ProjectPreview({
           setFavorite={setFavorite}
         />
         <ContextMenu options={[
-          { text: "Delete", onSelect: () => console.warn("TODO: Delete")},
+          { text: "Delete", onSelect: () => deleteProject(id)},
           { text: "Show project content", onSelect: () => console.warn("TODO: Show")},
           { text: "Generate project report", onSelect: () => console.warn("TODO: Report")},
         ].filter(opt => opt.text === 'Delete' ? isOwner : true)}/>
