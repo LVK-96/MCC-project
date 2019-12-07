@@ -25,6 +25,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import UUIDGenerator from 'react-native-uuid-generator';
 import storage from '@react-native-firebase/storage';
 import axios from 'axios';
+import { googleVisionUrl } from '../../util/config';
 
 // Component that renders the task form to create a new task.
 // TODO: This could be combined with TaskView.js
@@ -99,37 +100,29 @@ function ProjectFormView({ navigation }) {
                 const uri = response.uri;
 
                 try {
-                    // Upload the image to firebase storage
-                    // and get the URL
-                    // const stats = await RNFetchBlob.fs.stat(uri);
-                    // const storageRef = storage().ref();
-                    // const format = stats.path.split('.').reverse()[0];
-                    // const iconRef = storageRef.child(`taskImages/${await UUIDGenerator.getRandomUUID()}.${format}`);
-                    // await iconRef.putFile(stats.path);
-                    // const path = iconRef.toString();
+                    // Encode the string to base-64 locally.
                     const stats = await RNFetchBlob.fs.stat(uri);
                     const base64 = await RNFetchBlob.fs.readFile(stats.path, 'base64');
 
-                    // Make the Google Vision API request.
+                    // Construct the Google Vision API request.
                     const body = {
-                        "requests": [
-                          {
-                            "features": [
-                              {
-                                "type": "TEXT_DETECTION"
-                              }
-                            ],
-                            "image": {
-                              "content": base64.toString()
-                            }
-                          }
-                        ]
-                      }
-                    const key = "AIzaSyCrywTxXbwLS6kl1rciQHLCJ8cIeVr-DE4"
-                    let response = await axios.post(
-                        'https://vision.googleapis.com/v1/images:annotate?key=' +
-                            key,
-                            body,
+                        requests: [
+                            {
+                                features: [
+                                    {
+                                        type: 'TEXT_DETECTION',
+                                    },
+                                ],
+                                image: {
+                                    content: base64.toString(),
+                                },
+                            },
+                        ],
+                    };
+
+                    // Make the Google Vision API request.
+                    const res = await axios.post(
+                        googleVisionUrl, body,
                         {
                             headers: {
                                 Accept: 'application/json',
@@ -137,8 +130,10 @@ function ProjectFormView({ navigation }) {
                             },
                         }
                     );
-                    if (response.status === 200) {
-                        const text = response.data.responses[0].textAnnotations[0].description;
+
+                    // Get the response and set the description.
+                    if (res.status === 200) {
+                        const text = res.data.responses[0].textAnnotations[0].description;
                         setDescription(text);
                     }
                 } catch (error) {
@@ -147,7 +142,7 @@ function ProjectFormView({ navigation }) {
             } else {
                 console.log('Image picking failed: ', response);
             }
-          });
+        });
     };
 
     return (
@@ -168,7 +163,7 @@ function ProjectFormView({ navigation }) {
                         onChangeText={text => setDescription(text)} />
                 </View>
                 <Button title="Convert from image"
-                    onPress={handleImageConversion}/>
+                    onPress={handleImageConversion} />
                 <View>
                     <Text style={styles.label}>Deadline</Text>
                     <TouchableOpacity onPress={handleDateSelection}>
@@ -181,16 +176,16 @@ function ProjectFormView({ navigation }) {
                 </View>
                 {/* We only render the assignees selection if the project
                 this task is associated with is a group project. */
-                project.type === 'GROUP' &&
-                <View>
-                    <Text style={styles.label}>Assigned to</Text>
+                    project.type === 'GROUP' &&
+                    <View>
+                        <Text style={styles.label}>Assigned to</Text>
                         <UserPicker defaultLabel={'Add assignee'}
-                            onSelectCallback={addAssignee}/>
-                        <UserList displayUsers={assignees}/>
-                </View>}
+                            onSelectCallback={addAssignee} />
+                        <UserList displayUsers={assignees} />
+                    </View>}
                 <View style={styles.saveButton}>
                     <Button title="Save"
-                        onPress={handleSavePress}/>
+                        onPress={handleSavePress} />
                 </View>
             </View>
         </View>
