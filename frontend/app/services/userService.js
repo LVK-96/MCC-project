@@ -65,6 +65,31 @@ const getById = async (id) => {
   }
 };
 
+const saveUser = async (user) => {
+  try {
+    const response = await axios.post(baseUrl, user, {
+      headers: {
+      Authorization: token,
+      },
+    });
+    return response.data;
+  } catch (exception) {
+    throw exception;
+  }
+};
 
-export default { setToken, getAll, searchByName, getById };
+const updateUser = async (user) => {
+  try {
+    const response = await axios.put(`${baseUrl}/${user.uid}`, user, {
+      headers: {
+      Authorization: token,
+      },
+    });
+    return response.data;
+  } catch (exception) {
+    console.log('User update failed');
+  }
+};
+
+export default { setToken, getAll, searchByName, getById, updateUser, saveUser };
 

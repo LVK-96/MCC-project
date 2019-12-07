@@ -13,8 +13,6 @@ usersRouter.post('/', async (request, response, next) => {
   }
 });
 
-// TODO: endpoint for getting all users
-
 usersRouter.get('/search', async (request, response, next) => {
   try {
     const { query } = request;
@@ -45,9 +43,13 @@ usersRouter.put('/:id', async (request, response, next) => {
     const { body } = request;
     const document = await db.collection('users').doc(request.params.id).get();
     let user = document.data();
-    user.email = body.email;
-    await db.collection('users').doc(request.params.id).set(user);
-    response.json(user);
+    let newFavorites = user.favorites;
+    if (body.favorites) {
+      newFavorites = newFavorites.concat(body.favorites);
+    }
+    const newUser = { ...user, ...body, favorites: newFavorites };
+    await db.collection('users').doc(request.params.id).set(newUser);
+    response.json(newUser);
   } catch (exception) {
     next(exception);
   }
