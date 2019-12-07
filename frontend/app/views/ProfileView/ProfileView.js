@@ -46,6 +46,7 @@ function ProfileView({ navigation }) {
 
   const logout = async () => {
     try {
+      navigation.navigate('Authentication');
       await authenticationContext.logout();
     } catch (e) {
       Alert.alert('Failed to logout');
@@ -61,22 +62,22 @@ function ProfileView({ navigation }) {
           <SettingsView setModalVisible={setModalVisible} />
         </Modal>
         <View style={styles.header}/>
-          <TouchableOpacity style={styles.avatarContainer} onPress={changeProfilePic}>
-            <Image style={styles.avatar}
-              source={{
-                uri: authenticationContext.user.photoURL,
-              }}
-            />
-          </TouchableOpacity>
-          <View style={styles.body}>
-            <View style={styles.bodyContent}>
-              <Text style={styles.name}>{authenticationContext.user.displayName}</Text>
-            </View>
+        <TouchableOpacity style={styles.avatarContainer} onPress={changeProfilePic}>
+          <Image style={styles.avatar}
+            source={{
+              uri: authenticationContext.user.photoURL,
+            }}
+          />
+        </TouchableOpacity>
+        <View style={styles.body}>
+          <View style={styles.buttonContainer}>
+            <Text style={styles.name}>{authenticationContext.user.displayName}</Text>
             <Button title={'Change password'} onPress={changePassword} style={styles.profileButton} />
             <Button title={'Logout'} style={styles.profileButton} onPress={logout} color={'red'} />
-            <TouchableOpacity style={styles.settingsButton} onPress={() => setModalVisible(true)}>
-              <SettingsIcon />
-            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.settingsButton} onPress={() => setModalVisible(true)}>
+            <SettingsIcon />
+          </TouchableOpacity>
         </View>
       </View>
     );

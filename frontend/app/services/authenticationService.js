@@ -1,13 +1,14 @@
 import auth from '@react-native-firebase/auth';
+import axios from 'axios';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
-import projectService from '../services/projectService';
+import api_url from '../util/config';
+
+const baseUrl = api_url + '/users';
 
 const login = async (email, password) => {
   try {
     const sign = await auth().signInWithEmailAndPassword(email, password);
-    const token = await auth().currentUser.getIdToken(true);
-    projectService.setToken(token);
     return {
       displayName: sign.user.displayName,
       email: sign.user.email,
@@ -26,8 +27,6 @@ const signup = async (email, displayName, password) => {
     const defaultRef = storageRef.child('profilepics/default.jpg');
     const path = defaultRef.toString();
     await auth().currentUser.updateProfile({ displayName: displayName, photoURL: path });
-    const token = await auth().currentUser.getIdToken(true);
-    projectService.setToken(token);
     return {
       displayName: displayName,
       email: sign.user._user.email,
@@ -35,6 +34,24 @@ const signup = async (email, displayName, password) => {
       uid: sign.user._user.uid
     };
   } catch (e) {
+    throw e;
+  }
+};
+
+const getAuthToken = async () => {
+  return await auth().currentUser.getIdToken(true);
+};
+
+const saveFcmToken = async (displayName, uid, fcmToken, photoURL) => {
+  try {
+    await axios.post(baseUrl, {
+      name: displayName,
+      uid: uid,
+      fcmToken: fcmToken,
+      photoURL: photoURL,
+    });
+  } catch (e) {
+    console.log(e);
     throw e;
   }
 };
@@ -89,6 +106,8 @@ export default {
   login,
   signup,
   logout,
+  getAuthToken,
+  saveFcmToken,
   changeProfilePic,
   checkPassword,
   changePassword

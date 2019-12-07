@@ -1,10 +1,10 @@
-const uniqid = require('uniqid');
-
 class User {
   constructor(params) {
-    this.id = uniqid(); // TODO: Is there some Firebase id that can replace this?
-    this.username = params.username;
-    this.email = params.email;
+    this.uid = params.uid;
+    this.fcmToken = params.fcmToken; // For receiving notifications
+    this.name = params.name;
+    this.photoURL = params.photoURL;
+    // TODO: propably also need to have username and link to profilepic here
   }
 }
 

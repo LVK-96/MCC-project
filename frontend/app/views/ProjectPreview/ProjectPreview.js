@@ -5,6 +5,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import styles from './styles';
+import ContextMenu from '../ContextMenu';
+import FavoriteStar from '../FavoriteStar';
+import ProjectMembersPreview from '../ProjectMembersPreview';
+import MembersProvider from '../../providers/MembersProvider';
 
 /*Offers a preview of a project in a project list. Contains only essential
   information, as the goal is to keep the preview small enough to be usable
@@ -17,21 +21,41 @@ function ProjectPreview({
   created,
   favorite,
   onPress,
+  setFavorite,
+  isOwner,
+  id,
+  deleteProject,
 }) {
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={onPress}
     >
-      <Text style={styles.name}>
-        {name}
-      </Text>
-      <Text style={styles.description}>
-        {description}
-      </Text>
-      <Text style={styles.deadline}>
-        {(new Date(deadline)).toString()}
-      </Text>
+      <View style={styles.infoContainer}>
+        <Text style={styles.name}>
+          {name}
+        </Text>
+        <Text style={styles.description}>
+          {description}
+        </Text>
+        <Text style={styles.deadline}>
+          {(new Date(deadline)).toString()}
+        </Text>
+        <MembersProvider projectId={id}>
+          <ProjectMembersPreview />
+        </MembersProvider>
+      </View>
+      <View style={styles.menuContainer}>
+        <FavoriteStar
+          isFavorite={favorite}
+          setFavorite={setFavorite}
+        />
+        <ContextMenu options={[
+          { text: "Delete", onSelect: () => deleteProject(id)},
+          { text: "Show project content", onSelect: () => console.warn("TODO: Show")},
+          { text: "Generate project report", onSelect: () => console.warn("TODO: Report")},
+        ].filter(opt => opt.text === 'Delete' ? isOwner : true)}/>
+      </View>
     </TouchableOpacity>
   );
 }

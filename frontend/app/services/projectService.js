@@ -4,8 +4,9 @@ import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import UUIDGenerator from 'react-native-uuid-generator';
 import ImageResizer from 'react-native-image-resizer';
+import api_url from '../util/config';
 
-const baseUrl = 'http://10.0.2.2:3000/projects'; // TODO: use env var for this
+const baseUrl = api_url + '/projects';
 
 let token = null;
 
@@ -59,4 +60,62 @@ const createProject = async (project) => {
 	}
 };
 
-export default { getAll, createProject, setToken };
+const deleteProject = async (id) => {
+	try {
+		const response = await axios.delete(`${baseUrl}/${id}`, {
+			headers: {
+				Authorization: token,
+			},
+		});
+		return response.data;
+	} catch (err) {
+		console.log('Error deleting project', err);
+		return null;
+	}
+}
+
+const getFilesByProjectId = async (id) => {
+	try {
+		const response = await axios.get(`${baseUrl}/${id}/files`, {
+			headers: {
+			Authorization: token,
+			},
+		});
+		return response.data;
+	} catch (exception) {
+		console.log("Error fetching project files");
+		return [];
+	}
+};
+
+const createFile = async (projectId, file) => {
+	try {
+		// Create the file in firebase storage.
+		const stats = await RNFetchBlob.fs.stat(file.path);
+		const format = stats.path.split('.').reverse()[0];
+		const storageRef = storage().ref();
+		const uuid = await UUIDGenerator.getRandomUUID();
+
+		const fileRef = storageRef.child(`projectFiles/${uuid}.${format}`);
+		await fileRef.putFile(stats.path);
+		const path = fileRef.toString();
+
+		// Make the request.
+    file.name = stats.filename;
+		file.source = path;
+		file.uid = uuid;
+
+		const response = await axios.post(`${baseUrl}/${projectId}/files`, file, {
+			headers: {
+			Authorization: token,
+			},
+		});
+		return response.data;
+	} catch (exception) {
+		console.log('Error creating project file', exception);
+		return null;
+	}
+};
+
+export default { getAll, createProject, setToken,
+	getFilesByProjectId, createFile, deleteProject };

@@ -5,11 +5,13 @@ import {
   ActivityIndicator,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {
   withNavigation,
 } from 'react-navigation';
 import ProjectContext from '../../contexts/ProjectContext';
+import AuthenticationContext from '../../contexts/AuthenticationContext';
 import {
   compareDates,
   dateIsWithinAWeek,
@@ -27,9 +29,12 @@ function ProjectList({
   navigation,
   searchParam, // This is passed from the ProjectSearch view
 }) {
+  const { user } = useContext(AuthenticationContext);
+
   const {
     projects,
-    selectProject
+    selectProject,
+    deleteProject,
   } = useContext(ProjectContext);
   const headerText = (filter === 'favorite') ? 'Favorite projects'
                    : (filter === 'date') ? 'All projects'
@@ -64,15 +69,32 @@ function ProjectList({
     }
   };
 
+  const handleDeletion = async (id) => {
+    const successful = await deleteProject(id);
+    if (!successful) {
+      Alert.alert('Failed to delete project');
+    }
+  };
+
+  const header = (
+    <Text style={styles.headerText}>
+      {headerText}
+    </Text>
+  );
+
   const contentArea = selectedProjects ? (
     <ScrollView style={styles.projectsContainer}>
+      {header}
       {selectedProjects.map(project =>
         <ProjectPreview
           key={project.id}
           onPress={() => viewProject(project.id)}
           {...project}
+          isOwner={user ? user.uid === project.owner : false}
+          deleteProject={handleDeletion}
         />
       )}
+      {<View style={styles.projectsBottom}/>}
     </ScrollView>
   ) : (
     <View style={styles.loadingContainer}>
@@ -82,9 +104,6 @@ function ProjectList({
 
   return (
     <View style={styles.container}>
-      <Text>
-        {headerText}
-      </Text>
       {contentArea}
       <TouchableOpacity onPress={() => navigation.navigate('ProjectForm')}
         style={styles.createProjectButtonContainer}>

@@ -1,27 +1,30 @@
 const usersRouter = require('express').Router();
-let { db } = require('../utils/config');
+let { db, auth } = require('../utils/config');
 const User = require('../models/user');
 
 usersRouter.post('/', async (request, response, next) => {
   try {
     const { body } = request;
     const user = new User(body);
-    await db.collection('users').doc(user.id).set({ ...user });
+    await db.collection('users').doc(user.uid).set({ ...user });
     response.status(201).json(user);
   } catch (exception) {
     next(exception);
   }
 });
 
-usersRouter.get('/', async (request, response, next) => {
+// TODO: endpoint for getting all users
+
+usersRouter.get('/search', async (request, response, next) => {
   try {
-    const collection = await db.collection('users').get();
-    const docs = collection.docs;
-    let users = [];
-    for (let doc of docs) {
-      users.push(doc.data());
+    const { query } = request;
+    await auth.verifyIdToken(request.get('authorization').toString());
+    const users = await db.collection('users').where('name', '>=', query.name).get();
+    let resp = [];
+    for (let d of users.docs) {
+      resp.push(d.data());
     }
-    response.json(users);
+    response.json(resp);
   } catch (exception) {
     next(exception);
   }
@@ -37,7 +40,7 @@ usersRouter.get('/:id', async (request, response, next) => {
   }
 });
 
-usersRouter.post('/:id', async (request, response, next) => {
+usersRouter.put('/:id', async (request, response, next) => {
   try {
     const { body } = request;
     const document = await db.collection('users').doc(request.params.id).get();

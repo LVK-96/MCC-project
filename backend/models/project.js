@@ -12,6 +12,8 @@ class Project {
     this.created = this.dateRegex(new Date().toISOString());
     this.modified = this.created;
     this.keywords = params.keywords;
+    this.deadlineNotified = false;
+    this.members = [];
   }
 
   dateRegex(ISODateString) {

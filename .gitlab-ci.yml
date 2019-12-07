@@ -1,0 +1,24 @@
+default:
+  image: leovk/mcc:latest
+
+frontend:
+  only:
+    refs:
+      - master
+      - 30-gitlab-ci
+  script:
+    - ./scripts/build_app.sh
+  artifacts:
+    paths:
+    - ./frontend/android/app/build/outputs/apk/debug/app-debug.apk
+    expire_in: 1 week
+
+backend:
+  only:
+    refs:
+      - master
+      - 30-gitlab-ci
+  script:
+    - mkdir -p secret && echo $SERVICE_ACCOUNT > secret/admin.json
+    - gcloud auth activate-service-account --key-file=secret/admin.json
+    - ./scripts/deploy_cloud.sh

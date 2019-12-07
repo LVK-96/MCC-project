@@ -1,14 +1,20 @@
 import React, { useState, useContext } from 'react';
 import AuthenticationContext from '../contexts/AuthenticationContext';
 import SettingsContext from '../contexts/SettingsContext';
+import NotificationContext from '../contexts/NotificationContext';
 import authenticationService from '../services/authenticationService';
+import projectService from '../services/projectService';
+import taskService from '../services/taskService';
 import fetchCorrectRes from '../util/fetchCorrectRes';
+import memberService from '../services/memberService';
+import userService from '../services/userService';
 
 /*Encapsulates authentication logic inside one component.*/
 function AuthenticationProvider({ children }) {
   const [user, setUser] = useState(null);
 
   const settingsContext = useContext(SettingsContext);
+  const notificationContext = useContext(NotificationContext);
 
   /*We are logged in if the user is set (not null).*/
   const isLoggedIn = !!user;
@@ -20,6 +26,9 @@ function AuthenticationProvider({ children }) {
     } else {
       try {
         const loggedUser = await authenticationService.login(email, password);
+        const authToken = await authenticationService.getAuthToken();
+        setToken(authToken);
+        await saveFcmToken(loggedUser);
         const url = await fetchCorrectRes(loggedUser.photoURL, settingsContext.imageRes);
         setUser({ ...loggedUser, photoURL: url });
       } catch (e) {
@@ -33,6 +42,9 @@ function AuthenticationProvider({ children }) {
   const signup = async ({ email, displayName, password }) => {
     try {
       const signedUser = await authenticationService.signup(email, displayName, password);
+      const authToken = await authenticationService.getAuthToken();
+      setToken(authToken);
+      await saveFcmToken(signedUser);
       const url = await fetchCorrectRes(signedUser.photoURL, settingsContext.imageRes);
       setUser({ ...signedUser, photoURL: url });
     } catch (e) {
@@ -51,6 +63,21 @@ function AuthenticationProvider({ children }) {
     }
   };
 
+  const saveFcmToken = async (user2save) => {
+    // Save fcm token into user collection of database
+    // For receiving notifications
+    try {
+      await authenticationService.saveFcmToken(
+        user2save.displayName,
+        user2save.uid,
+        notificationContext.fcmToken,
+        user2save.photoURL
+      );
+    } catch (e) {
+      console.log("Saving fcm token failed");
+    }
+  };
+
   const changeProfilePic = async (uri) => {
     try {
       const imageUrl = await authenticationService.changeProfilePic(uri, user.uid);
@@ -59,6 +86,13 @@ function AuthenticationProvider({ children }) {
     } catch (e) {
       throw new Error('Failed to save profile picture to cloud storage');
     }
+  };
+
+  const setToken = (token) => {
+    projectService.setToken(token);
+    taskService.setToken(token);
+    memberService.setToken(token);
+    userService.setToken(token);
   };
 
   const value = {

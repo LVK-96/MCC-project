@@ -3,6 +3,7 @@ import ProjectContext from '../contexts/ProjectContext';
 import projectsService from '../services/projectService';
 import AuthenticationContext from '../contexts/AuthenticationContext';
 import fetchCorrectRes from '../util/fetchCorrectRes';
+import projectService from '../services/projectService';
 
 const mockprojects = [
   {
@@ -14,6 +15,7 @@ const mockprojects = [
     created: '2019-06-06',
     modified: '2019-09-09',
     keywords: ['test', 'project', 'placeholder', 'different'],
+    type: 'GROUP',
   },
   {
     id: 101,
@@ -24,6 +26,7 @@ const mockprojects = [
     created: '2019-06-06',
     modified: '2019-09-09',
     keywords: ['test', 'project', 'placeholder'],
+    type: 'PERSONAL',
   },
   {
     id: 102,
@@ -34,6 +37,7 @@ const mockprojects = [
     created: '2019-06-06',
     modified: '2019-11-01',
     keywords: ['test', 'project', 'placeholder', 'different'],
+    type: 'GROUP'
   },
   {
     id: 103,
@@ -44,6 +48,7 @@ const mockprojects = [
     created: '2019-06-06',
     modified: '2019-10-10',
     keywords: ['test', 'project', 'placeholder'],
+    type: 'PERSONAL',
   },
   {
     id: 104,
@@ -54,6 +59,7 @@ const mockprojects = [
     created: '2018-06-06',
     modified: '2019-09-09',
     keywords: ['test', 'project', 'placeholder'],
+    type: 'GROUP',
   },
 ];
 
@@ -101,12 +107,38 @@ function ProjectProvider({ children }) {
     }
   };
 
+  // This assumes that file has fields name and uri.
+  // Returns the created files.
+  const addFile = async (project, file) => {
+    try {
+      const created = await projectService.createFile(project.id, file);
+      return created;
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  // Deletes the project designated by id.
+  // Returns whether deletion was successful.
+  const deleteProject = async (id) => {
+    const deleted = await projectService.deleteProject(id);
+    // If successful, update local state.
+    if (deleted !== null) {
+      setProjects(prev => prev.filter(project => project.id !== id));
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const [selectedProject] = allWithId(selectedProjectId);
   const value = {
     projects,
     selectProject,
     selectedProject,
     createProject,
+    addFile,
+    deleteProject,
   };
   return (
     <ProjectContext.Provider value={value}>
