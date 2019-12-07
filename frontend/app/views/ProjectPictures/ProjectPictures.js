@@ -14,6 +14,8 @@ import colors from '../../values/colors';
 import projectService from '../../services/projectService';
 import styles from './styles';
 import ImagePicker from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+import RNFetchBlob from 'rn-fetch-blob';
 
 function ProjectPictures() {
 
@@ -67,7 +69,15 @@ function ProjectPictures() {
 	};
 
 	const handlePictureDownload = async (picture) => {
-		//TODO: Fill this in (see ProjectFiles for guidance)
+		try {
+			const storageRef = storage().refFromURL(picture.source);
+			const url = await storageRef.getDownloadURL();
+			const dirs = RNFetchBlob.fs.dirs;
+			RNFetchBlob.config({ path: dirs.DocumentDir })
+				.fetch('GET', url);
+		} catch (exception) {
+			Alert.alert('Failed to download file ' + picture.name);
+		}
 	};
 
 	const header = (
@@ -80,9 +90,8 @@ function ProjectPictures() {
 		<ScrollView style={styles.contentArea}>
 			{header}
 			{pictures.length > 0 ?
-				pictures.map((picture, index) =>
-					/*TODO: Replace with actual key, index is not sufficient*/
-					<View key={index}>
+				pictures.map(picture =>
+					<View key={picture.uid}>
 						<TouchableOpacity onPress={() => handlePictureDownload(picture)}>
 							<Image source={picture.source} />
 						</TouchableOpacity>
