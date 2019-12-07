@@ -80,6 +80,7 @@ function ProjectList({
           {...project}
         />
       )}
+      {<View style={styles.projectsBottom}/>}
     </ScrollView>
   ) : (
     <View style={styles.loadingContainer}>

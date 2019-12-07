@@ -15,6 +15,9 @@ export default StyleSheet.create({
   projectsContainer: {
     flex: 1,
   },
+  projectsBottom: {
+    marginBottom: 60,
+  },
   loadingContainer: {
     flex: 1,
     alignItems: 'center',
