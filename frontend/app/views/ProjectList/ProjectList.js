@@ -10,6 +10,7 @@ import {
   withNavigation,
 } from 'react-navigation';
 import ProjectContext from '../../contexts/ProjectContext';
+import AuthenticationContext from '../../contexts/AuthenticationContext';
 import {
   compareDates,
   dateIsWithinAWeek,
@@ -27,6 +28,8 @@ function ProjectList({
   navigation,
   searchParam, // This is passed from the ProjectSearch view
 }) {
+  const { user } = useContext(AuthenticationContext);
+
   const {
     projects,
     selectProject
@@ -78,6 +81,7 @@ function ProjectList({
           key={project.id}
           onPress={() => viewProject(project.id)}
           {...project}
+          isOwner={user ? user.uid === project.owner : false}
         />
       )}
       {<View style={styles.projectsBottom}/>}

@@ -21,6 +21,7 @@ function ProjectPreview({
   favorite,
   onPress,
   setFavorite,
+  isOwner,
 }) {
   return (
     <TouchableOpacity
@@ -48,7 +49,7 @@ function ProjectPreview({
           { text: "Delete", onSelect: () => console.warn("TODO: Delete")},
           { text: "Show project content", onSelect: () => console.warn("TODO: Show")},
           { text: "Generate project report", onSelect: () => console.warn("TODO: Report")},
-        ]}/>
+        ].filter(opt => opt.text === 'Delete' ? isOwner : true)}/>
       </View>
     </TouchableOpacity>
   );
