@@ -28,9 +28,9 @@ function AuthenticationProvider({ children }) {
         const loggedUser = await authenticationService.login(email, password);
         const authToken = await authenticationService.getAuthToken();
         setToken(authToken);
-        await saveFcmToken(loggedUser);
         const url = await fetchCorrectRes(loggedUser.photoURL, settingsContext.imageRes);
-        setUser({ ...loggedUser, photoURL: url });
+        const fromFirestore = await userService.updateUser({ uid: loggedUser.uid, fcmToken: settingsContext.fcmToken });
+        setUser({ ...fromFirestore, ...loggedUser, photoURL: url });
       } catch (e) {
         // TODO: If profile pic fetching fails dont fail login just set empty url
         console.log('failed to login with firebase');
@@ -44,9 +44,16 @@ function AuthenticationProvider({ children }) {
       const signedUser = await authenticationService.signup(email, displayName, password);
       const authToken = await authenticationService.getAuthToken();
       setToken(authToken);
-      await saveFcmToken(signedUser);
+      const fromFirestore = await userService.saveUser({
+        name: signedUser.displayName,
+        uid: signedUser.uid,
+        fcmToken: notificationContext.fcmToken,
+        photoURL: signedUser.photoURL,
+        favorites: [],
+      });
       const url = await fetchCorrectRes(signedUser.photoURL, settingsContext.imageRes);
-      setUser({ ...signedUser, photoURL: url });
+      console.log(fromFirestore);
+      setUser({ ...fromFirestore, ...signedUser, photoURL: url });
     } catch (e) {
       // TODO: If profile pic fetching fails dont fail login just set empty url
       console.log('failed to signup with firebase');
@@ -60,21 +67,6 @@ function AuthenticationProvider({ children }) {
       setUser(null);
     } catch (e) {
       throw new Error('Logout failed');
-    }
-  };
-
-  const saveFcmToken = async (user2save) => {
-    // Save fcm token into user collection of database
-    // For receiving notifications
-    try {
-      await authenticationService.saveFcmToken(
-        user2save.displayName,
-        user2save.uid,
-        notificationContext.fcmToken,
-        user2save.photoURL
-      );
-    } catch (e) {
-      console.log("Saving fcm token failed");
     }
   };
 
