@@ -22,8 +22,15 @@ function TaskList({ navigation }) {
       }
     };
 
+    const header = (
+      <Text style={styles.headerText}>
+        Project tasks
+      </Text>
+    );
+
     const contentArea = tasks ? (
         <ScrollView style={styles.tasksContainer}>
+          {header}
           {/* Sort tasks by creation date */}
           {tasks.sort((t1, t2) =>
             new Date(t2.created).getTime() - new Date(t1.created).getTime())
@@ -34,6 +41,7 @@ function TaskList({ navigation }) {
               task={task}
             />
           )}
+          {<View style={styles.tasksBottom}/>}
         </ScrollView>
       ) : (
         <View style={styles.loadingContainer}>
@@ -43,9 +51,6 @@ function TaskList({ navigation }) {
 
       return (
         <View style={styles.container}>
-          <Text>
-            Project tasks
-          </Text>
           {contentArea}
           <TouchableOpacity onPress={() => navigation.navigate('TaskForm')}
             style={styles.createTaskButtonContainer}>

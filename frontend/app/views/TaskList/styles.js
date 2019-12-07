@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import fontSizes from '../../values/fontSizes';
 
 export default StyleSheet.create({
   container: {
@@ -6,8 +7,16 @@ export default StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  headerText: {
+    fontSize: fontSizes.large,
+    marginHorizontal: 20,
+    marginTop: 10,
+  },
   tasksContainer: {
     flex: 1,
+  },
+  tasksBottom: {
+    marginBottom: 60,
   },
   loadingContainer: {
     flex: 1,
@@ -15,7 +24,10 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   createTaskButtonContainer: {
-    alignSelf: 'flex-end',
+    position: "absolute",
+    right: 0,
+    bottom: 0,
     marginRight: 20,
+    marginBottom: 10,
   },
 });
