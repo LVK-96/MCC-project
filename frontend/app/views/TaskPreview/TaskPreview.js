@@ -2,15 +2,15 @@ import React, { useContext } from 'react';
 import {
 	Text,
 	TouchableOpacity,
+	Alert,
 	CheckBox,
-	Alert
 } from 'react-native';
 import styles from './styles';
 import TasksContext from '../../contexts/TasksContext';
 
-/*Offers a preview of a project in a project list. Contains only essential
+/*Offers a preview of a task in a list of tasks. Contains only essential
   information, as the goal is to keep the preview small enough to be usable
-  within a list of projects.*/
+  within a list of tasks.*/
 function TaskPreview({
 	task,
 	onPress,

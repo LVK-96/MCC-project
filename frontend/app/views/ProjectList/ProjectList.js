@@ -64,8 +64,15 @@ function ProjectList({
     }
   };
 
+  const header = (
+    <Text style={styles.headerText}>
+      {headerText}
+    </Text>
+  );
+
   const contentArea = selectedProjects ? (
     <ScrollView style={styles.projectsContainer}>
+      {header}
       {selectedProjects.map(project =>
         <ProjectPreview
           key={project.id}
@@ -73,6 +80,7 @@ function ProjectList({
           {...project}
         />
       )}
+      {<View style={styles.projectsBottom}/>}
     </ScrollView>
   ) : (
     <View style={styles.loadingContainer}>
@@ -82,9 +90,6 @@ function ProjectList({
 
   return (
     <View style={styles.container}>
-      <Text>
-        {headerText}
-      </Text>
       {contentArea}
       <TouchableOpacity onPress={() => navigation.navigate('ProjectForm')}
         style={styles.createProjectButtonContainer}>

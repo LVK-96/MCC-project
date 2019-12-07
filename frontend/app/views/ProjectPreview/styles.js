@@ -14,6 +14,8 @@ export default StyleSheet.create({
   },
   menuContainer: {
     alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   name: {
     fontWeight: 'bold',
