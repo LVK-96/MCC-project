@@ -8,7 +8,6 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
-import userService from '../../services/userService';
 
 /*A component that shows and allows the user to select whether or not some item
   is favorited.*/
@@ -30,7 +29,7 @@ function FavoriteStar({
     if (loading) {
       (async () => {
         try {
-          await authenticationContext.updateFavorites(projectId);
+          await authenticationContext.updateFavorites(projectId, isFavorite);
           setFavorite(!isFavorite);
         } catch (e) {
           Alert.alert(

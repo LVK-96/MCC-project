@@ -29,12 +29,12 @@ function AuthenticationProvider({ children }) {
         const authToken = await authenticationService.getAuthToken();
         setToken(authToken);
         const url = await fetchCorrectRes(loggedUser.photoURL, settingsContext.imageRes);
-        const fromFirestore = await userService.updateUser({ uid: loggedUser.uid, fcmToken: settingsContext.fcmToken });
+        const fromFirestore = await userService.updateUser({ fcmToken: notificationContext.fcmToken });
         setUser({ ...fromFirestore, ...loggedUser, photoURL: url });
       } catch (e) {
         // In dev we might have a situation where we have a user in firebase in auth
         // but not in firestore
-        if (e.message=== 'User update failed') {
+        if (e.message === 'User update failed') {
           const loggedUser = await authenticationService.login(email, password);
           const authToken = await authenticationService.getAuthToken();
           setToken(authToken);
@@ -46,7 +46,6 @@ function AuthenticationProvider({ children }) {
             photoURL: loggedUser.photoURL,
             favorites: [],
           });
-
           setUser({ ...fromFirestore, ...loggedUser, photoURL: url });
         } else {
           console.log('failed to login with firebase');
@@ -69,7 +68,6 @@ function AuthenticationProvider({ children }) {
         favorites: [],
       });
       const url = await fetchCorrectRes(signedUser.photoURL, settingsContext.imageRes);
-      console.log(fromFirestore);
       setUser({ ...fromFirestore, ...signedUser, photoURL: url });
     } catch (e) {
       // TODO: If profile pic fetching fails dont fail login just set empty url
@@ -97,9 +95,17 @@ function AuthenticationProvider({ children }) {
     }
   };
 
-  const updateFavorites = async (id) => {
+  const updateFavorites = async (id, isFavorite) => {
     try {
-      const newUser = { ...user, favorites: user.favorites.concat(id) };
+      let newUser;
+      if (isFavorite && user.favorites.includes(id)) {
+        newUser = { ...user, favorites: user.favorites.filter(f => f !== id) };
+      } else if (!isFavorite && !user.favorites.includes(id)) {
+        newUser = { ...user, favorites: user.favorites.concat(id) };
+      } else {
+        newUser = user;
+      }
+
       await userService.updateUser(newUser);
       setUser(newUser);
     } catch (e) {

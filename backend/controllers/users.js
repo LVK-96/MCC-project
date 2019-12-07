@@ -42,14 +42,14 @@ usersRouter.put('/:id', async (request, response, next) => {
   try {
     const { body } = request;
     const document = await db.collection('users').doc(request.params.id).get();
-    let user = document.data();
-    let newFavorites = user.favorites;
-    if (body.favorites) {
-      newFavorites = newFavorites.concat(body.favorites);
+    const user = document.data();
+    if (user) {
+      const newUser = { ...user, ...body };
+      await db.collection('users').doc(request.params.id).set({ ...newUser, favorites: body.favorites });
+      response.json(newUser);
+    } else {
+      response.status(404).end();
     }
-    const newUser = { ...user, ...body, favorites: newFavorites };
-    await db.collection('users').doc(request.params.id).set(newUser);
-    response.json(newUser);
   } catch (exception) {
     next(exception);
   }

@@ -1,10 +1,6 @@
 import auth from '@react-native-firebase/auth';
-import axios from 'axios';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
-import api_url from '../util/config';
-
-const baseUrl = api_url + '/users';
 
 const login = async (email, password) => {
   try {

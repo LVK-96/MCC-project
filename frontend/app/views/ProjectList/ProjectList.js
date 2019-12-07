@@ -43,7 +43,7 @@ function ProjectList({
                    : (filter === 'keyword') ? 'Search by keyword'
                    : '';
   const favorites = projects && projects
-    .filter(({ favorite }) => favorite)
+    .filter(p => user.favorites.includes(p.id))
     .sort((a, b) => a.name.localeCompare(b.name));
   const byDate = projects && [...projects]
     .sort((a,b) => compareDates(a.modified, b.modified));
