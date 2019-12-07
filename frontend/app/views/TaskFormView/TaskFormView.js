@@ -20,6 +20,11 @@ import ProjectContext from '../../contexts/ProjectContext'
 import formValidators from '../../util/formValidators';
 import UserPicker from '../UserPicker/UserPicker';
 import UserList from '../UserList/UserList';
+import ImagePicker from 'react-native-image-picker';
+import RNFetchBlob from 'rn-fetch-blob';
+import UUIDGenerator from 'react-native-uuid-generator';
+import storage from '@react-native-firebase/storage';
+import axios from 'axios';
 
 // Component that renders the task form to create a new task.
 // TODO: This could be combined with TaskView.js
@@ -80,6 +85,71 @@ function ProjectFormView({ navigation }) {
         }
     };
 
+    const handleImageConversion = () => {
+        const options = {
+            title: 'Select project icon',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        // Get the local image URI.
+        ImagePicker.launchImageLibrary(options, async response => {
+            if (!response.didCancel && !response.error) {
+                const uri = response.uri;
+
+                try {
+                    // Upload the image to firebase storage
+                    // and get the URL
+                    // const stats = await RNFetchBlob.fs.stat(uri);
+                    // const storageRef = storage().ref();
+                    // const format = stats.path.split('.').reverse()[0];
+                    // const iconRef = storageRef.child(`taskImages/${await UUIDGenerator.getRandomUUID()}.${format}`);
+                    // await iconRef.putFile(stats.path);
+                    // const path = iconRef.toString();
+                    const stats = await RNFetchBlob.fs.stat(uri);
+                    const base64 = await RNFetchBlob.fs.readFile(stats.path, 'base64');
+
+                    // Make the Google Vision API request.
+                    const body = {
+                        "requests": [
+                          {
+                            "features": [
+                              {
+                                "type": "TEXT_DETECTION"
+                              }
+                            ],
+                            "image": {
+                              "content": base64.toString()
+                            }
+                          }
+                        ]
+                      }
+                    const key = "AIzaSyCrywTxXbwLS6kl1rciQHLCJ8cIeVr-DE4"
+                    let response = await axios.post(
+                        'https://vision.googleapis.com/v1/images:annotate?key=' +
+                            key,
+                            body,
+                        {
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                        }
+                    );
+                    if (response.status === 200) {
+                        const text = response.data.responses[0].textAnnotations[0].description;
+                        setDescription(text);
+                    }
+                } catch (error) {
+                    console.log("Error", error)
+                }
+            } else {
+                console.log('Image picking failed: ', response);
+            }
+          });
+    };
+
     return (
         <View style={styles.outerContainer}>
             <Header
@@ -97,6 +167,8 @@ function ProjectFormView({ navigation }) {
                         placeholder="Description"
                         onChangeText={text => setDescription(text)} />
                 </View>
+                <Button title="Convert from image"
+                    onPress={handleImageConversion}/>
                 <View>
                     <Text style={styles.label}>Deadline</Text>
                     <TouchableOpacity onPress={handleDateSelection}>
