@@ -16,7 +16,6 @@ const getMembers = async (projectId) => {
         Authorization: token,
         },
     });
-    console.log(response.data);
 		return response.data;
 	} catch (e) {
 		console.log('Error fetching members', e);
@@ -24,7 +23,22 @@ const getMembers = async (projectId) => {
 	}
 };
 
+const addMember = async (newMember, projectId) => {
+  try {
+    const response = await axios.post(`${baseUrl}/${projectId}/members`, newMember, {
+      headers: {
+      Authorization: token,
+      },
+    });
+    return response.data;
+  } catch (e) {
+    console.log('Error adding member');
+    throw e;
+  }
+};
+
 export default {
   setToken,
-  getMembers
+  getMembers,
+  addMember,
 }

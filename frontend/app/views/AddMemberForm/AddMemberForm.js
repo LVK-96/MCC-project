@@ -6,23 +6,28 @@ import {
   TouchableOpacity,
   Button,
   ScrollView,
+  Alert,
 } from 'react-native';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
-import styles from './styles';
+import MembersContext from '../../contexts/MembersContext';
 import userService from '../../services/userService';
+import styles from './styles';
 
 const AddMemberForm = ({ setModalVisible }) => {
   const [searchName, setSearchName] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
   const authenticationContext = useContext(AuthenticationContext);
+  const membersContext = useContext(MembersContext);
 
   const handleSearch = async (value) => {
     try {
       if (value.length > 2) {
         setSearchName(value);
         const result = await userService.searchByName(value, authenticationContext.user.uid);
-        setSearchResults(result);
+        const oldMembersUid = membersContext.members.map(m => m.uid);
+        const filteredResult = result.filter(m => !oldMembersUid.includes(m.uid));
+        setSearchResults(filteredResult);
       } else {
         setSearchName(value);
         setSearchResults([]);
@@ -33,7 +38,13 @@ const AddMemberForm = ({ setModalVisible }) => {
   };
 
   const handleMemberAdd = async (uid) => {
-    const memberToAdd = searchResults.find(r => r.uid === uid);
+    try {
+      const memberToAdd = searchResults.find(r => r.uid === uid);
+      await membersContext.addMember(memberToAdd);
+    } catch (e) {
+      console.log(e);
+      Alert.alert('Adding member failed!');
+    }
   };
 
   return (

@@ -6,22 +6,34 @@ function MembersProvider({ children, projectId }) {
     const [members, setMembers] = useState([]);
 
   useEffect(() => {
-    const getTasks = async () => {
+    const getMembers = async () => {
       try {
-        const fetched = await memberService.fetchMembers();
+        const fetched = await memberService.getMembers(projectId);
         setMembers(fetched);
       } catch (e) {
         console.log('Error getting members');
         setMembers([]);
       }
     };
-    getTasks();
+
+    getMembers();
     // We want to run the effect every time the context's
     // projectId changes.
     }, [projectId]);
 
+  const addMember = async (newMember) => {
+    try {
+      const added = await memberService.addMember(newMember, projectId);
+      console.log(added);
+      setMembers(members.concat(added));
+    } catch (e) {
+      throw e;
+    }
+  }
+
   const contextValue = {
     members,
+    addMember,
   };
 
   return (

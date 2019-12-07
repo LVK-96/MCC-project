@@ -69,10 +69,12 @@ projectsRouter.post('/:id/members', async (request, response, next) => {
     const project = await projectRef.get();
     if(!isOwner(decodedToken, project)) return response.status(403).end();
     const { body } = request;
-    for (let member of body.users) {
-      await projectRef.collection('members').doc(member.uid).set({ ...member });
+    const alreadyMember = await projectRef.collection('members').doc(body.uid).get();
+    if (alreadyMember.data()) {
+      return response.status(409).end();
     }
-    response.json({ message: 'Members added', members: body.users });
+    await projectRef.collection('members').doc(body.uid).set({ ...body });
+    response.json(body);
   } catch (exception) {
     next(exception);
   }
