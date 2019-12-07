@@ -23,8 +23,6 @@ import UserPicker from '../UserPicker/UserPicker';
 import UserList from '../UserList/UserList';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'rn-fetch-blob';
-import UUIDGenerator from 'react-native-uuid-generator';
-import storage from '@react-native-firebase/storage';
 import axios from 'axios';
 import { googleVisionUrl } from '../../util/config';
 
@@ -143,7 +141,7 @@ function ProjectFormView({ navigation }) {
                         Alert.alert('Failed to convert image to task.');
                     }
                 } catch (error) {
-                    console.log('Error', error);
+                    Alert.alert('Failed to convert image to task.');
                 } finally {
                     setLoading(false);
                 }
