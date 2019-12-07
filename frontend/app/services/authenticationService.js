@@ -3,6 +3,7 @@ import axios from 'axios';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import api_url from '../util/config';
+import createCorrectRes from '../util/createCorrectRes';
 
 const baseUrl = api_url + '/users';
 
@@ -64,10 +65,11 @@ const logout = async () => {
   }
 };
 
-const changeProfilePic = async (uri, uid) => {
+const changeProfilePic = async (uri, uid, imageRes) => {
   try {
-    const stats = await RNFetchBlob.fs.stat(uri);
-    const format = stats.path.split('.')[1];
+    const respURI = await createCorrectRes(uri, imageRes);
+    const stats = await RNFetchBlob.fs.stat(respURI);
+    const format = stats.path.split('.').slice(-1)[0];
     const storageRef = storage().ref();
     const profilepicRef = storageRef.child(`profilepics/${uid}.${format}`);
     await profilepicRef.putFile(stats.path);
@@ -75,6 +77,7 @@ const changeProfilePic = async (uri, uid) => {
     await auth().currentUser.updateProfile({ photoURL: path });
     return path;
   } catch (e) {
+    console.log(e);
     throw e;
   }
 };

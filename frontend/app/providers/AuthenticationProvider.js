@@ -78,9 +78,19 @@ function AuthenticationProvider({ children }) {
     }
   };
 
-  const changeProfilePic = async (uri) => {
+  /*react native firebase function to store image into database can resolve faster than the
+    image actually becomes retrievable by the second call to firebase storage. Therefore, without
+    the sleep function, the second call to firebase can retrieve the old image because the profilepicture
+    always uses the same name
+  */
+  function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
+  const changeProfilePic = async (uri, imageRes) => {
     try {
-      const imageUrl = await authenticationService.changeProfilePic(uri, user.uid);
+      const imageUrl = await authenticationService.changeProfilePic(uri, user.uid, imageRes);
+      await sleep(1000);
       const url = await fetchCorrectRes(imageUrl, settingsContext.imageRes);
       setUser({ ...user, photoURL: url });
     } catch (e) {

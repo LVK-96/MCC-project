@@ -31,16 +31,10 @@ const getAll = async () => {
 
 const createProject = async (project, imageRes) => {
 	try {
-		//TODO: Fix cloud image path
 		//TODO: use image resize in all image uploads
 		console.log('Creating project', project.name);
 		const respURI = await createCorrectRes(project.iconSource, imageRes);
 		const stats = await RNFetchBlob.fs.stat(respURI);
-
-		console.log('this:');
-		console.log(stats);
-		console.log('fnvkj');
-		console.log(stats.path.split('.').slice(-1)[0]);
 
 		//parse path
 		const format = stats.path.split('.').slice(-1)[0];
@@ -48,13 +42,6 @@ const createProject = async (project, imageRes) => {
 		const iconRef = storageRef.child(`projectIcons/${await UUIDGenerator.getRandomUUID()}.${format}`);
 		await iconRef.putFile(stats.path);
 		const path = iconRef.toString();
-
-		console.log('this:');
-		console.log(stats);
-		console.log('nother');
-		console.log(path);
-
-
 
 		const response = await axios.post(baseUrl, { ...project, iconSource: path }, {
 		headers: {
