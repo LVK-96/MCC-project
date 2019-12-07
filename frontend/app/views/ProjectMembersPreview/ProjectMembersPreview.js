@@ -10,6 +10,8 @@ import styles from './styles';
 const uri = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJklEQVQoU2NkaGD4z4AGGhga0IUYGIeEQob/GJ75z8CIxTODXyEAJqobfBeQVBoAAAAASUVORK5CYII=";
 const image = { uri };
 
+/*A component that shows a preview of the members of a project.
+  The images of up to three members are shown as thumbnails.*/
 function ProjectMembersPreview() {
   //TODO: replace this placeholder, perhaps extract from context
   const members = [
