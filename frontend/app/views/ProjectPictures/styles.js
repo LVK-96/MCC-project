@@ -30,4 +30,7 @@ export default StyleSheet.create({
   contentArea: {
       marginLeft: 20,
   },
+  imageDate: {
+    marginLeft: 20,
+  },
 });

@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 	Alert,
 	Image,
+	FlatList,
 } from 'react-native';
 import ProjectContext from '../../contexts/ProjectContext';
 import PlusIcon from '../PlusIcon';
@@ -80,6 +81,27 @@ function ProjectPictures() {
 		}
 	};
 
+	const getDateString = (dateString) => {
+		const date = new Date(dateString);
+		const today = new Date();
+		const y = date.getFullYear();
+		const yt = today.getFullYear();
+		const m = date.getMonth();
+		const mt = today.getMonth();
+		const d = date.getDate();
+		const dt = today.getDate();
+		if (y === yt && m === mt) {
+			if (d === dt) {
+				return 'Today';
+			} else if (d === dt - 1) {
+				return 'Yesterday';
+			} else {
+				return d + '.' + (m + 1) + '.' + y;
+			}
+		}
+		return d + '.' + (m + 1) + '.' + y;
+	};
+
 	const header = (
 		<Text style={styles.headerText}>
 			Project pictures
@@ -90,13 +112,21 @@ function ProjectPictures() {
 		<ScrollView style={styles.contentArea}>
 			{header}
 			{pictures.length > 0 ?
-				pictures.map(picture =>
-					<View key={picture.uid}>
+				<FlatList
+					data={pictures}
+					renderItem={({ picture }) =>
+					<View>
 						<TouchableOpacity onPress={() => handlePictureDownload(picture)}>
-							<Image source={picture.source} />
+							<Image source={picture.source}
+								width={100}
+								height={100}/>
 						</TouchableOpacity>
-					</View>
-				) :
+						<Text style={styles.imageDate}>
+							{getDateString(picture.uploaded)}
+						</Text>
+					</View>}
+					keyExtractor={img => img.uid}
+				/> :
 				<Text styles={styles.noPictures}>
 					This project has no attached pictures
   			</Text>}
