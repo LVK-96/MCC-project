@@ -10,8 +10,7 @@ function MembersProvider({ children, projectId }) {
     const getMembers = async () => {
       try {
         let fetched = await memberService.getMembers(projectId);
-        console.log(fetched);
-        let correctUrls = fetched.map(f => fetchCorrectRes(f.photoURL));;
+        let correctUrls = fetched.map(f => fetchCorrectRes(f.photoURL));
         correctUrls = await Promise.all(correctUrls);
         for (let i = 0; i < correctUrls.length; ++i) {
           fetched[i].photoURL = correctUrls[i];
