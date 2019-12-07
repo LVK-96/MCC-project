@@ -1,5 +1,5 @@
 const usersRouter = require('express').Router();
-let { db } = require('../utils/config');
+let { db, auth } = require('../utils/config');
 const User = require('../models/user');
 
 usersRouter.post('/', async (request, response, next) => {
@@ -18,6 +18,7 @@ usersRouter.post('/', async (request, response, next) => {
 usersRouter.get('/search', async (request, response, next) => {
   try {
     const { query } = request;
+    await auth.verifyIdToken(request.get('authorization').toString());
     const users = await db.collection('users').where('name', '>=', query.name).get();
     let resp = [];
     for (let d of users.docs) {

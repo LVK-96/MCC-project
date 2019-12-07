@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Button,
   ScrollView,
 } from 'react-native';
+import AuthenticationContext from '../../contexts/AuthenticationContext';
 import styles from './styles';
 import userService from '../../services/userService';
 
@@ -14,11 +15,13 @@ const AddMemberForm = ({ setModalVisible }) => {
   const [searchName, setSearchName] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
+  const authenticationContext = useContext(AuthenticationContext);
+
   const handleSearch = async (value) => {
     try {
       if (value.length > 2) {
         setSearchName(value);
-        const result = await userService.searchByName(value);
+        const result = await userService.searchByName(value, authenticationContext.user.uid);
         setSearchResults(result);
       } else {
         setSearchName(value);
