@@ -31,20 +31,21 @@ const getAll = async () => {
 const createProject = async (project) => {
 	try {
 		console.log('Creating project', project.name);
-
-		const respURI =  await ImageResizer.createResizedImage(project.iconSource, 640, 480, 'PNG', 100, 0, null); //is saved to a cache folder
-		console.log('resized blob:');
+		const test = true;
+		let respURI = project.iconSource;
+		//TODO: determine if to resize and how from user input
+		if (test) {
+			//resize image
+			respURI =  await ImageResizer.createResizedImage(project.iconSource, 640, 480, 'PNG', 100, 0, null); //is saved to a cache folder
+		}
 		const stats = await RNFetchBlob.fs.stat(respURI.path);
-		console.log(stats);
-
-		//const stats = await RNFetchBlob.fs.stat(project.iconSource);
+		//parse path
 		const format = stats.path.split('.')[1];
 		const storageRef = storage().ref();
 		const iconRef = storageRef.child(`projectIcons/${await UUIDGenerator.getRandomUUID()}.${format}`);
 		await iconRef.putFile(stats.path);
 		const path = iconRef.toString();
-		//console.log(...project);
-		//console.log(path);
+
 		const response = await axios.post(baseUrl, { ...project, iconSource: path }, {
 		headers: {
 			Authorization: token,
