@@ -76,13 +76,12 @@ const getImagesByProjectId = async (id) => {
 const createImage = async (projectId, image) => {
 	try {
 		// Create the file in firebase storage.
-		const stats = await RNFetchBlob.fs.stat(image.path);
-		const format = stats.path.split('.').reverse()[0];
+		const format = image.path.split('.').reverse()[0];
 		const storageRef = storage().ref();
 		const uuid = await UUIDGenerator.getRandomUUID();
 
 		const fileRef = storageRef.child(`projectFiles/${uuid}.${format}`);
-		await fileRef.putFile(stats.path);
+		await fileRef.putFile(image.path);
 		const path = fileRef.toString();
 
 		// Make the request.
