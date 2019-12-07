@@ -16,6 +16,7 @@ import FilePickerManager from 'react-native-file-picker';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
 
+const supportedTypes = ['pdf', 'mp3', 'txt', 'jpg', 'png'];
 function ProjectFiles() {
 	const { selectedProject, addFile } = useContext(ProjectContext);
 	const [files, setFiles] = useState(null);
@@ -46,12 +47,16 @@ function ProjectFiles() {
 				path: res.path,
 			};
 
-      try {
-        const ret = await addFile(selectedProject, file);
-        setFiles(prev => [...prev, ret]);
-      } catch (e) {
-        console.log('Adding file failed!');
-      }
+			try {
+				const format = res.path.split('.').reverse()[0];
+				if (!supportedTypes.includes(format)) {
+					return;
+				}
+				const ret = await addFile(selectedProject, file);
+				setFiles(prev => [...prev, ret]);
+			} catch (e) {
+				Alert.alert('Failed to upload file');
+			}
 		});
 	};
 
