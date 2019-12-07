@@ -186,7 +186,7 @@ projectsRouter.post('/:id/tasks', async (request, response, next) => {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
+    if (!isOwner(decodedToken, project)) return response.status(403).end();
     const { body } = request;
     const task = new Task(body);
     await projectRef.collection('tasks').doc(task.id).set({ ...task });
@@ -241,23 +241,6 @@ projectsRouter.put('/:project_id/tasks/:task_id', async (request, response, next
     const updated = { ...task, ...body };
     await taskRef.set(updated);
     response.json(updated);
-  } catch (exception) {
-    next(exception);
-  }
-});
-
-projectsRouter.post('/:project_id/tasks/:task_id/status', async (request, response, next) => {
-  try {
-    const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
-    const projectRef = db.collection('projects').doc(request.params.id);
-    const project = await projectRef.doc(request.params.id).get();
-    if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
-    const { body } = request;
-    const document = projectRef.doc(request.params.project_id).collection('tasks').doc(request.params.task_id).get();
-    let task = document.data();
-    task.status = body.status;
-    await projectRef.collection('tasks').doc(request.params.task_id).set({ ...task });
-    response.json(task);
   } catch (exception) {
     next(exception);
   }

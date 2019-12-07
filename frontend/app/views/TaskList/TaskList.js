@@ -7,6 +7,8 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import TasksContext from '../../contexts/TasksContext';
+import AuthenticationContext from '../../contexts/AuthenticationContext';
+import ProjectContext from '../../contexts/ProjectContext';
 import styles from './styles';
 import TaskPreview from '../TaskPreview';
 import colors from '../../values/colors';
@@ -16,6 +18,9 @@ import PlusIcon from '../PlusIcon';
   to edit their details or mark them as done.*/
 function TaskList({ navigation }) {
     const { tasks, selectTask } = useContext(TasksContext);
+
+    const authenticationContext = useContext(AuthenticationContext);
+    const projectContext = useContext(ProjectContext);
 
     // Sets the selected task and changes to task view.
     const viewTask = (taskId) => {
@@ -51,13 +56,21 @@ function TaskList({ navigation }) {
         </View>
       );
 
+      if (authenticationContext.user.uid === projectContext.selectedProject.owner) {
+        return (
+          <View style={styles.container}>
+            {contentArea}
+            <TouchableOpacity onPress={() => navigation.navigate('TaskForm')}
+              style={styles.createTaskButtonContainer}>
+              <PlusIcon />
+            </TouchableOpacity>
+          </View>
+        );
+      }
+
       return (
         <View style={styles.container}>
           {contentArea}
-          <TouchableOpacity onPress={() => navigation.navigate('TaskForm')}
-            style={styles.createTaskButtonContainer}>
-            <PlusIcon />
-          </TouchableOpacity>
         </View>
       );
 }

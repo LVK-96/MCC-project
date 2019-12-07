@@ -10,9 +10,10 @@ import styles from './styles';
 import MemberCard from '../MemberCard';
 import AddMemberForm from '../AddMemberForm';
 import MembersContext from '../../contexts/MembersContext';
+import ProjectContext from '../../contexts/ProjectContext';
+import AuthenticationContext from '../../contexts/AuthenticationContext';
 
-const MembersList = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+const ViewBody = ({ modalVisible, setModalVisible }) => {
   const membersContext = useContext(MembersContext);
 
   return (
@@ -30,14 +31,30 @@ const MembersList = () => {
             </View>
           )}
         </ScrollView>
-        <View>
-          <TouchableOpacity onPress={() => setModalVisible(true) }
-            style={styles.buttonContainer}>
-            <PlusIcon />
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
+  );
+}
+
+const MembersList = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const authenticationContext = useContext(AuthenticationContext);
+  const projectContext = useContext(ProjectContext);
+
+  if (authenticationContext.user.uid === projectContext.selectedProject.owner) {
+    return (
+      <View style={styles.container}>
+        <ViewBody modalVisible={modalVisible} setModalVisible={setModalVisible} />
+        <TouchableOpacity onPress={() => setModalVisible(true) }
+          style={styles.buttonContainer}>
+          <PlusIcon />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return (
+    <ViewBody modalVisible={modalVisible} setModalVisible={setModalVisible} />
   );
 };
 

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
 import MembersContext from '../../contexts/MembersContext';
+import ProjectContext from '../../contexts/ProjectContext';
 import userService from '../../services/userService';
 import styles from './styles';
 
@@ -18,6 +19,7 @@ const AddMemberForm = ({ setModalVisible }) => {
   const [searchResults, setSearchResults] = useState([]);
 
   const authenticationContext = useContext(AuthenticationContext);
+  const projectContext = useContext(ProjectContext);
   const membersContext = useContext(MembersContext);
 
   const handleSearch = async (value) => {
@@ -26,7 +28,8 @@ const AddMemberForm = ({ setModalVisible }) => {
         setSearchName(value);
         const result = await userService.searchByName(value, authenticationContext.user.uid);
         const oldMembersUid = membersContext.members.map(m => m.uid);
-        const filteredResult = result.filter(m => !oldMembersUid.includes(m.uid));
+        let filteredResult = result.filter(m => !oldMembersUid.includes(m.uid))
+                                   .filter(m => m.uid !== projectContext.selectedProject.owner)
         setSearchResults(filteredResult);
       } else {
         setSearchName(value);

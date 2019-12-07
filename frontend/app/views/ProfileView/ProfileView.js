@@ -46,6 +46,7 @@ function ProfileView({ navigation }) {
 
   const logout = async () => {
     try {
+      navigation.navigate('Authentication');
       await authenticationContext.logout();
     } catch (e) {
       Alert.alert('Failed to logout');
