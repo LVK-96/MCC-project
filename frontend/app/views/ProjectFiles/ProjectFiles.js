@@ -67,8 +67,15 @@ function ProjectFiles() {
 		}
 	};
 
+	const header = (
+		<Text style={styles.headerText}>
+			Project files
+		</Text>
+	);
+
 	const contentArea = files ? (
 		<ScrollView style={styles.contentArea}>
+			{header}
 			{files.length > 0 ?
 			files.map(file =>
 				// TODO: Only use uuid as key.
@@ -78,9 +85,10 @@ function ProjectFiles() {
 					</TouchableOpacity>
 				</View>
 			) :
-			<Text styles={styles}>
+			<Text styles={styles.noFiles}>
 				This project has no attached files
 			</Text>}
+			{<View style={styles.filesBottom}/>}
 		</ScrollView>
 	) : (<View >
 			<ActivityIndicator size="large" color={colors.corporateBlue} />
@@ -88,9 +96,6 @@ function ProjectFiles() {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.header}>
-				Project files
-			</Text>
 			{contentArea}
 			<TouchableOpacity onPress={handleFileUpload}
 				style={styles.buttonContainer}>
