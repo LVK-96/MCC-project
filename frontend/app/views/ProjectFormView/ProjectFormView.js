@@ -6,7 +6,8 @@ import {
     DatePickerAndroid,
     TouchableOpacity,
     Image,
-    Alert
+    Alert,
+    ScrollView,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import {
@@ -99,7 +100,7 @@ function ProjectFormView({ navigation }) {
     };
 
     return (
-        <View style={styles.outerContainer}>
+        <ScrollView style={styles.outerContainer}>
             <Header
                 leftComponent={{ text: 'X', style: { color: '#fff' } }}
                 centerComponent={{ text: 'New project', style: { color: '#fff', left: 0 } }}
@@ -163,7 +164,7 @@ function ProjectFormView({ navigation }) {
                     </View>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 

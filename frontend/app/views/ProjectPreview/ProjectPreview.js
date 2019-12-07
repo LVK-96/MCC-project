@@ -7,6 +7,7 @@ import {
 import styles from './styles';
 import ContextMenu from '../ContextMenu';
 import FavoriteStar from '../FavoriteStar';
+import ProjectMembersPreview from '../ProjectMembersPreview';
 
 /*Offers a preview of a project in a project list. Contains only essential
   information, as the goal is to keep the preview small enough to be usable
@@ -36,6 +37,7 @@ function ProjectPreview({
         <Text style={styles.deadline}>
           {(new Date(deadline)).toString()}
         </Text>
+        <ProjectMembersPreview />
       </View>
       <View style={styles.menuContainer}>
         <FavoriteStar
