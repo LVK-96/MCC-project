@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     Alert,
     Button,
+    ActivityIndicator,
 } from 'react-native';
 import {
     Header,
@@ -20,6 +21,10 @@ import ProjectContext from '../../contexts/ProjectContext'
 import formValidators from '../../util/formValidators';
 import UserPicker from '../UserPicker/UserPicker';
 import UserList from '../UserList/UserList';
+import ImagePicker from 'react-native-image-picker';
+import RNFetchBlob from 'rn-fetch-blob';
+import axios from 'axios';
+import { googleVisionUrl } from '../../util/config';
 
 // Component that renders the task form to create a new task.
 // TODO: This could be combined with TaskView.js
@@ -29,6 +34,8 @@ function ProjectFormView({ navigation }) {
     const [deadline, setDeadline] = useState('Press to select deadline date.');
     // List of user IDs
     const [assignees, setAssignees] = useState([]);
+    // Loading indicator for image converter.
+    const [loading, setLoading] = useState(false);
 
     // We create the task through the project provider.
     const context = useContext(TasksContext);
@@ -80,6 +87,70 @@ function ProjectFormView({ navigation }) {
         }
     };
 
+    const handleImageConversion = () => {
+        const options = {
+            title: 'Select project icon',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        // Get the local image URI.
+        ImagePicker.launchImageLibrary(options, async response => {
+            if (!response.didCancel && !response.error) {
+                const uri = response.uri;
+
+                try {
+                    setLoading(true);
+                    // Encode the string to base-64 locally.
+                    const stats = await RNFetchBlob.fs.stat(uri);
+                    const base64 = await RNFetchBlob.fs.readFile(stats.path, 'base64');
+
+                    // Construct the Google Vision API request.
+                    const body = {
+                        requests: [
+                            {
+                                features: [
+                                    {
+                                        type: 'TEXT_DETECTION',
+                                    },
+                                ],
+                                image: {
+                                    content: base64.toString(),
+                                },
+                            },
+                        ],
+                    };
+
+                    // Make the Google Vision API request.
+                    const res = await axios.post(
+                        googleVisionUrl, body,
+                        {
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                        }
+                    );
+
+                    // Get the response and set the description.
+                    if (res.status === 200) {
+                        const text = res.data.responses[0].textAnnotations[0].description;
+                        setDescription(text);
+                    } else {
+                        Alert.alert('Failed to convert image to task.');
+                    }
+                } catch (error) {
+                    Alert.alert('Failed to convert image to task.');
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                console.log('Image picking failed: ', response);
+            }
+        });
+    };
+
     return (
         <View style={styles.outerContainer}>
             <Header
@@ -97,6 +168,12 @@ function ProjectFormView({ navigation }) {
                         placeholder="Description"
                         onChangeText={text => setDescription(text)} />
                 </View>
+                <View style={styles.converterContainer}>
+                    <Button title="Or convert from image"
+                        onPress={handleImageConversion} />
+                    {loading &&
+                    <ActivityIndicator />}
+                </View>
                 <View>
                     <Text style={styles.label}>Deadline</Text>
                     <TouchableOpacity onPress={handleDateSelection}>
@@ -109,16 +186,16 @@ function ProjectFormView({ navigation }) {
                 </View>
                 {/* We only render the assignees selection if the project
                 this task is associated with is a group project. */
-                project.type === 'GROUP' &&
-                <View>
-                    <Text style={styles.label}>Assigned to</Text>
+                    project.type === 'GROUP' &&
+                    <View>
+                        <Text style={styles.label}>Assigned to</Text>
                         <UserPicker defaultLabel={'Add assignee'}
-                            onSelectCallback={addAssignee}/>
-                        <UserList displayUsers={assignees}/>
-                </View>}
+                            onSelectCallback={addAssignee} />
+                        <UserList displayUsers={assignees} />
+                    </View>}
                 <View style={styles.saveButton}>
                     <Button title="Save"
-                        onPress={handleSavePress}/>
+                        onPress={handleSavePress} />
                 </View>
             </View>
         </View>
