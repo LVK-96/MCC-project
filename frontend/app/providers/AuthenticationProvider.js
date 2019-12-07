@@ -29,7 +29,7 @@ function AuthenticationProvider({ children }) {
         const authToken = await authenticationService.getAuthToken();
         setToken(authToken);
         const url = await fetchCorrectRes(loggedUser.photoURL, settingsContext.imageRes);
-        const fromFirestore = await userService.updateUser({ fcmToken: notificationContext.fcmToken });
+        const fromFirestore = await userService.updateUser({ uid: loggedUser.uid, fcmToken: notificationContext.fcmToken });
         setUser({ ...fromFirestore, ...loggedUser, photoURL: url });
       } catch (e) {
         // In dev we might have a situation where we have a user in firebase in auth

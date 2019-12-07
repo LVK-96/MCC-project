@@ -45,7 +45,7 @@ usersRouter.put('/:id', async (request, response, next) => {
     const user = document.data();
     if (user) {
       const newUser = { ...user, ...body };
-      await db.collection('users').doc(request.params.id).set({ ...newUser, favorites: body.favorites });
+      await db.collection('users').doc(request.params.id).set({ ...newUser });
       response.json(newUser);
     } else {
       response.status(404).end();
