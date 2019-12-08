@@ -7,6 +7,7 @@ frontend:
       - master
       - 30-gitlab-ci
   script:
+    - echo $FRONTEND_ENV > frontend/env.json
     - ./scripts/build_app.sh
   artifacts:
     paths:

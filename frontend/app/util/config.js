@@ -1,12 +1,12 @@
-console.log(__DEV__);
-let api_url = 'http://10.0.2.2:3000'
-if (false) { // TODO: This is the production config
-  api_url = 'https://mcc-fall-2019-g20.appspot.com';
+import env from './../../env.json';
+let api_url = env.API_URL;
+if (env.DEVELOPMENT) {
+  api_url = 'localhost:300';
 }
 
 export default api_url;
 
 // TODO: Better way to get the API key?
-const apiKey = 'AIzaSyCrywTxXbwLS6kl1rciQHLCJ8cIeVr-DE4';
-const googleVisionUrl = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`;
+const apiKey = env.API_KEY;
+const googleVisionUrl = `${env.VISION_URL}?key=${apiKey}`;
 export { googleVisionUrl, apiKey };
