@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import styles from './styles';
 import ContextMenu from '../ContextMenu';
 import FavoriteStar from '../FavoriteStar';
 import ProjectMembersPreview from '../ProjectMembersPreview';
-import AuthenticationContext from '../../contexts/AuthenticationContext';
 
 /*Offers a preview of a project in a project list. Contains only essential
   information, as the goal is to keep the preview small enough to be usable
@@ -20,24 +19,15 @@ function ProjectPreview({
   modified,
   created,
   onPress,
+  isFavorite,
   isOwner,
   id,
   members,
   deleteProject,
 }) {
-  const [favorite, setFavorite] = useState(false);
+  //const [favorite, setFavorite] = useState(isFavorite);
 
-  const authenticationContext = useContext(AuthenticationContext);
-
-  useEffect(() => {
-    const checkFavoriteStatus = async () => {
-      if (authenticationContext.user.favorites.includes(id)) setFavorite(true);
-      else setFavorite(false);
-    }
-
-    checkFavoriteStatus();
-  }, []);
-
+  console.log(isFavorite);
   return (
     <TouchableOpacity
       style={styles.container}
@@ -57,8 +47,7 @@ function ProjectPreview({
       </View>
       <View style={styles.menuContainer}>
         <FavoriteStar
-          isFavorite={favorite}
-          setFavorite={setFavorite}
+          isFavorite={isFavorite}
           projectId={id}
         />
         <ContextMenu options={[
