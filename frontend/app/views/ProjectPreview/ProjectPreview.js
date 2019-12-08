@@ -73,7 +73,7 @@ function ProjectPreview({
             deletion option if user is the owner. Only show report option if
             project is a group project.*/
           ...(isOwner ? [{ text: "Delete", onSelect: () => deleteProject(id)}] : []),
-          { text: "Show project content", onSelect: () => console.warn("TODO: Show")},
+          { text: "Show project content", onSelect: onPress },
           { text: "Generate project report", onSelect: () => generateReport() },
         ]}/>
       </View>
