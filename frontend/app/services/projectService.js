@@ -150,6 +150,28 @@ const createFile = async (projectId, file) => {
 	}
 };
 
+const createFileFromRef = async (projectId, ref) => {
+  try {
+    const path = ref.toString();
+    // Make the request.
+    const uuid = await UUIDGenerator.getRandomUUID();
+    const file = {
+      name: `${projectId}-report`,
+      source: path,
+      uid: uuid,
+    }
+
+    const response = await axios.post(`${baseUrl}/${projectId}/files?key=${apiKey}`, file, {
+      headers: {
+      Authorization: token,
+      },
+    });
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
 const getMembersByProjectId = async (id) => {
 	try {
 		const response = await axios.get(`${baseUrl}/${id}/members`);
@@ -162,4 +184,4 @@ const getMembersByProjectId = async (id) => {
 
 export default { getAll, createProject, setToken,
 	getFilesByProjectId, createFile, deleteProject,
-	getImagesByProjectId, createImage, getMembersByProjectId };
+	getImagesByProjectId, createImage, getMembersByProjectId, createFileFromRef };

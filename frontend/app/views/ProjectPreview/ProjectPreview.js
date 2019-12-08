@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
+import storage from '@react-native-firebase/storage';
 import {
   View,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import styles from './styles';
 import ContextMenu from '../ContextMenu';
 import FavoriteStar from '../FavoriteStar';
 import ProjectMembersPreview from '../ProjectMembersPreview';
+import reportService from '../../services/reportService';
+import projectService from '../../services/projectService';
 
 /*Offers a preview of a project in a project list. Contains only essential
   information, as the goal is to keep the preview small enough to be usable
@@ -28,6 +32,18 @@ function ProjectPreview({
 }) {
 
   const hasMembers = members && (members.length > 0);
+
+  const generateReport = async () => {
+    try {
+      await reportService.generate({ id: id, name: name, deadline: deadline, description: description });
+      const reportRef = storage().ref().child(`${name}-${id}.pdf`);
+      await projectService.createFileFromRef(id, reportRef);
+      Alert.alert('Report saved to');
+    } catch (e) {
+      console.log(e);
+      Alert.alert('report generation failed');
+    }
+  };
 
   console.log(isFavorite);
   return (
@@ -58,7 +74,7 @@ function ProjectPreview({
             project is a group project.*/
           ...(isOwner ? [{ text: "Delete", onSelect: () => deleteProject(id)}] : []),
           { text: "Show project content", onSelect: () => console.warn("TODO: Show")},
-          ...((type === 'GROUP') ? [{ text: "Generate project report", onSelect: () => console.warn("TODO: Report")}] : []),
+          { text: "Generate project report", onSelect: () => generateReport() },
         ]}/>
       </View>
     </TouchableOpacity>
