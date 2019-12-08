@@ -74,5 +74,28 @@ const updateTaskStatus = async (projectId, taskId, status) => {
     }
 };
 
+const getAssigneesByProjectAndTaskId = async (projectId, taskId) => {
+    try {
+        const response = await axios.get(`${projectId}/tasks/${taskId}/assignees`,
+        { headers: { Authorization: token }});
+        return response.data;
+    } catch (err) {
+        console.log('Error fecthing task assignees');
+        return null;
+    }
+};
+
+const addAssigneesToTask = async (projectId, taskId, users) => {
+    try {
+        const response = await axios.get(`${projectId}/tasks/${taskId}/assignees`,
+        users, { headers: { Authorization: token }});
+        return response.data;
+    } catch (err) {
+        console.log('Error fecthing task assignees');
+        return null;
+    }
+};
+
 export default { getTasksByProjectId, updateTask, createTask,
-    updateTaskStatus, setToken };
+    updateTaskStatus, setToken, getAssigneesByProjectAndTaskId,
+    addAssigneesToTask };

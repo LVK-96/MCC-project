@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -7,6 +7,7 @@ import {
     Picker,
     TouchableOpacity,
     DatePickerAndroid,
+    Alert,
 } from 'react-native';
 import ProjectContext from '../../contexts/ProjectContext';
 import TasksContext from '../../contexts/TasksContext';
@@ -14,19 +15,39 @@ import { withNavigation } from 'react-navigation';
 import styles from './styles';
 import UserPicker from '../UserPicker/UserPicker';
 import UserList from '../UserList/UserList';
+import AuthenticationContext from '../../contexts/AuthenticationContext';
+import taskService from '../../services/taskService';
 
 function TaskView() {
-    const projectType = useContext(ProjectContext).selectedProject.type;
+    const { selectedProject } = useContext(ProjectContext);
+    const { user } = useContext(AuthenticationContext);
     const {
         selectedTask: task,
         setSelectedTaskField: setField ,
         updateTask,
         updateStatus,
     } = useContext(TasksContext);
+    // TODO: This logic could alternatively be handled in
+    // TasksProvider
+    const [assignees, setAssignees] = useState(null);
+
+    // Re-fetch the assignees whenever the selected task/project changes.
+    useEffect(() => {
+
+        async function fetchAssignees(projectId, taskId) {
+            const fetched = await taskService.getAssigneesByProjectAndTaskId(projectId, taskId);
+            setAssignees(fetched);
+        }
+
+        if (task && selectedProject) {
+            fetchAssignees(selectedProject.id, task.id);
+        }
+
+    }, [task, selectedProject]);
 
     const handleDateSelection = async () => {
         try {
-            // Get user inputted date from Android datepicker.
+            // Get user inputted date from Android datepicke    r.
             const { action, year, month, day } = await DatePickerAndroid.open();
             if (action !== DatePickerAndroid.dismissedAction) {
                 const date = new Date();
@@ -41,13 +62,21 @@ function TaskView() {
         }
     };
 
-    // TODO: Disable assignee adding if the
-    // logged user isn't the project administrator.
-    const addAssignee = (userId) => {
-        // Cannot add the same user twice
-        if (task.assignees.indexOf(userId) === -1) {
-            updateTask(task.id, { ...task,
-                assignees: [...task.assignees, userId] });
+    const addAssignee = async (userId) => {
+        // Only project administrator can assign tasks
+        if (selectedProject.owner === user.uid) {
+            // Cannot add the same user twice
+            if (task.assignees.indexOf(userId) === -1) {
+                const assigned = await taskService.addAssigneesToTask(selectedProject.id,
+                    task.id, [userId]);
+
+                // Update internal state if successful.
+                if (assigned !== null) {
+                    setAssignees(prev => [...prev, ...assigned]);
+                } else {
+                    Alert.alert('Failed to add assignee to task');
+                }
+            }
         }
     };
 
@@ -94,12 +123,18 @@ function TaskView() {
                 </View>
                 {/* We only render the assignees selection if the project
                 this task is associated with is a group project. */
-                projectType === 'GROUP' &&
+                selectedProject.type === 'GROUP' &&
                 <View>
                     <Text style={styles.label}>Task assignees</Text>
-                    <UserPicker defaultLabel={'Add assignee'}
-                        onSelectCallback={addAssignee}/>
-                    <UserList displayUsers={task.assignees}/>
+                    <UserPicker defaultLabel={selectedProject.owner === user.uid
+                    ? 'Add assignee' : 'View assignees'}
+                        onSelectCallback={addAssignee}
+                        projectId={selectedProject.id}/>
+                    {assignees === null ?
+                    <Text>Failed to fetch task assignees</Text> :
+                    assignees.length > 0
+                    ? <UserList displayUsers={assignees}/>
+                    : <Text>This task is not assigned to any user</Text>}
                 </View>}
             </View>
         </View>
