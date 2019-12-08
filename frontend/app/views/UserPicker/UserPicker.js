@@ -5,6 +5,7 @@ import {
     Text,
 } from 'react-native';
 import projectService from '../../services/projectService';
+import styles from './styles';
 
 // A wrapper component for user picker. This is to isolate
 // the user fetching logic into its own component.
@@ -54,7 +55,9 @@ function UserPicker({
                         value={user.id}/>
                 )}
             </Picker>
-        : <Text>Failed to fetch project members</Text>)
+        : <Text style={styles.noMembers}>
+            Failed to fetch project members
+        </Text>)
     );
 }
 
