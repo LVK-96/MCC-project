@@ -71,7 +71,7 @@ function ProjectFiles() {
 
 			await (RNFetchBlob.config({ path: dirs.DownloadDir + `/${uuid}.${format}`})
 				.fetch('GET', url));
-			Alert.alert("File successfully downloaded. It has been placed in your downloads folder");
+			Alert.alert("File successfully downloaded.", "It has been placed in your downloads folder");
 		} catch (exception) {
 			Alert.alert('Failed to download file ' + file.name);
 		}
