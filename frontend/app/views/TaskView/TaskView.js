@@ -14,9 +14,11 @@ import { withNavigation } from 'react-navigation';
 import styles from './styles';
 import UserPicker from '../UserPicker/UserPicker';
 import UserList from '../UserList/UserList';
+import AuthenticationContext from '../../contexts/AuthenticationContext';
 
 function TaskView() {
-    const projectType = useContext(ProjectContext).selectedProject.type;
+    const { selectedProject } = useContext(ProjectContext);
+    const { user } = useContext(AuthenticationContext);
     const {
         selectedTask: task,
         setSelectedTaskField: setField ,
@@ -94,11 +96,14 @@ function TaskView() {
                 </View>
                 {/* We only render the assignees selection if the project
                 this task is associated with is a group project. */
-                projectType === 'GROUP' &&
+                selectedProject.type === 'GROUP' &&
+                // Only project administrator can assign tasks
+                //selectedProject.owner === user.uid &&
                 <View>
                     <Text style={styles.label}>Task assignees</Text>
                     <UserPicker defaultLabel={'Add assignee'}
-                        onSelectCallback={addAssignee}/>
+                        onSelectCallback={addAssignee}
+                        projectId={selectedProject.id}/>
                     <UserList displayUsers={task.assignees}/>
                 </View>}
             </View>
