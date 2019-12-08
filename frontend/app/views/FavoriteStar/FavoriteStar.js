@@ -16,13 +16,12 @@ function FavoriteStar({
   isFavorite,
   /*A function that sets the desired object as favorite.
     No loading logic needed, this component handles it on its own.*/
-  setFavorite,
 }) {
   const authenticationContext = useContext(AuthenticationContext);
   const [loading, setLoading] = useState(false);
   /*User input to the component is only relevant if the setFavorite function
     has been provided.*/
-  const toggle = () => setFavorite ? setLoading(prev => !prev) : undefined;
+  const toggle = () => setLoading(prev => !prev);
   /*Whenever the loading flag has been set to true, set the favorite status
     as the opposite of what it currently is.*/
   useEffect(() => {
@@ -30,7 +29,6 @@ function FavoriteStar({
       (async () => {
         try {
           await authenticationContext.updateFavorites(projectId, isFavorite);
-          setFavorite(!isFavorite);
         } catch (e) {
           Alert.alert(
             "Favorite-operation failed",

@@ -25,8 +25,9 @@ function ProjectPreview({
   members,
   deleteProject,
 }) {
-  const [favorite, setFavorite] = useState(isFavorite);
+  //const [favorite, setFavorite] = useState(isFavorite);
 
+  console.log(isFavorite);
   return (
     <TouchableOpacity
       style={styles.container}
@@ -46,8 +47,7 @@ function ProjectPreview({
       </View>
       <View style={styles.menuContainer}>
         <FavoriteStar
-          isFavorite={favorite}
-          setFavorite={setFavorite}
+          isFavorite={isFavorite}
           projectId={id}
         />
         <ContextMenu options={[

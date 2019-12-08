@@ -30,7 +30,6 @@ function ProjectList({
   searchParam, // This is passed from the ProjectSearch view
 }) {
   const { user } = useContext(AuthenticationContext);
-
   const {
     projects,
     selectProject,
@@ -47,7 +46,7 @@ function ProjectList({
     .sort((a, b) => a.name.localeCompare(b.name));
   const byDate = projects && [...projects]
     .sort((a,b) => compareDates(a.modified, b.modified));
-  const byUpcomingDeadline = projects && projects
+  const byUpcomingDeadline = projects && [...projects]
     .filter(({ deadline }) => dateIsWithinAWeek(deadline))
     .sort((a, b) => compareDates(a.deadline, b.deadline));
   const byName = projects && (filter === 'name' && searchParam) ? projects
