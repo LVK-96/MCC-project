@@ -24,6 +24,7 @@ const createPDF = (body) => {
       `${body.name}`,
       `${body.description}`,
       `Deadline: ${body.deadline}`,
+      ...((body.members && body.members.length > 0) ? [`Members: ${body.members.map(m => m.name).join(", ")}`] : []),
     ],
     defaultStyle: {
       font: 'Helvetica'

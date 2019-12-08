@@ -69,8 +69,9 @@ function ProjectFiles() {
 			const uuid = await UUIDGenerator.getRandomUUID();
 			const format = url.split('?')[0].split('.').slice(-1)[0];
 
-			RNFetchBlob.config({ path: dirs.DownloadDir + `/${uuid}.${format}`})
-				.fetch('GET', url);
+			await (RNFetchBlob.config({ path: dirs.DownloadDir + `/${uuid}.${format}`})
+				.fetch('GET', url));
+			Alert.alert("File successfully downloaded.", "It has been placed in your downloads folder");
 		} catch (exception) {
 			Alert.alert('Failed to download file ' + file.name);
 		}
