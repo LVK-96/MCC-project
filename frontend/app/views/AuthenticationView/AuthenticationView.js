@@ -95,6 +95,7 @@ function AuthenticationView({
         placeholderTextColor={colors.lightGray}
         value={password}
         onChangeText={text => setPassword(text)}
+        secureTextEntry
       />
       <Button
         style={styles.authButton}
