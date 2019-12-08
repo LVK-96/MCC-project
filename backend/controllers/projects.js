@@ -146,7 +146,7 @@ projectsRouter.post('/:id/images', async (request, response, next) => {
     console.log('Posting image');
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
-    const project = await projectRef.doc(request.params.id).get();
+    const project = await projectRef.get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const { body } = request;
     const image = body;
@@ -163,7 +163,7 @@ projectsRouter.get('/:id/images', async (request, response, next) => {
     console.log('Getting projet images');
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
-    const project = await projectRef.doc(request.params.id).get(); // TODO: this should be projectRef.get();
+    const project = await projectRef.get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const collection = await projectRef.collection('images').get();
     const docs = collection.docs;

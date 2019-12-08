@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, setState } from 'react';
 import {
 	View,
 	Text,
@@ -16,17 +16,18 @@ import projectService from '../../services/projectService';
 import styles from './styles';
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
+import UUIDGenerator from 'react-native-uuid-generator';
 import RNFetchBlob from 'rn-fetch-blob';
+import fetchCorrectRes from '../../util/fetchCorrectRes';
 
 /*List of the pictures of a project.*/
 function ProjectPictures() {
-
 	const { selectedProject, addFile } = useContext(ProjectContext);
-	const [pictures, setPictures] = useState(null);
+	const [pictures, setPictures] = useState([]);
+	const [correctUris, setUris] = useState([]);
 
 	// Re-fetch the pictures when the selected project changes
 	useEffect(() => {
-
 		async function fetchImages(id) {
 			const images = await projectService.getImagesByProjectId(id);
 			setPictures(images);
@@ -37,6 +38,18 @@ function ProjectPictures() {
 		}
 
 	}, [selectedProject]);
+
+	useEffect(() => {
+		console.log('callback for pictures');
+		async function fetchUris(){
+			let uris = pictures.map(p => fetchCorrectRes(p.source));
+			uris = await Promise.all(uris);
+			setUris(uris);
+		}
+		if (pictures){
+			fetchUris();
+		}
+	}, [pictures]);
 
 	const handlePictureUpload = async () => {
 		const options = {
@@ -70,15 +83,25 @@ function ProjectPictures() {
 		});
 	};
 
-	const handlePictureDownload = async (picture) => {
+	const handlePictureDownload = async (downloadUrl) => {
 		try {
-			const storageRef = storage().refFromURL(picture.source);
-			const url = await storageRef.getDownloadURL();
 			const dirs = RNFetchBlob.fs.dirs;
-			RNFetchBlob.config({ path: dirs.DocumentDir })
-				.fetch('GET', url);
+			const uuid = await UUIDGenerator.getRandomUUID();
+			const format = downloadUrl.split('?')[0].split('.').slice(-1)[0];
+
+			const res = await RNFetchBlob.config({ path: dirs.DownloadDir + `/${uuid}.${format}` }).fetch('GET', downloadUrl);
+
+			let status = res.info().status;
+			if (status === 200) {
+				//request successfull
+				Alert.alert('Succeeded in downloading file');
+			}
+			else {
+				//request unsuccesfull
+				Alert.alert('Failed to download file');
+			}
 		} catch (exception) {
-			Alert.alert('Failed to download file ' + picture.name);
+			Alert.alert('Failed to download file');
 		}
 	};
 
@@ -114,17 +137,14 @@ function ProjectPictures() {
 			{header}
 			{pictures.length > 0 ?
 				<FlatList
-					data={pictures}
-					renderItem={({ picture }) =>
+					data={correctUris}
+					renderItem={ ({ item: picture }) =>
 					<View>
 						<TouchableOpacity onPress={() => handlePictureDownload(picture)}>
-							<Image source={picture.source}
-								width={100}
-								height={100}/>
+							<Image source={{uri: picture}}
+								style = {{width: 100, height: 100}}
+							/>
 						</TouchableOpacity>
-						<Text style={styles.imageDate}>
-							{getDateString(picture.uploaded)}
-						</Text>
 					</View>}
 					keyExtractor={img => img.uid}
 				/> :
