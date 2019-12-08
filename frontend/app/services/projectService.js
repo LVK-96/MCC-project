@@ -4,7 +4,7 @@ import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import UUIDGenerator from 'react-native-uuid-generator';
 import createCorrectRes from '../util/createCorrectRes';
-import api_url from '../util/config';
+import api_url, { apiKey } from '../util/config';
 
 const baseUrl = api_url + '/projects';
 
@@ -16,7 +16,7 @@ const setToken = (newToken) => {
 
 const getAll = async () => {
 	try {
-		const response = await axios.get(baseUrl, {
+		const response = await axios.get(`${baseUrl}?key=${apiKey}`, {
 			headers: {
 			Authorization: token,
 			},
@@ -43,7 +43,7 @@ const createProject = async (project, imageRes) => {
 		await iconRef.putFile(stats.path);
 		const path = iconRef.toString();
 
-		const response = await axios.post(baseUrl, { ...project, iconSource: path }, {
+		const response = await axios.post(`${baseUrl}?key=${apiKey}`, { ...project, iconSource: path }, {
 		headers: {
 			Authorization: token,
 		},
@@ -58,7 +58,7 @@ const createProject = async (project, imageRes) => {
 
 const deleteProject = async (id) => {
 	try {
-		const response = await axios.delete(`${baseUrl}/${id}`, {
+		const response = await axios.delete(`${baseUrl}/${id}?key=${apiKey}`, {
 			headers: {
 				Authorization: token,
 			},
@@ -72,7 +72,7 @@ const deleteProject = async (id) => {
 
 const getImagesByProjectId = async (id) => {
 	try {
-		const response = await axios.get(`${baseUrl}/${id}/images`, {
+		const response = await axios.get(`${baseUrl}/${id}/images?key=${apiKey}`, {
 			headers: { Authorization: token }
 		});
 		return response.data;
@@ -97,7 +97,7 @@ const createImage = async (projectId, image) => {
 		image.source = path;
 		image.uid = uuid;
 
-		const response = await axios.post(`${baseUrl}/${projectId}/images`, image, {
+		const response = await axios.post(`${baseUrl}/${projectId}/images?key=${apiKey}`, image, {
 			headers: { Authorization: token },
 		});
 		return response.data;
@@ -109,7 +109,7 @@ const createImage = async (projectId, image) => {
 
 const getFilesByProjectId = async (id) => {
 	try {
-		const response = await axios.get(`${baseUrl}/${id}/files`, {
+		const response = await axios.get(`${baseUrl}/${id}/files?key=${apiKey}`, {
 			headers: {
 			Authorization: token,
 			},
@@ -138,7 +138,7 @@ const createFile = async (projectId, file) => {
 		file.source = path;
 		file.uid = uuid;
 
-		const response = await axios.post(`${baseUrl}/${projectId}/files`, file, {
+		const response = await axios.post(`${baseUrl}/${projectId}/files?key=${apiKey}`, file, {
 			headers: {
 			Authorization: token,
 			},

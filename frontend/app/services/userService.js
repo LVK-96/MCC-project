@@ -1,6 +1,7 @@
 import axios from 'axios';
+import api_url, { apiKey } from '../util/config';
 
-const baseUrl = 'http://10.0.2.2:3000/users'; // TODO: use env var for this
+const baseUrl = `${api_url}/users`; // TODO: use env var for this
 
 const mockUsers = [
     {
@@ -25,11 +26,11 @@ const setToken = (newToken) => {
 
 const getAll = async () => {
     try {
-        const response = await axios.get(baseUrl, {
-			headers: {
-			Authorization: token,
-			},
-		});
+      const response = await axios.get(`${baseUrl}?=key${apiKey}`, {
+        headers: {
+        Authorization: token,
+        },
+      });
 		return response.data;
     } catch (exception) {
         return mockUsers;
@@ -38,7 +39,7 @@ const getAll = async () => {
 
 const searchByName = async (name, ownUid) => {
   try {
-    const response = await axios.get(`${baseUrl}/search?name=${name}`, {
+    const response = await axios.get(`${baseUrl}/search?name=${name}&key=${apiKey}`, {
       headers: {
 			Authorization: token,
       },
@@ -53,7 +54,7 @@ const searchByName = async (name, ownUid) => {
 
 const getById = async (id) => {
   try {
-    const response = await axios.get(`${baseUrl}/${id}`, {
+    const response = await axios.get(`${baseUrl}/${id}?key=${apiKey}`, {
       headers: {
       Authorization: token,
       },
@@ -67,7 +68,7 @@ const getById = async (id) => {
 
 const saveUser = async (user) => {
   try {
-    const response = await axios.post(baseUrl, user, {
+    const response = await axios.post(`${baseUrl}?key=${apiKey}`, user, {
       headers: {
       Authorization: token,
       },
@@ -80,7 +81,7 @@ const saveUser = async (user) => {
 
 const updateUser = async (user) => {
   try {
-    const response = await axios.put(`${baseUrl}/${user.uid}`, user, {
+    const response = await axios.put(`${baseUrl}/${user.uid}?key=${apiKey}`, user, {
       headers: {
       Authorization: token,
       },

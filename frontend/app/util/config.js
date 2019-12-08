@@ -9,4 +9,4 @@ export default api_url;
 // TODO: Better way to get the API key?
 const apiKey = 'AIzaSyCrywTxXbwLS6kl1rciQHLCJ8cIeVr-DE4';
 const googleVisionUrl = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`;
-export { googleVisionUrl };
+export { googleVisionUrl, apiKey };

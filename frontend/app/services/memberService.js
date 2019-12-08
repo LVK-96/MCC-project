@@ -1,5 +1,6 @@
 import axios from 'axios';
-import api_url from '../util/config';
+import api_url, { apiKey } from '../util/config';
+
 
 const baseUrl = api_url + '/projects';
 
@@ -11,7 +12,7 @@ const setToken = (newToken) => {
 
 const getMembers = async (projectId) => {
 	try {
-		const response = await axios.get(`${baseUrl}/${projectId}/members`, {
+		const response = await axios.get(`${baseUrl}/${projectId}/members?key=${apiKey}`, {
         headers: {
         Authorization: token,
         },
@@ -25,7 +26,7 @@ const getMembers = async (projectId) => {
 
 const addMember = async (newMember, projectId) => {
   try {
-    const response = await axios.post(`${baseUrl}/${projectId}/members`, newMember, {
+    const response = await axios.post(`${baseUrl}/${projectId}/members?key=${apiKey}`, newMember, {
       headers: {
       Authorization: token,
       },
