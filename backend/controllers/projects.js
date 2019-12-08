@@ -264,8 +264,8 @@ projectsRouter.post('/:project_id/tasks/:task_id/assignees', async (request, res
   try {
     console.log('Posting asignees');
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
-    const projectRef = db.collection('projects').doc(request.params.id);
-    const project = await projectRef.doc(request.params.project_id).get();
+    const projectRef = db.collection('projects').doc(request.params.project_id);
+    const project = await projectRef.get();
     if (!isOwner(decodedToken, project)) return response.status(403).end();
     response.json([]);
   } catch (exception) {
@@ -277,8 +277,8 @@ projectsRouter.get('/:project_id/tasks/:task_id/assignees', async (request, resp
   try {
     console.log('Getting task asignees');
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
-    const projectRef = db.collection('projects').doc(request.params.id);
-    const project = await projectRef.doc(request.params.project_id).get();
+    const projectRef = db.collection('projects').doc(request.params.project_id);
+    const project = await projectRef.get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     response.json([]);
   } catch (exception) {
