@@ -80,6 +80,7 @@ function AuthenticationView({
           placeholderTextColor={colors.lightGray}
           value={displayName}
           onChangeText={text => setDisplayName(text)}
+          selectionColor="white"
         />
       }
       <TextInput
@@ -88,6 +89,7 @@ function AuthenticationView({
         placeholderTextColor={colors.lightGray}
         value={email}
         onChangeText={text => setEmail(text)}
+        selectionColor="white"
       />
       <TextInput
         style={styles.passwordInput}
@@ -95,6 +97,8 @@ function AuthenticationView({
         placeholderTextColor={colors.lightGray}
         value={password}
         onChangeText={text => setPassword(text)}
+        selectionColor="white"
+        secureTextEntry
       />
       <Button
         style={styles.authButton}
