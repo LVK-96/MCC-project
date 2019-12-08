@@ -230,8 +230,8 @@ projectsRouter.get('/:project_id/tasks/:task_id', async (request, response, next
   try {
     console.log('Getting task by id');
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
-    const projectRef = db.collection('projects').doc(request.params.id);
-    const project = await projectRef.doc(request.params.id).get();
+    const projectRef = db.collection('projects').doc(request.params.project_id);
+    const project = await projectRef.doc(request.params.project_id).get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
     const document = await projectRef.collection('tasks').doc(request.params.task_id).get();
     const task = document.data();
