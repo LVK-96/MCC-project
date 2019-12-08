@@ -150,6 +150,16 @@ const createFile = async (projectId, file) => {
 	}
 };
 
+const getMembersByProjectId = async (id) => {
+	try {
+		const response = await axios.get(`${baseUrl}/${id}/members`);
+		return response.data;
+	} catch (ex) {
+		console.log('Error fetching project members');
+		return null;
+	}
+};
+
 export default { getAll, createProject, setToken,
 	getFilesByProjectId, createFile, deleteProject,
-	getImagesByProjectId, createImage };
+	getImagesByProjectId, createImage, getMembersByProjectId };
