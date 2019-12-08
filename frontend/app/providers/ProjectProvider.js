@@ -96,9 +96,9 @@ function ProjectProvider({ children }) {
 
   // Make call to back-end and add the newly created project to local
   // projects context. Returns whether creation was successful.
-  const createProject = async (project) => {
+  const createProject = async (project, imageRes) => {
     try {
-      const created = await projectsService.createProject(project);
+      const created = await projectsService.createProject(project, imageRes);
       const url = await fetchCorrectRes(created.iconSource);
       setProjects(prevProjects => [{ ...created, iconSource: url }, ...prevProjects]);
       return true;

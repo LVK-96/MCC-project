@@ -12,11 +12,13 @@ import Button from '../Button';
 import SettingsIcon from '../SettingsIcon';
 import styles from './styles';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
+import SettingsContext from '../../contexts/SettingsContext';
 import SettingsView from '../SettingsView';
 
 function ProfileView({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const authenticationContext = useContext(AuthenticationContext);
+  const settingsContext = useContext(SettingsContext);
 
   const changeProfilePic = () => {
     const options = {
@@ -30,7 +32,7 @@ function ProfileView({ navigation }) {
     ImagePicker.launchImageLibrary(options, async response => {
       if (!response.didCancel && !response.error) {
         try {
-          await authenticationContext.changeProfilePic(response.uri);
+          await authenticationContext.changeProfilePic(response.uri, settingsContext.imageRes);
         } catch (e) {
           Alert.alert('Failed to set profile picture!');
         }
