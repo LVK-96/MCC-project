@@ -20,6 +20,7 @@ function ProfileView({ navigation }) {
   const authenticationContext = useContext(AuthenticationContext);
   const settingsContext = useContext(SettingsContext);
 
+  // TODO: Check that this work properly
   const changeProfilePic = () => {
     const options = {
       title: 'Select profile picture',

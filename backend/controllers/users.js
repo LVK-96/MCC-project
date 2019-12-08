@@ -2,6 +2,8 @@ const usersRouter = require('express').Router();
 let { db, auth } = require('../utils/config');
 const User = require('../models/user');
 
+// TODO: access controll
+
 usersRouter.post('/', async (request, response, next) => {
   try {
     const { body } = request;

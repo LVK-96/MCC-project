@@ -96,6 +96,7 @@ function ProjectProvider({ children }) {
 
   // Make call to back-end and add the newly created project to local
   // projects context. Returns whether creation was successful.
+  // TODO: handle no picture situation better i.e have some default pic
   const createProject = async (project, imageRes) => {
     try {
       const created = await projectsService.createProject(project, imageRes);
@@ -132,6 +133,7 @@ function ProjectProvider({ children }) {
 
   // Deletes the project designated by id.
   // Returns whether deletion was successful.
+  // TODO: check that this actually works
   const deleteProject = async (id) => {
     const deleted = await projectService.deleteProject(id);
     // If successful, update local state.
