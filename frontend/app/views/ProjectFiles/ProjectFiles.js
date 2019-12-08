@@ -48,7 +48,11 @@ function ProjectFiles() {
 
 			try {
 				const ret = await addFile(selectedProject, file);
-				setFiles(prev => [...prev, ret]);
+				if (ret !== null) {
+					setFiles(prev => [...prev, ret]);
+				} else {
+					Alert.alert('Failed to upload file');
+				}
 			} catch (e) {
 				Alert.alert('Failed to upload file');
 			}
