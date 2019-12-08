@@ -21,17 +21,15 @@ const getAll = async () => {
 			Authorization: token,
 			},
 		});
-		//console.log(response.data);
 		return response.data;
 	} catch (exception) {
-		//console.log(exception);
 		return null;
 	}
 };
 
 const createProject = async (project, imageRes) => {
 	try {
-		//TODO: use image resize in all image uploads
+		console.log(project);
 		console.log('Creating project', project.name);
 		const respURI = await createCorrectRes(project.iconSource, imageRes);
 		const stats = await RNFetchBlob.fs.stat(respURI);

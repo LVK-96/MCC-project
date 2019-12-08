@@ -15,6 +15,7 @@ import styles from './styles';
 import FilePickerManager from 'react-native-file-picker';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
+import UUIDGenerator from 'react-native-uuid-generator';
 
 function ProjectFiles() {
 	const { selectedProject, addFile } = useContext(ProjectContext);
@@ -60,7 +61,11 @@ function ProjectFiles() {
 			const storageRef = storage().refFromURL(file.source);
 			const url = await storageRef.getDownloadURL();
 			const dirs = RNFetchBlob.fs.dirs;
-			RNFetchBlob.config({ path: dirs.DocumentDir })
+
+			const uuid = await UUIDGenerator.getRandomUUID();
+			const format = url.split('?')[0].split('.').slice(-1)[0];
+
+			RNFetchBlob.config({ path: dirs.DownloadDir + `/${uuid}.${format}`})
 				.fetch('GET', url);
 		} catch (exception) {
 			Alert.alert('Failed to download file ' + file.name);

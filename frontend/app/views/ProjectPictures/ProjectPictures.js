@@ -27,7 +27,6 @@ function ProjectPictures() {
 
 	// Re-fetch the pictures when the selected project changes
 	useEffect(() => {
-		console.log('use effect');
 		async function fetchImages(id) {
 			const images = await projectService.getImagesByProjectId(id);
 			setPictures(images);
@@ -42,8 +41,6 @@ function ProjectPictures() {
 	useEffect(() => {
 		console.log('callback for pictures');
 		async function fetchUris(){
-			console.log('async part');
-			console.log(pictures);
 			let uris = pictures.map(p => fetchCorrectRes(p.source));
 			uris = await Promise.all(uris);
 			setUris(uris);
