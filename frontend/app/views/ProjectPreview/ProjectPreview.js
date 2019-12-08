@@ -23,6 +23,7 @@ function ProjectPreview({
   isOwner,
   id,
   members,
+  type,
   deleteProject,
 }) {
   //const [favorite, setFavorite] = useState(isFavorite);
@@ -53,10 +54,13 @@ function ProjectPreview({
           projectId={id}
         />
         <ContextMenu options={[
-          { text: "Delete", onSelect: () => deleteProject(id)},
+          /*Only show options that are relevant to the user. Only show
+            deletion option if user is the owner. Only show report option if
+            project is a group project.*/
+          ...(isOwner ? [{ text: "Delete", onSelect: () => deleteProject(id)}] : []),
           { text: "Show project content", onSelect: () => console.warn("TODO: Show")},
-          { text: "Generate project report", onSelect: () => console.warn("TODO: Report")},
-        ].filter(opt => opt.text === 'Delete' ? isOwner : true)}/>
+          ...((type === 'GROUP') ? [{ text: "Generate project report", onSelect: () => console.warn("TODO: Report")}] : []),
+        ]}/>
       </View>
     </TouchableOpacity>
   );
