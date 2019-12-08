@@ -76,7 +76,7 @@ const updateTaskStatus = async (projectId, taskId, status) => {
 
 const getAssigneesByProjectAndTaskId = async (projectId, taskId) => {
     try {
-        const response = await axios.get(`${projectId}/tasks/${taskId}/assignees`,
+        const response = await axios.get(`${baseUrl}/${projectId}/tasks/${taskId}/assignees`,
         { headers: { Authorization: token }});
         return response.data;
     } catch (err) {
@@ -87,7 +87,7 @@ const getAssigneesByProjectAndTaskId = async (projectId, taskId) => {
 
 const addAssigneesToTask = async (projectId, taskId, users) => {
     try {
-        const response = await axios.get(`${projectId}/tasks/${taskId}/assignees`,
+        const response = await axios.get(`${baseUrl}/${projectId}/tasks/${taskId}/assignees`,
         users, { headers: { Authorization: token }});
         return response.data;
     } catch (err) {
