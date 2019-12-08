@@ -35,7 +35,7 @@ function ProjectPreview({
 
   const generateReport = async () => {
     try {
-      await reportService.generate({ id: id, name: name, deadline: deadline, description: description });
+      await reportService.generate({ id: id, name: name, deadline: deadline, description: description, members: members && members.map(({name}) => ({name})), });
       const reportRef = storage().ref().child(`${name}-${id}.pdf`);
       await projectService.createFileFromRef(id, reportRef);
       Alert.alert('Report saved to');
