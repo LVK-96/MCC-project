@@ -22,7 +22,7 @@ function AuthenticationProvider({ children }) {
   const login = async ({ email, password }) => {
     //TODO: remove this in production
     if (email === 'placeholder@email.com'){
-      setUser({ email: 'placeholder@email.com', uid: '13456' });
+      setUser({ email: 'placeholder@email.com', uid: '13456', favorites: [] });
     } else {
       try {
         const loggedUser = await authenticationService.login(email, password);
