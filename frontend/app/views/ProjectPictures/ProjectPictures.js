@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, setState } from 'react';
 import {
 	View,
 	Text,
@@ -17,15 +17,16 @@ import styles from './styles';
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
+import fetchCorrectRes from '../../util/fetchCorrectRes';
 
 function ProjectPictures() {
-
 	const { selectedProject, addFile } = useContext(ProjectContext);
-	const [pictures, setPictures] = useState(null);
+	const [pictures, setPictures] = useState([]);
+	const [correctUris, setUris] = useState([]);
 
 	// Re-fetch the pictures when the selected project changes
 	useEffect(() => {
-
+		console.log('use effect');
 		async function fetchImages(id) {
 			const images = await projectService.getImagesByProjectId(id);
 			setPictures(images);
@@ -36,6 +37,27 @@ function ProjectPictures() {
 		}
 
 	}, [selectedProject]);
+
+	useEffect(() => {
+		console.log('callback for pictures');
+		async function fetchUris(){
+			console.log('async part');
+			console.log(pictures);
+			const uris = await fetchCorrectPictureUri();
+			setUris(uris);
+		}
+		if (pictures){
+			fetchUris();
+		}
+	}, [pictures]);
+
+
+	const fetchCorrectPictureUri = async () => {
+		console.log('fetching correct res');
+		let temp = pictures.map(p => fetchCorrectRes(p.source));
+		temp = await Promise.all(temp);
+		return temp;
+	};
 
 	const handlePictureUpload = async () => {
 		const options = {
@@ -108,22 +130,30 @@ function ProjectPictures() {
   		</Text>
 	);
 
+	console.log('test:');
+	console.log(pictures);
+	console.log('test2:');
+	console.log(correctUris);
+	//under touchable opacity
+	/*<Text style={styles.imageDate}>
+			{getDateString(picture.uploaded)}
+	</Text>*/
+
 	const contentArea = pictures ? (
 		<ScrollView style={styles.contentArea}>
 			{header}
 			{pictures.length > 0 ?
 				<FlatList
-					data={pictures}
-					renderItem={({ picture }) =>
+					data={correctUris}
+					renderItem={ ({ item: picture }) =>
 					<View>
+						{console.log('this:')}
+						{console.log(picture)}
 						<TouchableOpacity onPress={() => handlePictureDownload(picture)}>
-							<Image source={picture.source}
-								width={100}
-								height={100}/>
+							<Image source={{uri: picture}}
+								style = {{width: 100, height: 100}}
+							/>
 						</TouchableOpacity>
-						<Text style={styles.imageDate}>
-							{getDateString(picture.uploaded)}
-						</Text>
 					</View>}
 					keyExtractor={img => img.uid}
 				/> :
