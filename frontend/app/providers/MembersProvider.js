@@ -3,6 +3,8 @@ import MembersContext from '../contexts/MembersContext';
 import memberService from '../services/memberService';
 import fetchCorrectRes from '../util/fetchCorrectRes';
 
+/*Provides a value for the MembersContext that provides the members of some
+  specific project with the projectId given as a prop.*/
 function MembersProvider({ children, projectId }) {
     const [members, setMembers] = useState([]);
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import SettingsContext from '../contexts/SettingsContext';
 
+/*A provider for the SettingsContext. Allows for the controlling of settings.*/
 function SettingsProvider({ children }) {
   const [imageRes, setImageRes] = useState('full'); // low, high or full
 

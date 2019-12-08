@@ -1,5 +1,5 @@
 import axios from 'axios';
-import api_url from '../util/config';
+import api_url, { apiKey } from '../util/config';
 
 const baseUrl = api_url + '/projects';
 
@@ -12,7 +12,7 @@ const setToken = (newToken) => {
 // Fetch tasks by project id.
 const getTasksByProjectId = async (projectId) => {
 	try {
-		const response = await axios.get(`${baseUrl}/${projectId}/tasks`, {
+		const response = await axios.get(`${baseUrl}/${projectId}/tasks?key=${apiKey}`, {
         headers: {
         Authorization: token,
         },
@@ -27,7 +27,7 @@ const getTasksByProjectId = async (projectId) => {
 // Update the task specified by id with the payload specified by task.
 const updateTask = async (projectId, taskId, task) => {
     try {
-        const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}`, task, {
+        const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}?key=${apiKey}`, task, {
           headers: {
           Authorization: token,
           },
@@ -42,7 +42,7 @@ const updateTask = async (projectId, taskId, task) => {
 // Creates a task for the project designated by projectId.
 const createTask = async (projectId, task) => {
     try {
-        const response = await axios.post(`${baseUrl}/${projectId}/tasks`, task,{
+        const response = await axios.post(`${baseUrl}/${projectId}/tasks?key=${apiKey}`, task,{
           headers: {
           Authorization: token,
           },
@@ -62,7 +62,7 @@ const createTask = async (projectId, task) => {
 // Returns the updated task.
 const updateTaskStatus = async (projectId, taskId, status) => {
     try {
-        const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}`,
+        const response = await axios.put(`${baseUrl}/${projectId}/tasks/${taskId}?key=${apiKey}`,
         { status: status }, {
           headers: {
           Authorization: token,

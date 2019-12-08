@@ -6,6 +6,7 @@ const User = require('../models/user');
 
 usersRouter.post('/', async (request, response, next) => {
   try {
+    console.log('Posting user');
     const { body } = request;
     const user = new User(body);
     await db.collection('users').doc(user.uid).set({ ...user });
@@ -17,8 +18,9 @@ usersRouter.post('/', async (request, response, next) => {
 
 usersRouter.get('/search', async (request, response, next) => {
   try {
-    const { query } = request;
+    console.log('Searching for users');
     await auth.verifyIdToken(request.get('authorization').toString());
+    const { query } = request;
     const users = await db.collection('users').where('name', '>=', query.name).get();
     let resp = [];
     for (let d of users.docs) {
@@ -32,6 +34,7 @@ usersRouter.get('/search', async (request, response, next) => {
 
 usersRouter.get('/:id', async (request, response, next) => {
   try {
+    console.log('Getting user by id');
     const document = await db.collection('users').doc(request.params.id).get();
     const user = document.data();
     response.json(user);
@@ -42,6 +45,7 @@ usersRouter.get('/:id', async (request, response, next) => {
 
 usersRouter.put('/:id', async (request, response, next) => {
   try {
+    console.log('Updating user by id');
     const { body } = request;
     const document = await db.collection('users').doc(request.params.id).get();
     const user = document.data();
@@ -59,6 +63,7 @@ usersRouter.put('/:id', async (request, response, next) => {
 
 usersRouter.delete('/:id', async (request, response, next) => {
   try {
+    console.log('Deleting user by id');
     await db.collection('users').doc(request.params.id).delete();
     response.json({ message: 'User deleted' });
   } catch (exception) {

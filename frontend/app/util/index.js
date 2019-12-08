@@ -19,4 +19,4 @@ export function dateIsWithinAWeek(date) {
 
 /*This hides the warnings which contain information about some components
   of react-native being moved into their own packages in the future.*/
-console.ignoredYellowBox = ["@react-native-community"];
+console.ignoredYellowBox = ["@react-native-community", "DatePicker"];

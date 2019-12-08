@@ -8,6 +8,7 @@ import styles from './styles';
 import ProjectContext from '../../contexts/ProjectContext';
 import ProjectList from '../ProjectList';
 
+/*Utility component used by ProjectSearch. Implements a search field.*/
 function SearchField({ isTextInput, searchParam, setSearchParam }) {
   const projectContext = useContext(ProjectContext);
 
@@ -29,6 +30,7 @@ function SearchField({ isTextInput, searchParam, setSearchParam }) {
   }
 }
 
+/*A component for searching projects.*/
 function ProjectSearch() {
   const [switchValue, setSwitchValue] = useState('name');
   const [searchCriteria, setSearchCriteria] = useState('name');

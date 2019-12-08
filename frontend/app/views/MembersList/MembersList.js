@@ -13,6 +13,7 @@ import MembersContext from '../../contexts/MembersContext';
 import ProjectContext from '../../contexts/ProjectContext';
 import AuthenticationContext from '../../contexts/AuthenticationContext';
 
+/*The main body of the MembersList component (i.e. the actual content)*/
 const ViewBody = ({ modalVisible, setModalVisible }) => {
   const membersContext = useContext(MembersContext);
 
@@ -36,6 +37,7 @@ const ViewBody = ({ modalVisible, setModalVisible }) => {
   );
 }
 
+/*Shows a list of members of a project.*/
 const MembersList = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const authenticationContext = useContext(AuthenticationContext);

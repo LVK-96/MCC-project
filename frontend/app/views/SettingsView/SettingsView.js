@@ -7,6 +7,7 @@ import {
 import SettingsContext from '../../contexts/SettingsContext';
 import styles from './styles';
 
+/*A component that shows the settings. Controls settings via SettingsContext.*/
 function SettingsView({ setModalVisible }) {
   const settingsContext = useContext(SettingsContext);
 
