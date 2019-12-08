@@ -27,6 +27,8 @@ function ProjectPreview({
 }) {
   //const [favorite, setFavorite] = useState(isFavorite);
 
+  const hasMembers = members && (members.length > 0);
+
   console.log(isFavorite);
   return (
     <TouchableOpacity
@@ -43,7 +45,7 @@ function ProjectPreview({
         <Text style={styles.deadline}>
           {(new Date(deadline)).toString()}
         </Text>
-        <ProjectMembersPreview members={members} />
+        {hasMembers && <ProjectMembersPreview members={members} />}
       </View>
       <View style={styles.menuContainer}>
         <FavoriteStar
