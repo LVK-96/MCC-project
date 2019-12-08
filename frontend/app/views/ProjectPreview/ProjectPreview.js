@@ -26,7 +26,6 @@ function ProjectPreview({
   type,
   deleteProject,
 }) {
-  //const [favorite, setFavorite] = useState(isFavorite);
 
   const hasMembers = members && (members.length > 0);
 
