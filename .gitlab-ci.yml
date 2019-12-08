@@ -5,7 +5,7 @@ frontend:
   only:
     refs:
       - master
-      - 30-gitlab-ci
+      - 30-gitlab-ci-2
   script:
     - echo $FRONTEND_ENV > frontend/env.json
     - ./scripts/build_app.sh
