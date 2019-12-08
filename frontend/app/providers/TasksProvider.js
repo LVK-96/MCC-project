@@ -117,19 +117,23 @@ function TasksProvider({ children, projectId }) {
         try {
             const created = await taskService.createTask(projectId, task);
 
-            if (created !== null) {
-                // Add the task assignees.
-                const createdAssgns = await taskService.addAssigneesToTask(projectId,
-                    created.id, assignees);
-                if (createdAssgns === null) {
-                    return false;
-                }
-            } else {
+            // if (created !== null) {
+            //     // Add the task assignees.
+            //     const createdAssgns = await taskService.addAssigneesToTask(projectId,
+            //         created.id, assignees);
+            //     if (createdAssgns === null) {
+            //         return false;
+            //     }
+            // } else {
+            //     return false;
+            // }
+            if (created === null) {
                 return false;
             }
 
             // Update internal state.
-            setTasks(prev => [...prev, created]);
+            const prev = tasks ? tasks : [];
+            setTasks([...prev, created]);
             return true;
         } catch (error) {
             return false;

@@ -7,8 +7,9 @@ const projectIsValid = (project) => {
 };
 
 const taskIsValid = (task) => {
-    return task.description.length > 0
-        && !isNaN(new Date(task.deadline).getTime())
+    // return task.description.length > 0
+    //     && !isNaN(new Date(task.deadline).getTime())
+    return true;
 }
 
 export default { projectIsValid, taskIsValid };

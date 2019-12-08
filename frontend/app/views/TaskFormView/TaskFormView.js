@@ -63,6 +63,7 @@ function ProjectFormView({ navigation }) {
         const task = {
             description,
             deadline,
+            projectId: project.id,
         };
 
         // Project information is valid.
