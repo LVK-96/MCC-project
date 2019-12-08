@@ -49,12 +49,7 @@ const createTask = async (projectId, task) => {
         });
         return response.data;
     } catch (error) {
-        // TODO: Remove this
-        task.status = 'PENDING';
-        task.project = projectId;
-        task.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-        //return null;
-        return task;
+        return null;
     }
 };
 
