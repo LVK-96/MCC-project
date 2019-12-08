@@ -18,6 +18,7 @@ import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob';
 
+/*List of the pictures of a project.*/
 function ProjectPictures() {
 
 	const { selectedProject, addFile } = useContext(ProjectContext);
