@@ -61,12 +61,11 @@ function ProjectFormView({ navigation }) {
         const task = {
             description,
             deadline,
-            assignees,
         };
 
         // Project information is valid.
         if (formValidators.taskIsValid(task)) {
-            const creationSuccessful = await context.createTask(task);
+            const creationSuccessful = await context.createTask(task, assignees);
             // If project was created succesfully, go back to projects view.
             if (creationSuccessful) {
                 navigation.navigate('TaskList');
@@ -190,7 +189,8 @@ function ProjectFormView({ navigation }) {
                     <View>
                         <Text style={styles.label}>Assigned to</Text>
                         <UserPicker defaultLabel={'Add assignee'}
-                            onSelectCallback={addAssignee} />
+                            onSelectCallback={addAssignee}
+                            projectId={project.id} />
                         <UserList displayUsers={assignees} />
                     </View>}
                 <View style={styles.saveButton}>
