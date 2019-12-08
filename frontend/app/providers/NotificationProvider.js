@@ -3,6 +3,8 @@ import messaging from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
 import NotificationContext from '../contexts/NotificationContext';
 
+/*A provider that provides a value for the NotificationContext, allowing
+  notificiations to be used.*/
 function NotificationProvider({ children }) {
   const [fcmToken, setFcmToken] = useState('');
   useEffect(() => {
