@@ -16,3 +16,7 @@ export function dateIsWithinAWeek(date) {
   const asWeeks = asDays / 7;
   return (asWeeks >= 0) && (asWeeks < 1);
 }
+
+/*This hides the warnings which contain information about some components
+  of react-native being moved into their own packages in the future.*/
+console.ignoredYellowBox = ["@react-native-community"];
