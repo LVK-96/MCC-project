@@ -1,7 +1,6 @@
 import ImageResizer from 'react-native-image-resizer';
 
 const createCorrectRes = async (originalPath, imageRes) => {
-    console.log(originalPath);
     //TODO: parse image format from original image
     let respURI = originalPath;
     switch (imageRes) {
