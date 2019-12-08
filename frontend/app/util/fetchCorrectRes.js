@@ -7,19 +7,35 @@ const fetchCorrectRes = async (path, setting) => {
       const tmpLow = ref.fullPath.split('.');
       const lowPath = tmpLow[0] + '_640x480.' + tmpLow[1];
       const lowRef = storage().ref(lowPath);
-      return await lowRef.getDownloadURL();
+      try {
+        return await lowRef.getDownloadURL();
+      } catch (e) {
+        return 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
+      }
 
     case 'high':
       const tmpHigh = ref.fullPath.split('.');
       const highPath = tmpHigh[0] + '_1280x960.' + tmpHigh[1];
       const highRef = storage().ref(highPath);
-      return await highRef.getDownloadURL();
+      try {
+        return await highRef.getDownloadURL();
+      } catch (e) {
+        return 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
+      }
 
     case 'full':
-      return await ref.getDownloadURL();
+      try {
+        return await ref.getDownloadURL();
+      } catch (e) {
+        return 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
+      }
 
     default:
-      return await ref.getDownloadURL();
+      try {
+        return await ref.getDownloadURL();
+      } catch (e) {
+        return 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
+      }
   }
 };
 
