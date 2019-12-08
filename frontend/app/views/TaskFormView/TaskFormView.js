@@ -25,6 +25,7 @@ import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import axios from 'axios';
 import { googleVisionUrl } from '../../util/config';
+import AuthenticationContext from '../../contexts/AuthenticationContext';
 
 // Component that renders the task form to create a new task.
 // TODO: This could be combined with TaskView.js
@@ -40,6 +41,7 @@ function ProjectFormView({ navigation }) {
     // We create the task through the project provider.
     const context = useContext(TasksContext);
     const { selectedProject: project } = useContext(ProjectContext);
+    const { user } = useContext(AuthenticationContext);
 
     const handleDateSelection = async () => {
         try {
@@ -77,12 +79,13 @@ function ProjectFormView({ navigation }) {
         }
     };
 
-    // TODO: Disable assignee adding if the
-    // logged user isn't the project administrator.
     const addAssignee = (userId) => {
-        // Cannot add the same user twice
-        if (assignees.indexOf(userId) === -1) {
-            setAssignees(prevState => [...prevState, userId]);
+        // Only administrator can add
+        if (project.owner === user.id) {
+            // Cannot add the same user twice
+            if (assignees.indexOf(userId) === -1) {
+                setAssignees(prevState => [...prevState, userId]);
+            }
         }
     };
 
@@ -188,7 +191,8 @@ function ProjectFormView({ navigation }) {
                     project.type === 'GROUP' &&
                     <View>
                         <Text style={styles.label}>Assigned to</Text>
-                        <UserPicker defaultLabel={'Add assignee'}
+                        <UserPicker defaultLabel={project.owner === user.uid
+                    ? 'Add assignee' : 'View assignees'}
                             onSelectCallback={addAssignee}
                             projectId={project.id} />
                         <UserList displayUsers={assignees} />
