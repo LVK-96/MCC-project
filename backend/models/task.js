@@ -8,6 +8,7 @@ class Task {
     this.status = 'Pending';
     this.created = new Date().toISOString();
     this.deadlineNotified = false;
+    this.asignees = [];
   }
 }
 

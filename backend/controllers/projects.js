@@ -267,11 +267,7 @@ projectsRouter.post('/:project_id/tasks/:task_id/assignees', async (request, res
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.doc(request.params.project_id).get();
     if (!isOwner(decodedToken, project)) return response.status(403).end();
-    const { body } = request;
-    for (let user of body.users) {
-      await projectRef.collection('tasks').doc(request.params.task_id).collection('assignees').doc(user).set({ user });
-    }
-    response.json({ message: 'Task assigned', users: body.users });
+    response.json([]);
   } catch (exception) {
     next(exception);
   }
@@ -284,13 +280,7 @@ projectsRouter.get('/:project_id/tasks/:task_id/assignees', async (request, resp
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.doc(request.params.project_id).get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
-    const collection = await projectRef.collection('tasks').doc(request.params.task_id).collection('assignees').get();
-    const docs = collection.docs;
-    let assignees = [];
-    for (let doc of docs) {
-      assignees.push(doc.data());
-    }
-    response.json(assignees);
+    response.json([]);
   } catch (exception) {
     next(exception);
   }
