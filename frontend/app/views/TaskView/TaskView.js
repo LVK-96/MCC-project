@@ -43,13 +43,14 @@ function TaskView() {
         }
     };
 
-    // TODO: Disable assignee adding if the
-    // logged user isn't the project administrator.
     const addAssignee = (userId) => {
-        // Cannot add the same user twice
-        if (task.assignees.indexOf(userId) === -1) {
-            updateTask(task.id, { ...task,
-                assignees: [...task.assignees, userId] });
+        // Only project administrator can assign tasks
+        if (selectedProject.owner === user.uid) {
+            // Cannot add the same user twice
+            if (task.assignees.indexOf(userId) === -1) {
+                updateTask(task.id, { ...task,
+                    assignees: [...task.assignees, userId] });
+            }
         }
     };
 
@@ -97,11 +98,10 @@ function TaskView() {
                 {/* We only render the assignees selection if the project
                 this task is associated with is a group project. */
                 selectedProject.type === 'GROUP' &&
-                // Only project administrator can assign tasks
-                //selectedProject.owner === user.uid &&
                 <View>
                     <Text style={styles.label}>Task assignees</Text>
-                    <UserPicker defaultLabel={'Add assignee'}
+                    <UserPicker defaultLabel={selectedProject.owner === user.uid
+                    ? 'Add assignee' : 'View assignees'}
                         onSelectCallback={addAssignee}
                         projectId={selectedProject.id}/>
                     <UserList displayUsers={task.assignees}/>
