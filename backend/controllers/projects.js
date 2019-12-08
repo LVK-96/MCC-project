@@ -246,7 +246,7 @@ projectsRouter.put('/:project_id/tasks/:task_id', async (request, response, next
   }
 });
 
-projectsRouter.post('/:project_id/tasks/:task_id/asignees', async (request, response, next) => {
+projectsRouter.post('/:project_id/tasks/:task_id/assignees', async (request, response, next) => {
   try {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
@@ -254,7 +254,7 @@ projectsRouter.post('/:project_id/tasks/:task_id/asignees', async (request, resp
     if (!isOwner(decodedToken, project)) return response.status(403).end();
     const { body } = request;
     for (let user of body.users) {
-      await projectRef.collection('tasks').doc(request.params.task_id).collection('asignees').doc(user).set({ user });
+      await projectRef.collection('tasks').doc(request.params.task_id).collection('assignees').doc(user).set({ user });
     }
     response.json({ message: 'Task assigned', users: body.users });
   } catch (exception) {
@@ -262,19 +262,19 @@ projectsRouter.post('/:project_id/tasks/:task_id/asignees', async (request, resp
   }
 });
 
-projectsRouter.get('/:project_id/tasks/:task_id/asignees', async (request, response, next) => {
+projectsRouter.get('/:project_id/tasks/:task_id/assignees', async (request, response, next) => {
   try {
     const decodedToken = await auth.verifyIdToken(request.get('authorization').toString());
     const projectRef = db.collection('projects').doc(request.params.id);
     const project = await projectRef.doc(request.params.project_id).get();
     if (!isOwner(decodedToken, project) && !isMember(decodedToken, project)) return response.status(403).end();
-    const collection = await projectRef.collection('tasks').doc(request.params.task_id).collection('asignees').get();
+    const collection = await projectRef.collection('tasks').doc(request.params.task_id).collection('assignees').get();
     const docs = collection.docs;
-    let asignees = [];
+    let assignees = [];
     for (let doc of docs) {
-      asignees.push(doc.data());
+      assignees.push(doc.data());
     }
-    response.json(asignees);
+    response.json(assignees);
   } catch (exception) {
     next(exception);
   }
